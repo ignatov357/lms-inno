@@ -1,4 +1,5 @@
 <?php
+
     try {
         require_once('config.php');
         require_once('functions.php');
@@ -39,4 +40,5 @@
             json_response(500, array('errorMessage' => 'Internal Server Error'));
         }
     }
+
 ?>

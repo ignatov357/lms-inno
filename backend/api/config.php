@@ -1,4 +1,5 @@
 <?php
+
     // SYSTEM CONFIG BEGIN
 	define('DB_HOST', 'localhost');
 	define('DB_USER', 'insight911_1');
@@ -27,4 +28,5 @@
 
     define('HASH_SALT', '96YNzk5DBx5ABLJV');
     define('ACCESS_TOKEN_LIFETIME', 259200);
+
 ?>

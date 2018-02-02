@@ -1,4 +1,5 @@
 <?php
+
     // If some of the required parameters are missed then exit with error
     if(empty($_POST['userID']) || empty($_POST['password'])) {
         json_response(400, array('errorMessage' => 'Some required parameters are missed'));
@@ -10,7 +11,7 @@
     $query = $db->prepare("SELECT password FROM users WHERE id = ?");
     $query->bind_param("i", $_POST['userID']);
     $query->execute();
-    if($query->get_result()->fetch_assoc()['password'] != md5($_POST['password'].HASH_SALT)) {
+    if($query->get_result()->fetch_assoc()['password'] != hash_password($_POST['password'])) {
         // If the given credentials are incorrect then exit with error
         json_response(400, array('errorMessage' => 'User ID or password is incorrect'));
     }
