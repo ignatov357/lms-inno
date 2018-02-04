@@ -1,0 +1,509 @@
+{
+  "info": {
+    "version": "0.1.0",
+    "title": "AwesTeam Lib Api"
+  },
+  "host": "api.awes-project.com",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "basePath": "/",
+  "consumes": [
+    "multipart/form-data"
+  ],
+  "parameters": {
+    "accessToken": {
+      "in": "header",
+      "name": "Access-Token",
+      "type": "string",
+      "description": "Access token",
+      "required": true
+    },
+    "documentID": {
+      "in": "formData",
+      "name": "id",
+      "type": "integer",
+      "description": "Document id",
+      "required": true
+    },
+    "documentType": {
+      "in": "formData",
+      "name": "id",
+      "type": "integer",
+      "description": "Document type: 0 for book, 1 for journal and 2 for electronic materals",
+      "required": true
+    },
+    "documentAmount": {
+      "in": "formData",
+      "name": "instockCount",
+      "type": "integer",
+      "description": "How many documents exists",
+      "required": true
+    },
+    "documentTitle": {
+      "in": "formData",
+      "name": "title",
+      "type": "string",
+      "description": "book title",
+      "required": true
+    },
+    "documentAuthors": {
+      "in": "formData",
+      "name": "authors",
+      "type": "string",
+      "description": "Authors of this document",
+      "required": true
+    },
+    "documentPrice": {
+      "in": "formData",
+      "name": "price",
+      "type": "integer",
+      "description": "Price of this document",
+      "required": true
+    },
+    "documentKeywords": {
+      "in": "formData",
+      "name": "keywords",
+      "type": "string",
+      "description": "Keywords for easier search of this document",
+      "required": true
+    },
+    "bookBestseller": {
+      "in": "formData",
+      "name": "bestseller",
+      "type": "integer",
+      "description": "Required by document type 0. 1 if this book is bestseller, otherwise 0"
+    },
+    "bookPublisher": {
+      "in": "formData",
+      "name": "publisher",
+      "type": "string",
+      "description": "Required by document type 0. Publisher of this book"
+    },
+    "bookEdition": {
+      "in": "formData",
+      "name": "edition",
+      "type": "integer",
+      "description": "Required by document type 0. Book edition in integers"
+    },
+    "bookPublicationYear": {
+      "in": "formData",
+      "name": "publicationYear",
+      "type": "integer",
+      "description": "Required by document type 0. Year of book publication"
+    },
+    "articleJournalTitle": {
+      "in": "formData",
+      "name": "journalTitle",
+      "type": "string",
+      "description": "Required by document type 1. Title of article's journal"
+    },
+    "articleJournalIssuePublicationDate": {
+      "in": "formData",
+      "name": "journalIssuePublicationDate",
+      "type": "string",
+      "description": "Required by document type 1. Date of publication"
+    },
+    "articleJournalIssueEditors": {
+      "in": "formData",
+      "name": "journalIssueEditors",
+      "type": "string",
+      "description": "Required by document type 1. Editors of article"
+    },
+    "userId": {
+      "in": "formData",
+      "name": "id",
+      "type": "integer",
+      "description": "Id of user",
+      "required": true
+    },
+    "userName": {
+      "in": "formData",
+      "name": "name",
+      "type": "string",
+      "description": "User name",
+      "required": true
+    },
+    "userAddress": {
+      "in": "formData",
+      "name": "address",
+      "type": "string",
+      "description": "User address",
+      "required": true
+    },
+    "userPhone": {
+      "in": "formData",
+      "name": "phone",
+      "type": "string",
+      "description": "User phone",
+      "required": true
+    },
+    "userType": {
+      "in": "formData",
+      "name": "type",
+      "type": "integer",
+      "description": "0 for standart user, 1 for faculty member, 2 for librarian",
+      "required": true
+    }
+  },
+  "paths": {
+    "/manage/documents/addDocument": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "summary": "Creates new document in database",
+        "parameters": [
+          {
+            "$ref": "#/parameters/accessToken"
+          },
+          {
+            "$ref": "#/parameters/documentType"
+          },
+          {
+            "$ref": "#/parameters/documentTitle"
+          },
+          {
+            "$ref": "#/parameters/documentAmount"
+          },
+          {
+            "$ref": "#/parameters/documentAuthors"
+          },
+          {
+            "$ref": "#/parameters/documentPrice"
+          },
+          {
+            "$ref": "#/parameters/documentKeywords"
+          },
+          {
+            "$ref": "#/parameters/bookBestseller"
+          },
+          {
+            "$ref": "#/parameters/bookPublisher"
+          },
+          {
+            "$ref": "#/parameters/bookEdition"
+          },
+          {
+            "$ref": "#/parameters/bookPublicationYear"
+          },
+          {
+            "$ref": "#/parameters/articleJournalTitle"
+          },
+          {
+            "$ref": "#/parameters/articleJournalIssuePublicationDate"
+          },
+          {
+            "$ref": "#/parameters/articleJournalIssueEditors"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Document was successfully created"
+          }
+        }
+      }
+    },
+    "/manage/documents/modifyDocument": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "summary": "Modifies document in database",
+        "parameters": [
+          {
+            "$ref": "#/parameters/accessToken"
+          },
+          {
+            "$ref": "#/parameters/documentID"
+          },
+          {
+            "$ref": "#/parameters/documentTitle"
+          },
+          {
+            "$ref": "#/parameters/documentAmount"
+          },
+          {
+            "$ref": "#/parameters/documentAuthors"
+          },
+          {
+            "$ref": "#/parameters/documentPrice"
+          },
+          {
+            "$ref": "#/parameters/documentKeywords"
+          },
+          {
+            "$ref": "#/parameters/bookBestseller"
+          },
+          {
+            "$ref": "#/parameters/bookPublisher"
+          },
+          {
+            "$ref": "#/parameters/bookEdition"
+          },
+          {
+            "$ref": "#/parameters/bookPublicationYear"
+          },
+          {
+            "$ref": "#/parameters/articleJournalTitle"
+          },
+          {
+            "$ref": "#/parameters/articleJournalIssuePublicationDate"
+          },
+          {
+            "$ref": "#/parameters/articleJournalIssueEditors"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Document was successfully modified"
+          }
+        }
+      }
+    },
+    "/manage/documents/removeDocument": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "summary": "Removes document from database",
+        "parameters": [
+          {
+            "$ref": "#/parameters/accessToken"
+          },
+          {
+            "$ref": "#/parameters/documentID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns object 'document' if it was successfuly deleted"
+          }
+        }
+      }
+    },
+    "/manage/users/addUser": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "summary": "Creates new user in database",
+        "parameters": [
+          {
+            "$ref": "#/parameters/accessToken"
+          },
+          {
+            "$ref": "#/parameters/userName"
+          },
+          {
+            "$ref": "#/parameters/userAddress"
+          },
+          {
+            "$ref": "#/parameters/userPhone"
+          },
+          {
+            "$ref": "#/parameters/userType"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User was successfully created"
+          },
+          "400": {
+            "description": "Problem with parameters"
+          },
+          "401": {
+            "description": "Authorization or access problem"
+          }
+        }
+      }
+    },
+    "/manage/users/modifyUser": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "summary": "Modifies existing user in database",
+        "parameters": [
+          {
+            "$ref": "#/parameters/accessToken"
+          },
+          {
+            "$ref": "#/parameters/userId"
+          },
+          {
+            "$ref": "#/parameters/userName"
+          },
+          {
+            "$ref": "#/parameters/userAddress"
+          },
+          {
+            "$ref": "#/parameters/userPhone"
+          },
+          {
+            "$ref": "#/parameters/userType"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User was successfully modified"
+          },
+          "400": {
+            "description": "Problem with required parameters"
+          },
+          "401": {
+            "description": "Access-token problem"
+          }
+        }
+      }
+    },
+    "/manage/users/removeUser": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "summary": "Removes existing user in database",
+        "parameters": [
+          {
+            "$ref": "#/parameters/accessToken"
+          },
+          {
+            "$ref": "#/parameters/userId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User was successfully removed"
+          },
+          "400": {
+            "description": "Problem with required parameters"
+          },
+          "401": {
+            "description": "Access-token problem"
+          }
+        }
+      }
+    },
+    "/manage/users/generateNewPassword": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "summary": "Function for change password, librarian-only access",
+        "parameters": [
+          {
+            "$ref": "#/parameters/accessToken"
+          },
+          {
+            "$ref": "#/parameters/userId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password was successfully changed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some parameters are missed"
+          },
+          "401": {
+            "description": "Problems with access-token"
+          }
+        }
+      }
+    },
+    "/users/changePassword": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "summary": "Function for self-change password",
+        "parameters": [
+          {
+            "$ref": "#/parameters/accessToken"
+          },
+          {
+            "in": "formData",
+            "name": "newPassword",
+            "type": "string",
+            "description": "New password",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Password was successfully changed",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Some parameters are missed"
+          }
+        }
+      }
+    },
+    "/users/getAccessToken": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "summary": "Creates or updates access token for required user",
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "userID",
+            "type": "integer",
+            "description": "Id of required user",
+            "required": true
+          },
+          {
+            "in": "formData",
+            "name": "password",
+            "type": "integer",
+            "description": "User password",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Access token was created and sent",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "accessToken": {
+                  "type": "string"
+                },
+                "expirationDate": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Problem with input data"
+          }
+        }
+      }
+    }
+  }
+}
