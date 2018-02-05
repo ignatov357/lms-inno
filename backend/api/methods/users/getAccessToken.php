@@ -1,9 +1,7 @@
 <?php
 
     // If some of the required parameters are missed then exit with error
-    if(empty($_POST['userID']) || empty($_POST['password'])) {
-        json_response(400, array('errorMessage' => 'Some required parameters are missed'));
-    }
+    ensure_required_params(array('userID', 'password'), $_POST);
 
     $response = array();
 
@@ -26,9 +24,9 @@
 
     // If an access token is already generated then change an expiry date
     if($response['accessToken'] != null) {
-        $response['expiryDate'] = time() + ACCESS_TOKEN_LIFETIME;
-        $query = $db->prepare("UPDATE sessions SET expiry_date = ? WHERE access_token = ?");
-        $query->bind_param("is", $response['expiryDate'], $response['accessToken']);
+        $response['expirationDate'] = time() + ACCESS_TOKEN_LIFETIME;
+        $query = $db->prepare("UPDATE sessions SET expiration_date = ? WHERE access_token = ?");
+        $query->bind_param("is", $response['expirationDate'], $response['accessToken']);
         $query->execute();
         unset($query);
     }
@@ -36,9 +34,9 @@
     // If an access token isn't already generated then generate it
     if($response['accessToken'] == null) {
         $response['accessToken'] = hash('sha256', $_POST['userID'].':'.$_POST['password'].':'.time());
-        $response['expiryDate'] = time() + ACCESS_TOKEN_LIFETIME;
-        $query = $db->prepare("INSERT INTO sessions (user_id, access_token, expiry_date) VALUES (?, ?, ?)");
-        $query->bind_param("isi", $_POST['userID'], $response['accessToken'], $response['expiryDate']);
+        $response['expirationDate'] = time() + ACCESS_TOKEN_LIFETIME;
+        $query = $db->prepare("INSERT INTO sessions (user_id, access_token, expiration_date) VALUES (?, ?, ?)");
+        $query->bind_param("isi", $_POST['userID'], $response['accessToken'], $response['expirationDate']);
         $query->execute();
         unset($query);
     }

@@ -5,11 +5,19 @@
 
     // If some of the required parameters are missed then exit with error
     // If some parameter has invalid value then exit with error
-    if(empty($_POST['id']) || empty($_POST['name']) || empty($_POST['address']) || empty($_POST['phone']) || empty($_POST['type'])) {
-        json_response(400, array('errorMessage' => 'Some required parameters are missed'));
-    } elseif(!in_array($_POST['type'], array(0, 1, 2))) {
+    ensure_required_params(array('id', 'name', 'address', 'phone', 'type'), $_POST);
+    if(!in_array($_POST['type'], array(0, 1, 2))) {
         json_response(400, array('errorMessage' => 'Incorrect value for parameter \'type\''));
     }
+
+    // If user doesn't exist then exit with error
+    $query = $db->prepare("SELECT * FROM users WHERE id = ?");
+    $query->bind_param("i", $_POST['id']);
+    $query->execute();
+    if($query->get_result()->fetch_assoc() == null) {
+        json_response(400, array('errorMessage' => 'User with given id doesn\'t exist'));
+    }
+    unset($query);
 
     $response = array('id' => $_POST['id'], 'type' => $_POST['type'], 'name' => $_POST['name'], 'address' => $_POST['address'], 'phone' => $_POST['phone']);
 

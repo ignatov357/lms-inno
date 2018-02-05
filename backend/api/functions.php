@@ -1,11 +1,12 @@
 <?php
     function init() {
+        header('Access-Control-Allow-Origin: http://awes-projects.com');
         remove_expired_access_tokens();
     }
 
     function remove_expired_access_tokens() {
         global $db;
-        $db->query("DELETE FROM sessions WHERE expiry_date < ".time());
+        $db->query("DELETE FROM sessions WHERE expiration_date < ".time());
     }
 
     function json_response($code, $response) {
@@ -13,23 +14,37 @@
         exit(json_encode($response));
     }
 
+    function get_user_id_by_access_token($access_token) {
+        global $db;
+        $query = $db->prepare("SELECT * FROM sessions WHERE access_token = ?");
+        $query->bind_param("s", $access_token);
+        $query->execute();
+        return $query->get_result()->fetch_assoc()['user_id'];
+    }
+
     function ensure_access($allowed_user_types = array()) {
         if (empty(getallheaders()['Access-Token'])) {
             json_response(401, array('errorMessage' => 'Access-Token required'));
         }
 
-        global $db;
-        $query = $db->prepare("SELECT * FROM sessions WHERE access_token = ?");
-        $query->bind_param("s", getallheaders()['Access-Token']);
-        $query->execute();
-        $user_id = $query->get_result()->fetch_assoc()['user_id'];
+        $user_id = get_user_id_by_access_token(getallheaders()['Access-Token']);
         if ($user_id == NULL) {
             json_response(401, array('errorMessage' => 'The given Access-Token is invalid'));
         }
         if (!empty($allowed_user_types)) {
+            global $db;
             $user_type = $db->query('SELECT type FROM users WHERE id = '.$user_id)->fetch_assoc()['type'];
             if(!in_array($user_type, $allowed_user_types)) {
                 json_response(401, array('errorMessage' => 'The given Access-Token doesn\'t have an access to this method'));
+            }
+        }
+    }
+
+    function ensure_required_params($params, $request_data) {
+        foreach($params as $param) {
+            if(empty($request_data[$param]) && ($request_data[$param] == NULL || !in_array($request_data[$param], array("0", 0, 0.0)))) {
+                echo $param;
+                json_response(400, array('errorMessage' => 'Some required parameters are missed'));
             }
         }
     }
