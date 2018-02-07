@@ -23,7 +23,10 @@
     unset($query);
 
     if ($document_type == 0) {
-        ensure_required_params(array('bestseller', 'publisher', 'edition', 'publicationYear'), $_POST);
+        ensure_required_params(array('reference', 'bestseller', 'publisher', 'edition', 'publicationYear'), $_POST);
+        if(!in_array($_POST['reference'], array(0, 1))) {
+            json_response(400, array('errorMessage' => 'Incorrect value for parameter \'bestseller\''));
+        }
         if (!in_array($_POST['bestseller'], array(0, 1))) {
             json_response(400, array('errorMessage' => 'Incorrect value for parameter \'bestseller\''));
         }
@@ -36,7 +39,7 @@
 
     $response = array('id' => $_POST['id'], 'instockCount' => $_POST['instockCount'], 'type' => $document_type, 'title' => $_POST['title'], 'authors' => $_POST['authors'], 'price' => $_POST['price'], 'keywords' => $_POST['keywords']);
     if ($document_type == 0) {
-        $additional_info = array('bestseller' => intval($_POST['bestseller']), 'publisher' => $_POST['publisher'], 'edition' => $_POST['edition'], 'publicationYear' => $_POST['publicationYear']);
+        $additional_info = array('reference' => intval($_POST['reference']), 'bestseller' => intval($_POST['bestseller']), 'publisher' => $_POST['publisher'], 'edition' => $_POST['edition'], 'publicationYear' => $_POST['publicationYear']);
     } elseif ($document_type == 1) {
         $additional_info = array('journalTitle' => $_POST['journalTitle'], 'journalIssuePublicationDate' => $_POST['journalIssuePublicationDate'], 'journalIssueEditors' => $_POST['journalIssueEditors']);
     } elseif ($document_type == 2) {

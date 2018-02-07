@@ -28,5 +28,6 @@
 
     define('HASH_SALT', '96YNzk5DBx5ABLJV');
     define('ACCESS_TOKEN_LIFETIME', 259200);
+    define('OVERDUE_FINE_IN_RUB_PER_DAY', 100);
 
 ?>

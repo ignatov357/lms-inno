@@ -43,7 +43,6 @@
     function ensure_required_params($params, $request_data) {
         foreach($params as $param) {
             if(empty($request_data[$param]) && ($request_data[$param] == NULL || !in_array($request_data[$param], array("0", 0, 0.0)))) {
-                echo $param;
                 json_response(400, array('errorMessage' => 'Some required parameters are missed'));
             }
         }
