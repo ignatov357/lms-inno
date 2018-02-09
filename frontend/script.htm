@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Query debugger</title>
+    <meta charset="utf-8">
+    <script src="scripts/jquery.js"></script>
+    <script src="scripts/helpers.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("button[name='query-but']").click(function () {
+                $("#quer-div").empty();
+                $("#resp-div").empty();
+
+                var selecter = document.getElementById("query-sel");
+                var selected = null;
+
+                for(var i = 0, n = selecter.options.length; i < n; i++){
+                    if(selecter.options[i].selected){
+                        selected = selecter.options[i].attributes[0].value;
+                        console.log(selected);
+                    }
+                }
+
+                switch (selected){
+                    case "getDocument":
+                        $("#quer-div").append(formHTMLString("getDocument", true));
+                        $("#q-apply").click(function () {
+                           var req = new XMLHttpRequest();
+                           var req_string = "id=" + $("#q-gd-id").val();
+
+                           req.open("GET", "http://api.awes-projects.com/documents/getDocument/?" + req_string, false);
+                           req.send(null);
+
+                           if(req.status == 200){
+                               $("#resp-div").append(formHTMLString("getDocument", false, req.responseText));
+                           } else {
+                               alert("Server returned an error " + req.status + " " + req.statusText);
+                           }
+                        });
+                        break;
+                    case "getDocuments":
+                        $("#quer-div").append(formHTMLString("getDocuments", true));
+                        $("#q-apply").click(function () {
+                            var req = new XMLHttpRequest();
+
+                            req.open("GET", "http://api.awes-projects.com/documents/getDocuments/", false);
+                            req.send(null);
+
+                            if(req.status == 200){
+                                $("#resp-div").append(formHTMLString("getDocuments", false, req.responseText));
+                            } else {
+                                alert("Server returned an error " + req.status + " " + req.statusText);
+                            }
+                        });
+                        break;
+                }
+                return false;
+
+            });
+            //return false;
+        })
+    </script>
+</head>
+<body>
+<h4>SELECT QUERY</h4>
+<select id="query-sel">
+    <option name="getDocument">Get document</option>
+    <option name="getDocuments">Get all documents</option>
+</select>
+<button name="query-but">APPLY</button>
+<div id="quer-div">
+
+</div>
+<div id="resp-div">
+
+</div>
+</body>
+</html>
