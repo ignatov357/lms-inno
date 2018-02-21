@@ -1,8 +1,6 @@
 package com.awesprojects.lmsclient.interactive;
 
 import com.awesprojects.lmsclient.LMSClient;
-import com.awesprojects.lmsclient.api.Users;
-import org.json.JSONException;
 
 import java.util.Scanner;
 
@@ -11,17 +9,19 @@ public class Terminal {
     private final LMSClient client;
     private final Commands reflector;
     private final Scanner scanner;
+    private final CommandUtils commandUtils;
 
     public Terminal(LMSClient client){
         this.client = client;
         reflector = new Commands();
         scanner = new Scanner(System.in);
+        commandUtils = new CommandUtils(client);
     }
 
     public void run(){
         boolean loggedIn = false;
         for (int i = 0; i < 3 && !loggedIn; i++) {
-            loggedIn |= login();
+            loggedIn |= commandUtils.login(scanner);
         }
         if (!loggedIn){
             client.err.println("unable to login, exiting");

@@ -1,6 +1,6 @@
 package com.awesprojects.lmsclient.api;
 
-public class Manage {
+public class ManageAPI {
 
     public static class Users{
 

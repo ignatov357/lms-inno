@@ -1,21 +1,27 @@
 package com.awesprojects.lmsclient.interactive;
 
 import com.awesprojects.lmsclient.LMSClient;
-import com.awesprojects.lmsclient.api.Users;
+import com.awesprojects.lmsclient.api.UsersAPI;
 import org.json.JSONException;
+
+import java.util.Scanner;
 
 public class CommandUtils {
 
     private final LMSClient client;
-    
-    public boolean login(){
+
+    public CommandUtils(LMSClient client){
+        this.client = client;
+    }
+
+    public boolean login(Scanner scanner){
         client.out.print("username : ");
         String id = scanner.nextLine();
         client.out.print("password : ");
         String password = scanner.nextLine();
         try {
             int userId = Integer.parseInt(id);
-            String response = Users.getAccessToken(userId, password);
+            String response = UsersAPI.getAccessToken(userId, password);
             return true;
         }catch(NumberFormatException nfe){
             client.err.println("looks like it is invalid id");

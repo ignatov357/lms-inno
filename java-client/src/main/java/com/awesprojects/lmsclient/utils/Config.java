@@ -13,6 +13,17 @@ public class Config {
     private PrintStream err;
     @Getter @Setter
     private String apiDomain;
+    @Getter @Setter
+    private boolean secure;
+    @Setter
+    private static Config currentConfig;
+
+
+    public static Config getCurrentConfig() {
+        if (currentConfig==null)
+            currentConfig = getDefaultConfig();
+        return currentConfig;
+    }
 
     public static Config getDefaultConfig(){
         Config config = new Config();
