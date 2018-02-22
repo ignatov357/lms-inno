@@ -1,3 +1,5 @@
+package documents;
+
 import com.awesprojects.lmsclient.api.DocumentsAPI;
 import com.awesprojects.lmsclient.api.Response;
 

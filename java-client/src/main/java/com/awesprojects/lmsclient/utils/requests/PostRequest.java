@@ -3,6 +3,8 @@ package com.awesprojects.lmsclient.utils.requests;
 import com.awesprojects.lmsclient.utils.Config;
 import lombok.Getter;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,8 +48,15 @@ public class PostRequest extends Request{
         }
     }
 
-    public void data(String name,String value){
-        formData.add(new String[]{name,value});
+    public void data(String key,String value){
+        try{
+            key = URLEncoder.encode(key,"UTF-16");
+            value = URLEncoder.encode(value, "UTF-16");
+        }catch(UnsupportedEncodingException use){
+            if (Config.getCurrentConfig().isDebug());
+                use.printStackTrace();
+        }
+        formData.add(new String[]{key,value});
     }
 
     public String buildRequest(StringBuilder sb){

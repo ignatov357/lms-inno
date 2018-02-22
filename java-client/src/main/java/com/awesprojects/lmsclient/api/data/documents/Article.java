@@ -1,12 +1,20 @@
 package com.awesprojects.lmsclient.api.data.documents;
 
+import com.awesprojects.lmsclient.api.internal.Responsable;
 import lombok.Data;
 import lombok.ToString;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 @Data
 @ToString(callSuper = true)
-public class Article extends Document{
+public class Article extends Document implements Responsable,Serializable{
+
+    public Article(){
+        super();
+        setType(1);
+    }
 
     public Article(JSONObject doc) {
         super(doc);
@@ -15,10 +23,10 @@ public class Article extends Document{
         journalIssueEditors = doc.optString("journal_issue_editors");
     }
 
-    public String journalTitle;
+    protected String journalTitle;
 
-    public String journalIssuePublicationDate;
+    protected String journalIssuePublicationDate;
 
-    public String journalIssueEditors;
+    protected String journalIssueEditors;
 
 }

@@ -31,6 +31,8 @@ public class Config {
 
     public static Config getDefaultConfig(){
         Config config = new Config();
+        config.debug = true;
+        config.verbose = true;
         config.err = System.err;
         config.out = System.out;
         config.apiDomain = "api.awes-projects.com";

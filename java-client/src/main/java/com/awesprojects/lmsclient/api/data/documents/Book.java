@@ -4,9 +4,19 @@ import lombok.Data;
 import lombok.ToString;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 @Data
 @ToString(callSuper = true)
-public class Book extends Document {
+public class Book extends Document implements Serializable{
+
+    public Book(){
+        super();
+        setType(0);
+        setBestseller(false);
+        setReference(false);
+        setPrice("0.00");
+    }
 
     public Book(JSONObject doc) {
         super(doc);

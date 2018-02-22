@@ -1,6 +1,6 @@
 package com.awesprojects.lmsclient.api;
 
-import com.awesprojects.lmsclient.api.internal.Responsed;
+import com.awesprojects.lmsclient.api.internal.Responsable;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,7 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 @ToString
-public class Response implements Responsed {
+public class Response implements Responsable {
 
     @Getter @Setter
     private int status;
@@ -77,7 +77,12 @@ public class Response implements Responsed {
     }
 
     public static JSONObject getJsonBody(String httpResponse){
-        return new JSONObject(getBody(httpResponse));
+
+        String body = getBody(httpResponse);
+        if (body!=null || !body.equals(""))
+            return new JSONObject(body);
+        else
+            return null;
     }
 
     public static JSONArray getJsonArrayBody(String httpResponse){

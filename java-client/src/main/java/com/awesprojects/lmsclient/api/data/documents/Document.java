@@ -1,14 +1,21 @@
 package com.awesprojects.lmsclient.api.data.documents;
 
+import com.awesprojects.lmsclient.api.internal.Responsable;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 
 @Data
-public abstract class Document {
+public abstract class Document implements Responsable,Serializable{
+
+    public Document(){
+
+    }
 
     public Document(JSONObject doc){
         type = doc.getInt("type");

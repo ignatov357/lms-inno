@@ -1,6 +1,7 @@
+package documents;
+
 import com.awesprojects.lmsclient.api.DocumentsAPI;
 import com.awesprojects.lmsclient.api.data.documents.Document;
-import org.json.JSONArray;
 
 public class GetDocuments {
 

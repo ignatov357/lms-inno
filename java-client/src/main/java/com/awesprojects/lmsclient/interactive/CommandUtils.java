@@ -4,7 +4,7 @@ import com.awesprojects.lmsclient.LMSClient;
 import com.awesprojects.lmsclient.api.Response;
 import com.awesprojects.lmsclient.api.UsersAPI;
 import com.awesprojects.lmsclient.api.data.AccessToken;
-import com.awesprojects.lmsclient.api.internal.Responsed;
+import com.awesprojects.lmsclient.api.internal.Responsable;
 import org.json.JSONException;
 
 import java.util.Scanner;
@@ -24,7 +24,7 @@ public class CommandUtils {
         String password = scanner.nextLine();
         try {
             int userId = Integer.parseInt(id);
-            Responsed response = UsersAPI.getAccessToken(userId, password);
+            Responsable response = UsersAPI.getAccessToken(userId, password);
             if (response instanceof AccessToken)
                 return true;
             if (response instanceof Response)

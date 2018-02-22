@@ -1,13 +1,15 @@
 package com.awesprojects.lmsclient.api.data;
 
-import com.awesprojects.lmsclient.api.internal.Responsed;
+import com.awesprojects.lmsclient.api.internal.Responsable;
 import com.awesprojects.lmsclient.utils.Config;
 import lombok.Data;
 import org.json.JSONObject;
+
+import java.io.Serializable;
 import java.util.Calendar;
 
 @Data
-public class AccessToken implements Responsed {
+public class AccessToken implements Responsable,Serializable {
 
     public AccessToken(String accessToken,long expirationDate){
         this.token = accessToken;
