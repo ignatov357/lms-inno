@@ -43,8 +43,10 @@ public class GetRequest extends Request{
 
     private String buildRequest(StringBuilder sb){
         sb.append("GET ").append(getUrl());
-        if (hasQuery())
+        if (hasQuery()) {
+            sb.append("?");
             compileQuery(sb);
+        }
         sb.append(" HTTP/1.1").append("\n");
         sb.append("Host: ").append(Config.getCurrentConfig().getApiDomain()).append("\n");
         sb.append("Connection: close\n");

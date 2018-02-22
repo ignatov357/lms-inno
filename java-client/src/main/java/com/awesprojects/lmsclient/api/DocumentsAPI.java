@@ -1,12 +1,12 @@
 package com.awesprojects.lmsclient.api;
 
 import com.awesprojects.lmsclient.api.data.documents.Document;
+import com.awesprojects.lmsclient.api.internal.ApiCall;
 import com.awesprojects.lmsclient.utils.requests.GetRequest;
+import com.awesprojects.lmsclient.utils.requests.PostRequest;
 import com.awesprojects.lmsclient.utils.requests.RequestFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.Iterator;
 
 public class DocumentsAPI {
 
@@ -23,6 +23,25 @@ public class DocumentsAPI {
             documents[i] = doc;
         }
         return documents;
+    }
+
+    @ApiCall
+    public static Document getDocument(int documentId){
+        GetRequest.Builder builder = RequestFactory.get();
+        builder.withURL("/documents/getDocument");
+        builder.withQuery("id",documentId+"");
+        String response = builder.create().execute();
+        JSONObject document = Response.getJsonBody(response);
+        return Document.parseDocument(document);
+    }
+
+    public static Response checkOutDocument(String accessToken,int documentID){
+        PostRequest.Builder builder = RequestFactory.post();
+        builder.withURL("/documents/checkOutDocument");
+        builder.withHeader("Access-Token",accessToken);
+        builder.withData("documentID",documentID+"");
+        String response = builder.create().execute();
+        return Response.getResult(response);
     }
 
 }

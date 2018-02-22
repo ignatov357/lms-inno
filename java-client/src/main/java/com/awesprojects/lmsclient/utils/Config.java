@@ -15,6 +15,10 @@ public class Config {
     private String apiDomain;
     @Getter @Setter
     private boolean secure;
+    @Getter @Setter
+    private boolean debug;
+    @Getter @Setter
+    private boolean verbose;
     @Setter
     private static Config currentConfig;
 

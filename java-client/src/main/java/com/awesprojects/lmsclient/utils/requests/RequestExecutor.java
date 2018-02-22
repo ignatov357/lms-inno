@@ -49,6 +49,7 @@ public class RequestExecutor {
         public String execute(String request) {
             String response;
             try {
+                if (Config.getCurrentConfig().isVerbose())
                 Config.getCurrentConfig().getOut().println("request: "+request);
                 socket.getOutputStream().write(request.getBytes());
                 socket.getOutputStream().flush();
@@ -65,6 +66,7 @@ public class RequestExecutor {
                     sb.append(scanner.nextLine()).append("\n");
 
                 String ret = sb.toString();
+                if (Config.getCurrentConfig().isVerbose())
                 Config.getCurrentConfig().getOut().println("response: "+ret);
                 return ret;
             } catch (IOException e) {

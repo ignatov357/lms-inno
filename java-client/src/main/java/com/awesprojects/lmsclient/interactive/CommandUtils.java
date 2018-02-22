@@ -1,7 +1,10 @@
 package com.awesprojects.lmsclient.interactive;
 
 import com.awesprojects.lmsclient.LMSClient;
+import com.awesprojects.lmsclient.api.Response;
 import com.awesprojects.lmsclient.api.UsersAPI;
+import com.awesprojects.lmsclient.api.data.AccessToken;
+import com.awesprojects.lmsclient.api.internal.Responsed;
 import org.json.JSONException;
 
 import java.util.Scanner;
@@ -21,8 +24,15 @@ public class CommandUtils {
         String password = scanner.nextLine();
         try {
             int userId = Integer.parseInt(id);
-            String response = UsersAPI.getAccessToken(userId, password);
-            return true;
+            Responsed response = UsersAPI.getAccessToken(userId, password);
+            if (response instanceof AccessToken)
+                return true;
+            if (response instanceof Response)
+                if (((Response) response).isError()) {
+                    client.err.println("server returned error response : "+response.toString());
+                    return false;
+                }
+            return false;
         }catch(NumberFormatException nfe){
             client.err.println("looks like it is invalid id");
         }catch(IndexOutOfBoundsException iobe){

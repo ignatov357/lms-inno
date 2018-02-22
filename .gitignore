@@ -1,2 +1,3 @@
 frontend-android/app/build
 java-client/target
+java-client/libs/.*

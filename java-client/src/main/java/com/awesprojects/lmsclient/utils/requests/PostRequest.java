@@ -1,5 +1,6 @@
 package com.awesprojects.lmsclient.utils.requests;
 
+import com.awesprojects.lmsclient.utils.Config;
 import lombok.Getter;
 
 import java.util.Iterator;
@@ -21,6 +22,20 @@ public class PostRequest extends Request{
         return formData.size() > 0;
     }
 
+    public int computeDataLength(){
+        int length = 0;
+        Iterator<String[]> iterator = formData.iterator();
+        while (iterator.hasNext()){
+            String[] pair = iterator.next();
+            length+= pair[0].length();
+            length+= pair[1].length();
+            length+= 1;
+            if (iterator.hasNext())
+                length+= 1;
+        }
+        return length;
+    }
+
     public void compileData(StringBuilder sb){
         Iterator<String[]> iterator = formData.iterator();
         while (iterator.hasNext()){
@@ -35,10 +50,27 @@ public class PostRequest extends Request{
         formData.add(new String[]{name,value});
     }
 
+    public String buildRequest(StringBuilder sb){
+        sb.append("POST ").append(getUrl());
+        sb.append(" HTTP/1.1").append("\n");
+        sb.append("Host: ").append(Config.getCurrentConfig().getApiDomain()).append("\n");
+        if (hasData()) {
+            sb.append("Content-Type: application/x-www-form-urlencoded").append("\n");
+            sb.append("Content-Length: ").append(computeDataLength()).append("\n");
+        }
+        sb.append("Connection: close\n");
+        if (hasHeaders())
+            compileHeaders(sb);
+        sb.append("\n");
+        if (hasData())
+            compileData(sb);
+        return sb.toString();
+    }
     @Override
     public String buildRequestAndGetResponse(StringBuilder sb) {
-       // sb.append("GET ").append()
-        return null;
+        String requestStr = buildRequest(sb);
+        String response = RequestExecutor.executeRequest(requestStr);
+        return response;
     }
 
 
