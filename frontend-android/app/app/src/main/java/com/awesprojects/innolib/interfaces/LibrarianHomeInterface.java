@@ -19,7 +19,7 @@ public class LibrarianHomeInterface implements IHomeInterface {
 
     @Override
     public void create(){
-        activity.setContentView(R.layout.interface_home_librarian);
+        activity.setContentView(R.layout.fragment_home_librarian);
     }
 
     @Override

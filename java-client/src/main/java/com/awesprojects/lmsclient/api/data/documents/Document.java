@@ -1,5 +1,6 @@
 package com.awesprojects.lmsclient.api.data.documents;
 
+import com.awesprojects.lmsclient.api.data.CheckOutInfo;
 import com.awesprojects.lmsclient.api.internal.Responsable;
 import lombok.Data;
 import lombok.Getter;
@@ -39,6 +40,8 @@ public abstract class Document implements Responsable,Serializable{
     protected String price;
 
     protected int instockCount;
+
+    protected CheckOutInfo checkOutInfo;
 
 
     public static Document parseDocument(JSONObject object){

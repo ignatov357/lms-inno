@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorLightBackground"
+    android:elevation="48dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:text="@string/signin_title"
+        android:textAppearance="@android:style/TextAppearance.Material.Headline" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/fragment_signin_center_ui_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/fragment_signin_response_info_textview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:visibility="visible" />
+
+            <EditText
+                android:id="@+id/fragment_signin_userid_edittext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/signin_hint_user_id"
+                android:inputType="numberDecimal"
+                android:minWidth="200dp"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/fragment_signin_userpassword_edittext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/signin_hint_user_password"
+                android:inputType="textPassword"
+                android:minWidth="200dp"
+                android:singleLine="true" />
+
+            <Button
+                android:id="@+id/fragment_signin_signin_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/signin" />
+
+            <ProgressBar
+                android:id="@+id/fragment_signin_progress_bar"
+                style="@android:style/Widget.DeviceDefault.ProgressBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

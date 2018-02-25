@@ -20,7 +20,7 @@ public class PatronHomeInterface implements IHomeInterface {
 
     @Override
     public void create() {
-        activity.setContentView(R.layout.interface_home_patron);
+        activity.setContentView(R.layout.fragment_home_patron);
     }
 
     @Override

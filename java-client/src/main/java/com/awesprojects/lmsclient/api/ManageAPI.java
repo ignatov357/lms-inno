@@ -1,6 +1,7 @@
 package com.awesprojects.lmsclient.api;
 
 import com.awesprojects.lmsclient.api.data.AccessToken;
+import com.awesprojects.lmsclient.api.data.CheckOutInfo;
 import com.awesprojects.lmsclient.api.data.documents.Article;
 import com.awesprojects.lmsclient.api.data.documents.Book;
 import com.awesprojects.lmsclient.api.data.documents.Document;
@@ -91,7 +92,7 @@ public class ManageAPI {
             }
         }
 
-        public static Document[] getDocumentsUserCheckedOut(AccessToken accessToken,int userId){
+        public static Responsable[] getDocumentsUserCheckedOut(AccessToken accessToken,int userId){
             GetRequest.Builder request = RequestFactory.get();
             request.withURL("/manage/users/getDocumentsUserCheckedOut");
             request.withQuery("user_id",userId+"");
@@ -101,11 +102,15 @@ public class ManageAPI {
                 JSONArray docsArray = Response.getJsonArrayBody(response);
                 Document[] documents = new Document[docsArray.length()];
                 for (int i = 0;i<docsArray.length();i++){
-                    documents[i] = Document.parseDocument(docsArray.getJSONObject(i));
+                    JSONObject obj = docsArray.getJSONObject(i);
+                    JSONObject documentInfo = obj.getJSONObject("documentInfo");
+                    documents[i] = Document.parseDocument(documentInfo);
+                    CheckOutInfo check = CheckOutInfo.parseInfo(obj);
+                    documents[i].setCheckOutInfo(check);
                 }
                 return documents;
             }else{
-                return null;
+                return new Responsable[]{Response.getResult(response)};
             }
         }
 
@@ -122,7 +127,7 @@ public class ManageAPI {
             }
         }
 
-        public static User[] getUsers(AccessToken accessToken){
+        public static Responsable[] getUsers(AccessToken accessToken){
             GetRequest.Builder request = RequestFactory.get();
             request.withURL("/manage/users/getUsers");
             request.withHeader("Access-Token",accessToken.getToken());
@@ -135,7 +140,7 @@ public class ManageAPI {
                 }
                 return users;
             }else{
-                return null;
+                return new Responsable[]{Response.getResult(response)};
             }
         }
 
