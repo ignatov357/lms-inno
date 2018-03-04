@@ -1,118 +1,14 @@
-@font-face{
-	font-family: Akrobat;
-	src: url("../fonts/akrobat.otf") format("opentype");
+body{
+    background: #f9fbe7;
 }
 
-h1{
-	font: 350% Akrobat;
+.btn{
+    border: 0;
+    background: #cddc39;
+    text-align: center;
 }
 
-h2 {
-	font: 300% Akrobat;
-}
-
-h3 {
-	font: 250% Akrobat;
-}
-
-h4 {
-	font: 200% Akrobat;
-}
-
-p {
-	font: 150% Akrobat;
-}
-
-body {
-	background: url("../static/back.jpg");
-}
-
-div.header{
-	background: rgba(0,0,0,0.3);
-	position: absolute;
-	top: 50px;
-	left: 0px;
-	right: 0px;
-}
-
-div.header h1{
-	position: relative;
-	top: -10px;
-}
-
-div.header h3{
-	position: relative;
-	top: -50px;
-}
-
-div.header h1, h2, h3{
-	color: white;
-	text-align: center;
-}
-
-div.login-field{
-	background: rgba(0,0,0,0.3);
-	position: absolute;
-	top: 350px;
-	left: 25%;
-	right: 25%;
-	padding: 1%;
-}
-
-div.login-field h4{
-	color: white;
-	text-align: center;
-	position: relative;
-	top: -20px;
-}
-
-div.login-in-field{
-	
-}
-
-div.login-in-field p{
-	color: white;
-	position: relative;
-	left: 50px;
-}
-
-input.text-form{
-	background: rgba(255,255,255,0) ;
-	border-bottom: 1px solid #B6B6B6;
-	border-right: 0px;
-	border-left: 0px;
-	border-top: 0px;
-	color: white;
-	font: 150% Akrobat;
-	
-}
-
-input.text-form:hover{
-	border-bottom: 3px solid white;
-}
-
-input.text-form:focus{
-	outline: none;
-	border-bottom: 3px solid white;
-}
-
-input.text-form[name="userID"]{
-	position: relative;
-	left: 68px;
-}
-
-input.text-form{
-	position: relative;
-	left: 0%;
-	width: 700px;
-}
-
-input[type="submit"]{
-	background: white;
-	outline: none;
-	border: 0px;
-	border-radius: 2px;
-	position: relative;
-	left: 39.5%;
-	zoom: 1.5;
+.centered{
+    margin: auto;
+    text-align: center;
 }
