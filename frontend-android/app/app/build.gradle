@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
+    flavorDimensions "versionCode"
+    signingConfigs {
+        config {
+            keyAlias 'releasekey'
+            keyPassword '99193105'
+            storeFile file('/home/ilya/android.keystore')
+            storePassword '99193105'
+        }
+    }
     compileSdkVersion 26
     buildToolsVersion "27.0.3"
     defaultConfig {
@@ -20,11 +29,25 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            jniDebuggable false
+            signingConfig signingConfigs.config
+            renderscriptDebuggable false
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    productFlavors {
+        releaseConfig {
+            minSdkVersion 21
+            applicationId 'com.awesprojects.innolib'
+            signingConfig signingConfigs.config
+            targetSdkVersion 24
+            versionCode 1
+            versionName '1.0'
+        }
     }
 }
 
@@ -38,4 +61,5 @@ dependencies {
     compile 'com.android.support:cardview-v7:26.0.0-alpha1'
     compile 'com.android.support:design:26.0.0-alpha1'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation files('libs/lms-client.jar')
 }

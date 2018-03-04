@@ -25,7 +25,17 @@ public class Book extends Document implements Serializable{
         bestseller = doc.optInt("bestseller",0)==1 ? true : false;
         publisher = doc.optString("publisher","unknown");
         edition = doc.optInt("edition",-1);
-        publicationYear = doc.optInt("publication_year", -1);
+        publicationYear = doc.optString("publication_year", "-10");
+        if (publicationYear.equals("-10"))
+            publicationYear = doc.optString("publicationYear", "-9");
+    }
+
+    public void setPublicationYear(int year){
+        setPublicationYear(year+"");
+    }
+
+    public void setPublicationYear(String year){
+        publicationYear = year;
     }
 
     protected boolean reference;
@@ -36,5 +46,5 @@ public class Book extends Document implements Serializable{
 
     protected int edition;
 
-    protected int publicationYear;
+    protected String publicationYear;
 }

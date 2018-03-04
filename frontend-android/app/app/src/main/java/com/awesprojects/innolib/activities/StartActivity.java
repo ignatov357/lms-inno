@@ -174,8 +174,8 @@ public class StartActivity extends Activity implements SignInFragment.OnSignInLi
         mPreferences.edit()
                 .putBoolean(PREFERENCE_IS_SIGNED_IN,true)
                 .commit();
-        int userID = Integer.parseInt(SecureStorageManager.getInstance().get("USER_ID"));
-        UserManager.getInstance().getUserAsync(InnolibApplication.getAccessToken(),userID,(responsable) -> {
+        //int userID = Integer.parseInt(SecureStorageManager.getInstance().get("USER_ID"));
+        UserManager.getInstance().getUserInfoAsync(InnolibApplication.getAccessToken(),(responsable) -> {
             if (responsable instanceof User){
                 runOnUiThread( () -> showHome((User)responsable) );
             }
@@ -187,6 +187,7 @@ public class StartActivity extends Activity implements SignInFragment.OnSignInLi
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("CURRENT_USER",user);
         startActivity(intent);
+        overridePendingTransition(R.anim.activity_fade_in,R.anim.activity_hold);
         finish();
     }
 

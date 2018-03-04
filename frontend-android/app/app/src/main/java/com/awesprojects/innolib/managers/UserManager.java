@@ -24,6 +24,10 @@ public class UserManager {
 
     }
 
+    public static int getUserType(User user){
+        return user.getType();
+    }
+
     public interface OnResponseCallback{
         public void onResponse(Responsable responsable);
     }
@@ -35,4 +39,13 @@ public class UserManager {
                 callback.onResponse(r);
         }).start();
     }
+
+    public void getUserInfoAsync(AccessToken accessToken,OnResponseCallback callback){
+        new Thread(() -> {
+            Responsable r = UsersAPI.getUserInfo(accessToken);
+            if (callback != null)
+                callback.onResponse(r);
+        }).start();
+    }
+
 }

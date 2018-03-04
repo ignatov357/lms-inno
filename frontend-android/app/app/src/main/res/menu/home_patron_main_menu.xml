@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home_patron_main_menu_profile"
+        android:icon="@drawable/ic_account_box_black_36dp"
+        android:title="@string/home_patron_menu_item_profile" />
+    <item
+        android:id="@+id/home_patron_main_menu_library"
+        android:icon="@drawable/ic_library_books_black_36dp"
+        android:title="@string/home_patron_menu_item_library" />
+    <item
+        android:id="@+id/home_patron_main_menu_settings"
+        android:icon="@drawable/ic_settings_black_36dp"
+        android:title="@string/home_patron_menu_item_settings" />
+</menu>

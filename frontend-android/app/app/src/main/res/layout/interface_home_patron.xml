@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_home_root_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="false"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/fragment_home_patron_main_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/fragment_home_patron_bottom_navigation_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorSecondary"
+            android:fitsSystemWindows="false"
+            android:minHeight="@dimen/android_navbar_height"
+            app:elevation="@dimen/android_navbar_elevation"
+            app:itemIconTint="@color/home_navigation_bar_item"
+            app:itemTextColor="@color/home_navigation_bar_item"
+            app:menu="@menu/home_patron_main_menu">
+
+        </android.support.design.widget.BottomNavigationView>
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -1,13 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="ApplicationTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
+    <style name="ApplicationTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:statusBarColor">@color/colorStatusBar</item>
     </style>
     
     <style name="SplashTheme" parent="ApplicationTheme">
         <item name="android:windowBackground">@drawable/splash_screen</item>
+    </style>
+
+    <style name="HomeTheme" parent="ApplicationTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
 </resources>

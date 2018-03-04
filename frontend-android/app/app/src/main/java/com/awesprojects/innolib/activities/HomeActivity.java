@@ -1,14 +1,14 @@
 package com.awesprojects.innolib.activities;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.transition.Fade;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
-import com.awesprojects.innolib.R;
-import com.awesprojects.innolib.fragments.AbstractHomeFragment;
-import com.awesprojects.innolib.fragments.LibrarianHomeFragment;
-import com.awesprojects.innolib.fragments.PatronHomeFragment;
+import com.awesprojects.innolib.interfaces.HomeInterfaceFactory;
+import com.awesprojects.innolib.interfaces.AbstractHomeInterface;
 import com.awesprojects.lmsclient.api.data.users.User;
 
 /**
@@ -18,28 +18,68 @@ import com.awesprojects.lmsclient.api.data.users.User;
 public class HomeActivity extends Activity {
 
     protected User mCurrentUser;
-    protected AbstractHomeFragment mHomeFragment;
+    protected AbstractHomeInterface mHomeInterface;
 
+    public User getUser(){
+        return mCurrentUser;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         mCurrentUser = (User) getIntent().getSerializableExtra("CURRENT_USER");
-        if (savedInstanceState==null){
+        mHomeInterface = HomeInterfaceFactory.createInterfaceByUserType(this,mCurrentUser.getType());
+        mHomeInterface.create(savedInstanceState);
+        /*if (savedInstanceState==null){
             if (mCurrentUser.getType()==2)
-                mHomeFragment = new LibrarianHomeFragment();
+                mHomeFragment = new LibrarianProfileFragment();
             else
-                mHomeFragment = new PatronHomeFragment();
+                mHomeFragment = new PatronProfileFragment();
             mHomeFragment.setUser(mCurrentUser);
             mHomeFragment.setEnterTransition(new Fade(Fade.IN));
             getFragmentManager().beginTransaction()
                     .add(R.id.activity_home_main_container,mHomeFragment,"HomeFragment")
                     .commit();
-        }
+        }*/
+    }
+
+    protected void addHomeFragment(){
+
     }
 
     @Override
     protected void onDestroy() {
+        mHomeInterface.destroy();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        mHomeInterface.saveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mHomeInterface.restoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mHomeInterface.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mHomeInterface.pause();
+    }
+
+    public final ViewGroup getRootViewGroup(){
+        return mHomeInterface.getRootViewGroup();
     }
 }

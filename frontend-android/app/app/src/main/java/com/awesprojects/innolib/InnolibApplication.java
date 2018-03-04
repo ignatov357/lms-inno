@@ -1,6 +1,7 @@
 package com.awesprojects.innolib;
 
 import android.app.Application;
+import android.transition.TransitionManager;
 
 import com.awesprojects.lmsclient.api.data.AccessToken;
 

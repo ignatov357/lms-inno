@@ -15,7 +15,7 @@ import java.io.Serializable;
 public abstract class Document implements Responsable,Serializable{
 
     public Document(){
-
+        setId(-1);
     }
 
     public Document(JSONObject doc){

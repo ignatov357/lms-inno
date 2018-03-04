@@ -149,7 +149,8 @@ public class ManageAPI {
     public static class Documents{
 
         private static void writeDocumentIntoRequest(PostRequest.Builder request,Document document){
-            request.withData("id",document.getId()+"");
+            if (document.getId()!=-1)
+                request.withData("id",document.getId()+"");
             request.withData("instockCount",document.getInstockCount()+"");
             request.withData("type",document.getType()+"");
             request.withData("title",document.getTitle());

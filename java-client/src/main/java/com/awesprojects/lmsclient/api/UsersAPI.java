@@ -1,8 +1,10 @@
 package com.awesprojects.lmsclient.api;
 
 import com.awesprojects.lmsclient.api.data.AccessToken;
+import com.awesprojects.lmsclient.api.data.users.User;
 import com.awesprojects.lmsclient.api.internal.ApiCall;
 import com.awesprojects.lmsclient.api.internal.Responsable;
+import com.awesprojects.lmsclient.utils.requests.GetRequest;
 import com.awesprojects.lmsclient.utils.requests.PostRequest;
 import com.awesprojects.lmsclient.utils.requests.RequestFactory;
 
@@ -48,6 +50,19 @@ public class UsersAPI {
         String response = request.create().execute();
         Response response1 = Response.getResult(response);
         return response1;
+    }
+
+    @ApiCall
+    public static Responsable getUserInfo(AccessToken accessToken){
+        GetRequest.Builder request = RequestFactory.get();
+        request.withURL("/users/getUserInfo");
+        request.withHeader("Access-Token",accessToken.getToken());
+        String response = request.create().execute();
+        if (Response.getResultCode(response)==200){
+            return User.parseUser(Response.getJsonBody(response));
+        }else{
+            return Response.getResult(response);
+        }
     }
 
 }

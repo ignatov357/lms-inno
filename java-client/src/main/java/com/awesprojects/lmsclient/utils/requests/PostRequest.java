@@ -50,8 +50,8 @@ public class PostRequest extends Request{
 
     public void data(String key,String value){
         try{
-            key = URLEncoder.encode(key,"UTF-16");
-            value = URLEncoder.encode(value, "UTF-16");
+            key = URLEncoder.encode(key,"UTF-8");
+            value = URLEncoder.encode(value, "UTF-8");
         }catch(UnsupportedEncodingException use){
             if (Config.getCurrentConfig().isDebug());
                 use.printStackTrace();
@@ -63,6 +63,8 @@ public class PostRequest extends Request{
         sb.append("POST ").append(getUrl());
         sb.append(" HTTP/1.1").append("\n");
         sb.append("Host: ").append(Config.getCurrentConfig().getApiDomain()).append("\n");
+        sb.append("Accept: */* \n");
+        sb.append("Accept-Encoding: gzip/deflate \n");
         if (hasData()) {
             sb.append("Content-Type: application/x-www-form-urlencoded").append("\n");
             sb.append("Content-Length: ").append(computeDataLength()).append("\n");
