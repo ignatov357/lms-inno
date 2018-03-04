@@ -92,7 +92,7 @@ public class ManageAPI {
             }
         }
 
-        public static Responsable[] getDocumentsUserCheckedOut(AccessToken accessToken,int userId){
+        public static Responsable getDocumentsUserCheckedOut(AccessToken accessToken,int userId){
             GetRequest.Builder request = RequestFactory.get();
             request.withURL("/manage/users/getDocumentsUserCheckedOut");
             request.withQuery("user_id",userId+"");
@@ -108,9 +108,9 @@ public class ManageAPI {
                     CheckOutInfo check = CheckOutInfo.parseInfo(obj);
                     documents[i].setCheckOutInfo(check);
                 }
-                return documents;
+                return new ResponsableContainer<>(documents);
             }else{
-                return new Responsable[]{Response.getResult(response)};
+                return Response.getResult(response);
             }
         }
 

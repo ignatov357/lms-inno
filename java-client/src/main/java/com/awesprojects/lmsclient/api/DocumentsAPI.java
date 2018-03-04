@@ -12,8 +12,15 @@ public class DocumentsAPI {
 
     @ApiCall
     public static Document[] getDocuments(){
+        return getDocuments(false);
+    }
+
+    @ApiCall
+    public static Document[] getDocuments(boolean availableOnly){
         GetRequest.Builder builder = RequestFactory.get();
         builder.withURL("/documents/getDocuments");
+        if (availableOnly)
+            builder.withQuery("availableOnly","1");
         String response = builder.create().execute();
         JSONArray documentsArray = Response.getJsonArrayBody(response);
         Document[] documents = new Document[documentsArray.length()];

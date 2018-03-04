@@ -25,6 +25,7 @@ public abstract class Document implements Responsable,Serializable{
         title = doc.getString("title");
         price = doc.getString("price");
         instockCount = doc.getInt("instockCount");
+        keywords = doc.optString("keywords",null);
     }
 
     protected int id;

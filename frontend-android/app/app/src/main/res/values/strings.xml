@@ -36,6 +36,7 @@
     <string name="home_library_list_document_stock_last">One copy left</string>
     <string name="home_library_list_document_stock_default"> copies left</string>
     <string name="home_library_list_document_checkout">CHECKOUT</string>
+    <string name="home_library_list_document_bestseller">BESTSELLER</string>
     <string name="home_library_checkout_cancel_button">Cancel</string>
     <string name="home_library_checkout_confirm_button">Confirm</string>
     <string name="home_library_checkout_confirm_title">Confirm check out</string>

@@ -11,4 +11,6 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorLightGray">#e2e2e2</color>
     <color name="colorNavbarPressed">#ffe7bc</color>
+    <color name="colorStarGold">#edcb06</color>
+    <color name="colorDocumentKeywords">#3838a3</color>
 </resources>

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.awesprojects.lmsclient.api.DocumentsAPI;
+import com.awesprojects.lmsclient.api.ResponsableContainer;
+import com.awesprojects.lmsclient.api.UsersAPI;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 import com.awesprojects.lmsclient.api.internal.Responsable;
@@ -22,36 +24,37 @@ public class DocumentManager {
         return mInstance;
     }
 
-    public static void getDocumentAsync(OnGetDocumentsListener onGetDocumentsListener){
-        getDocumentAsync(0,-1,onGetDocumentsListener);
+    public static void getCheckedOutDocuments(AccessToken accessToken,OnGetDocumentsListener listener){
+        GetCheckedOutDocuments getCheckedOutDocumentsAsyncTask = new GetCheckedOutDocuments();
+        getCheckedOutDocumentsAsyncTask.setListener(listener);
+        getCheckedOutDocumentsAsyncTask.execute(accessToken);
     }
 
-    public static void getDocumentAsync(int start, int count,OnGetDocumentsListener onGetDocumentsListener){
+    public static void getDocumentAsync(OnGetDocumentsListener onGetDocumentsListener){
+        getDocumentAsync(false,onGetDocumentsListener);
+    }
+
+    public static void getDocumentAsync(boolean availableOnly,OnGetDocumentsListener onGetDocumentsListener){
         GetDocumentAsyncTask getDocumentAsyncTask = new GetDocumentAsyncTask();
         getDocumentAsyncTask.setListener(onGetDocumentsListener);
-        getDocumentAsyncTask.execute(new Integer[]{start,count});
+        getDocumentAsyncTask.execute(availableOnly);
     }
     public interface OnGetDocumentsListener {
         public void onDocumentGet(Document[] documents);
     }
-    private static class GetDocumentAsyncTask extends AsyncTask<Integer[],Integer,Document[]>{
-
+    private static class GetDocumentAsyncTask extends AsyncTask<Boolean,Integer,Document[]>{
         OnGetDocumentsListener onGetDocumentsListener;
-
         public void setListener(OnGetDocumentsListener listener){
             onGetDocumentsListener = listener;
         }
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
-
         @Override
-        protected Document[] doInBackground(Integer[]... integers) {
-            return DocumentsAPI.getDocuments();
+        protected Document[] doInBackground(Boolean ... availableOnly) {
+            return DocumentsAPI.getDocuments(availableOnly[0]);
         }
-
         @Override
         protected void onPostExecute(Document[] documents) {
             super.onPostExecute(documents);
@@ -59,6 +62,27 @@ public class DocumentManager {
         }
     }
 
+
+    private static class GetCheckedOutDocuments extends AsyncTask<AccessToken,Integer,Responsable>{
+        OnGetDocumentsListener onGetDocumentsListener;
+        public void setListener(OnGetDocumentsListener listener){
+            onGetDocumentsListener = listener;
+        }
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected Responsable doInBackground(AccessToken ... accessToken) {
+            return UsersAPI.getCheckedOutDocuments(accessToken[0]);
+        }
+        @Override
+        protected void onPostExecute(Responsable documents) {
+            super.onPostExecute(documents);
+            if (documents instanceof ResponsableContainer)
+                onGetDocumentsListener.onDocumentGet(((ResponsableContainer<Document[]>) documents).get());
+        }
+    }
 
 
     public static void checkOutDocumentAsync(AccessToken accessToken,int documentId,

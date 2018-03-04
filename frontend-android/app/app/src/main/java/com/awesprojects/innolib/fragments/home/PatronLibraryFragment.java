@@ -13,6 +13,7 @@ import com.awesprojects.innolib.InnolibApplication;
 import com.awesprojects.innolib.R;
 import com.awesprojects.innolib.managers.DocumentManager;
 import com.awesprojects.lmsclient.api.DocumentsAPI;
+import com.awesprojects.lmsclient.api.data.documents.Book;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 
 /**
@@ -52,7 +53,7 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
 
 
     public void updateDocuments(){
-        DocumentManager.getDocumentAsync((documents) -> onDocumentsUpdated(documents));
+        DocumentManager.getDocumentAsync(true,(documents) -> onDocumentsUpdated(documents));
     }
 
     public void onDocumentsUpdated(Document[] documents){
@@ -95,10 +96,14 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
         TextView mAuthorsTextView;
         TextView mStockTextView;
         Button mCheckoutButton;
+        View mBestsellerLayout;
+        TextView mKeywordsTextView;
         int mStockColorNormal;
 
         public PatronLibraryListItemHolder(View itemView) {
             super(itemView);
+            mKeywordsTextView = itemView.findViewById(R.id.home_library_list_element_keywords_textview);
+            mBestsellerLayout = itemView.findViewById(R.id.home_library_list_element_bestseller_layout);
             mCheckoutButton = itemView.findViewById(R.id.home_library_list_element_checkout_button);
             mTitleTextView = itemView.findViewById(R.id.home_library_list_element_title_textview);
             mAuthorsTextView = itemView.findViewById(R.id.home_library_list_element_authors_textview);
@@ -111,7 +116,7 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
         }
 
         public void setAuthors(String authors){
-            mAuthorsTextView.setText(authors);
+            mAuthorsTextView.setText("By "+authors);
         }
 
         public void setStockCount(int count){
@@ -131,6 +136,30 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
         public void setCheckoutListener(int id,OnCheckoutClickListener onCheckoutClickListener){
             mCheckoutButton.setOnClickListener(onCheckoutClickListener);
             mCheckoutButton.setTag(id);
+        }
+
+        public void setBestseller(boolean is){
+            if (is){
+                mBestsellerLayout.setVisibility(View.VISIBLE);
+            }else{
+                mBestsellerLayout.setVisibility(View.GONE);
+            }
+        }
+
+        public void setKeywords(String[] keywords){
+            if (keywords==null || keywords.length == 0){
+                mKeywordsTextView.setVisibility(View.GONE);
+                mKeywordsTextView.setText("");
+                return;
+            }
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < keywords.length; i++) {
+                sb.append("#").append(keywords[i]);
+                if (i!=keywords.length-1)
+                    sb.append(" ");
+            }
+            mKeywordsTextView.setVisibility(View.VISIBLE);
+            mKeywordsTextView.setText(sb.toString());
         }
 
     }
@@ -161,6 +190,22 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
             holder.setTitle(doc.getTitle());
             holder.setAuthors(doc.getAuthors());
             holder.setStockCount(doc.getInstockCount());
+            holder.setKeywords(preparedKeywords(doc));
+            if (doc instanceof Book) {
+                holder.setBestseller(((Book) doc).isBestseller());
+            }else {
+                holder.setBestseller(false);
+            }
+        }
+
+        public String[] preparedKeywords(Document document){
+            String keywords = document.getKeywords();
+            if (keywords==null) return null;
+            keywords = keywords.replace(" ","_").replace(",_",",");
+            if (keywords.contains(","))
+                return keywords.split(",");
+            else
+                return new String[]{keywords};
         }
 
         @Override
