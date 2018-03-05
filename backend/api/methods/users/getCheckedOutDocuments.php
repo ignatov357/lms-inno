@@ -1,22 +1,9 @@
 <?php
 
     // If access token is invalid or if user doesn't have an access to this method then exit with error
-    ensure_access(array(2)); // Only librarians are allowed to use this method
-
-    // If some of the required parameters are missed then exit with error
-    // If some parameter has invalid value then exit with error
-    ensure_required_params(array('user_id'), $_GET);
+    ensure_access();
 
     $response = array();
-
-    // Check if user exists
-    $query = $db->prepare("SELECT * FROM users WHERE id = ?");
-    $query->bind_param("i", $_GET['user_id']);
-    $query->execute();
-    if($query->get_result()->fetch_assoc() == null) {
-        json_response(400, array('errorMessage' => 'User with given id doesn\'t exist'));
-    }
-    unset($query);
 
     // Get documents user checked out
     $query_string = "SELECT document_id, return_till FROM booked_documents WHERE user_id = ?";
@@ -24,7 +11,7 @@
         $query_string = $query_string." AND return_till < ".time();
     }
     $query = $db->prepare($query_string);
-    $query->bind_param("i", $_GET['user_id']);
+    $query->bind_param("i", get_user_id());
     $query->execute();
     $entries = $query->get_result();
     for($i = 0; $cur_entry = $entries->fetch_assoc(); $i++) {

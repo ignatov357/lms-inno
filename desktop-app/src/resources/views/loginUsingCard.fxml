@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+
+<AnchorPane fx:id="loginUsingCardContainer" prefHeight="305.0" prefWidth="390.0" styleClass="loginUsingCardContainer" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.LoginUsingCardController">
+   <children>
+      <Button layoutX="130.0" layoutY="266.0" mnemonicParsing="false" text="Login using password" onAction="#changeSceneTo_login" />
+   </children>
+</AnchorPane>

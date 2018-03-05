@@ -1,6 +1,10 @@
 <?php
     function init() {
         header('Access-Control-Allow-Origin: http://awes-projects.com');
+        if($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
+            header('Access-Control-Allow-Headers: Access-Token');
+            exit();
+        }
         remove_expired_access_tokens();
     }
 
@@ -14,10 +18,10 @@
         exit(json_encode($response));
     }
 
-    function get_user_id_by_access_token($access_token) {
+    function get_user_id() {
         global $db;
         $query = $db->prepare("SELECT * FROM sessions WHERE access_token = ?");
-        $query->bind_param("s", $access_token);
+        $query->bind_param("s", getallheaders()['Access-Token']);
         $query->execute();
         return $query->get_result()->fetch_assoc()['user_id'];
     }
@@ -27,7 +31,7 @@
             json_response(401, array('errorMessage' => 'Access-Token required'));
         }
 
-        $user_id = get_user_id_by_access_token(getallheaders()['Access-Token']);
+        $user_id = get_user_id();
         if ($user_id == NULL) {
             json_response(401, array('errorMessage' => 'The given Access-Token is invalid'));
         }
@@ -42,11 +46,16 @@
 
     function ensure_required_params($params, $request_data) {
         foreach($params as $param) {
-            if(empty($request_data[$param]) && ($request_data[$param] == NULL || !in_array($request_data[$param], array("0", 0, 0.0)))) {
+            if(is_empty($request_data[$param])) {
                 json_response(400, array('errorMessage' => 'Some required parameters are missed'));
             }
         }
     }
+
+    function is_empty($object) {
+        return empty($object) && ($object == NULL || !in_array($object, array("0", 0, 0.0)));
+    }
+
 
     function generate_password($length = 8) {
         $sets = array('abcdefghjkmnpqrstuvwxyz', 'ABCDEFGHJKMNPQRSTUVWXYZ', '1234567890');

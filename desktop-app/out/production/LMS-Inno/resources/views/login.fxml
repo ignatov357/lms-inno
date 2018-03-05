@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="loginContainer" prefHeight="184.0" prefWidth="313.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.LoginController">
+   <children>
+      <TextField id="loginForm_userID" fx:id="loginForm_userID" alignment="CENTER" layoutX="82.0" layoutY="33.0" onKeyReleased="#handleFieldsInput" promptText="User ID" AnchorPane.topAnchor="30.0" />
+      <PasswordField id="loginForm_password" fx:id="loginForm_password" alignment="CENTER" layoutX="82.0" layoutY="67.0" onKeyReleased="#handleFieldsInput" promptText="Password" />
+      <Button id="loginForm_submitButton" fx:id="loginForm_submitButton" disable="true" layoutX="130.0" layoutY="102.0" mnemonicParsing="false" onAction="#handleLoginFormSubmit" text="Login" />
+      <Button id="loginForm_signInUsingCardButton" fx:id="loginForm_signInUsingCardButton" layoutX="101.0" layoutY="137.0" mnemonicParsing="false" onAction="#changeSceneTo_loginUsingCard" text="Login using card" AnchorPane.topAnchor="137.0" />
+   </children>
+</AnchorPane>

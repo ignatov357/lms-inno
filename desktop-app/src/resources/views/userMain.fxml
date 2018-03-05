@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="userMainContainer" prefHeight="667.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.controllers.UserMainController">
+   <children>
+      <MenuBar prefHeight="25.0" prefWidth="1200.0" AnchorPane.topAnchor="0.0">
+        <menus>
+            <Menu mnemonicParsing="false" text="Documents">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleMenuClick" text="Check out document" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleMenuClick" text="Checked out documents" />
+               </items></Menu>
+            <Menu mnemonicParsing="false" text="Profile">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#handleMenuClick" text="My profile" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleMenuClick" text="Change password" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleMenuClick" text="Logout" />
+              </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+      <TabPane fx:id="checkOutDocumentContainer" layoutY="25.0" prefHeight="642.0" prefWidth="1200.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Books">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="booksTable" layoutX="14.0" layoutY="14.0" prefHeight="613.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <columns>
+                            <TableColumn prefWidth="56.0" text="#" />
+                            <TableColumn prefWidth="175.0" text="Title" />
+                              <TableColumn prefWidth="175.0" text="Publisher" />
+                              <TableColumn prefWidth="72.0" text="Edition" />
+                              <TableColumn prefWidth="120.0" text="Publication Year" />
+                              <TableColumn prefWidth="175.0" text="Authors" />
+                              <TableColumn prefWidth="89.0" text="Bestseller" />
+                              <TableColumn prefWidth="127.0" text="Price (rub.)" />
+                              <TableColumn prefWidth="110.0" text="Copies In Stock" />
+                              <TableColumn prefWidth="100.0" text="Check out" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Journal Articles">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="554.0" prefWidth="1058.0">
+                     <children>
+                        <TableView fx:id="journalArticlesTable" prefHeight="613.0" prefWidth="1200.0">
+                          <columns>
+                            <TableColumn prefWidth="56.0" text="#" />
+                            <TableColumn prefWidth="165.0" text="Article Title" />
+                              <TableColumn prefWidth="164.0" text="Authors" />
+                              <TableColumn prefWidth="164.0" text="Journal Title" />
+                              <TableColumn prefWidth="149.0" text="Issue Publication Date" />
+                              <TableColumn prefWidth="164.0" text="Issue Editors" />
+                              <TableColumn prefWidth="127.0" text="Price (rub.)" />
+                              <TableColumn prefWidth="110.0" text="Copies In Stock" />
+                              <TableColumn prefWidth="100.0" text="Check out" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Video/Audio materials">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="avMaterialsTable" prefHeight="613.0" prefWidth="1200.0">
+                          <columns>
+                            <TableColumn prefWidth="56.0" text="#" />
+                            <TableColumn prefWidth="403.0" text="Title" />
+                              <TableColumn prefWidth="403.0" text="Authors" />
+                              <TableColumn prefWidth="127.0" text="Price (rub.)" />
+                              <TableColumn prefWidth="110.0" text="Copies In Stock" />
+                              <TableColumn minWidth="0.0" prefWidth="100.0" text="Check out" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <TabPane fx:id="checkedOutDocumentsContainer" layoutY="25.0" prefHeight="642.0" prefWidth="1200.0" tabClosingPolicy="UNAVAILABLE" visible="false">
+         <tabs>
+            <Tab text="Books">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="checkedOutBooksTable" layoutX="14.0" layoutY="14.0" prefHeight="613.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <columns>
+                              <TableColumn prefWidth="56.0" text="#" />
+                              <TableColumn prefWidth="175.0" text="Title" />
+                              <TableColumn prefWidth="175.0" text="Publisher" />
+                              <TableColumn prefWidth="72.0" text="Edition" />
+                              <TableColumn prefWidth="120.0" text="Publication Year" />
+                              <TableColumn prefWidth="175.0" text="Authors" />
+                              <TableColumn prefWidth="89.0" text="Bestseller" />
+                              <TableColumn prefWidth="127.0" text="Return till" />
+                              <TableColumn prefWidth="100.0" text="Overdue" />
+                              <TableColumn prefWidth="110.0" text="Overdue fine" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Journal Articles">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="554.0" prefWidth="1058.0">
+                     <children>
+                        <TableView fx:id="checkedOutJournalArticlesTable" prefHeight="613.0" prefWidth="1200.0">
+                           <columns>
+                              <TableColumn prefWidth="56.0" text="#" />
+                              <TableColumn prefWidth="165.0" text="Article Title" />
+                              <TableColumn prefWidth="164.0" text="Authors" />
+                              <TableColumn prefWidth="164.0" text="Journal Title" />
+                              <TableColumn prefWidth="149.0" text="Issue Publication Date" />
+                              <TableColumn prefWidth="164.0" text="Issue Editors" />
+                              <TableColumn prefWidth="127.0" text="Return till" />
+                              <TableColumn prefWidth="100.0" text="Overdue" />
+                              <TableColumn prefWidth="110.0" text="Overdue fine" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Video/Audio materials">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="checkedOutAvMaterialsTable" prefHeight="613.0" prefWidth="1200.0">
+                           <columns>
+                              <TableColumn prefWidth="56.0" text="#" />
+                              <TableColumn prefWidth="403.0" text="Title" />
+                              <TableColumn prefWidth="403.0" text="Authors" />
+                              <TableColumn prefWidth="127.0" text="Return till" />
+                              <TableColumn minWidth="0.0" prefWidth="100.0" text="Overdue" />
+                              <TableColumn prefWidth="110.0" text="Overdue fine" />
+                           </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

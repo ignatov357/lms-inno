@@ -1,0 +1,5 @@
+.loginUsingCardContainer {
+    -fx-background-image: url("../images/nfc.png");
+    -fx-background-color: #F4F4F4;
+    -fx-background-repeat: no-repeat;
+}

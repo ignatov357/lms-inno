@@ -10,7 +10,7 @@
     $response = array();
 
     // Get user info
-    $user_id = get_user_id_by_access_token(getallheaders()['Access-Token']);
+    $user_id = get_user_id();
     $query = $db->prepare("SELECT * FROM users WHERE id = ?");
     $query->bind_param("i", $user_id);
     $query->execute();
@@ -59,6 +59,7 @@
     $query = $db->prepare("UPDATE documents SET instock_count = instock_count - 1 WHERE id = ?");
     $query->bind_param("i", $_POST['documentID']);
     $query->execute();
+    unset($query);
 
     // Calculate the return period
     if($document_info['type'] == 0) {
