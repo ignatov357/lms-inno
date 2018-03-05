@@ -13,4 +13,6 @@
     <color name="colorNavbarPressed">#ffe7bc</color>
     <color name="colorStarGold">#edcb06</color>
     <color name="colorDocumentKeywords">#3838a3</color>
+    <color name="colorDarkYellow">#b39e00</color>
+    <color name="colorDarkRed">#a72400</color>
 </resources>

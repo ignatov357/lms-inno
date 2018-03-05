@@ -99,9 +99,14 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
         View mBestsellerLayout;
         TextView mKeywordsTextView;
         int mStockColorNormal;
+        int mColorRed;
+        int mColorYellow;
 
+        @SuppressWarnings("deprecated")
         public PatronLibraryListItemHolder(View itemView) {
             super(itemView);
+            mColorYellow = itemView.getResources().getColor(R.color.colorDarkYellow);
+            mColorRed = itemView.getResources().getColor(R.color.colorDarkRed);
             mKeywordsTextView = itemView.findViewById(R.id.home_library_list_element_keywords_textview);
             mBestsellerLayout = itemView.findViewById(R.id.home_library_list_element_bestseller_layout);
             mCheckoutButton = itemView.findViewById(R.id.home_library_list_element_checkout_button);
@@ -121,10 +126,10 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
 
         public void setStockCount(int count){
             if (count==0){
-                mStockTextView.setTextColor(Color.RED);
+                mStockTextView.setTextColor(mColorRed);
                 mStockTextView.setText(R.string.home_library_list_document_stock_empty);
             }else if (count==1){
-                mStockTextView.setTextColor(Color.YELLOW);
+                mStockTextView.setTextColor(mColorYellow);
                 mStockTextView.setText(R.string.home_library_list_document_stock_last);
             }else{
                 String text = mStockTextView.getResources().getString(R.string.home_library_list_document_stock_default);

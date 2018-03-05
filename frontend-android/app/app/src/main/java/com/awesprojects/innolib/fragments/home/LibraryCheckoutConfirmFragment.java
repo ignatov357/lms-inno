@@ -25,13 +25,14 @@ public class LibraryCheckoutConfirmFragment extends AbstractHomeOverlayFragment 
     public LibraryCheckoutConfirmFragment(){
         super();
         setEnterTransition(new Slide(Gravity.BOTTOM));
-        setExitTransition(new Slide(Gravity.TOP));
+        setExitTransition(new Slide(Gravity.BOTTOM));
     }
 
     Document mDocument;
     TextView mDocumentDescription;
     Button mCancelButton;
     Button mConfirmButton;
+    View mOutsideCancelView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,8 +44,10 @@ public class LibraryCheckoutConfirmFragment extends AbstractHomeOverlayFragment 
         setContentView(R.layout.fragment_home_checkout_confirm);
         mDocumentDescription = getContentView().findViewById(R.id.fragment_checkout_confirm_document_description);
         mDocumentDescription.setText(mDocument.toString());
+        mOutsideCancelView = getContentView().findViewById(R.id.fragment_checkout_confirm_cancel_outside_view);
         mCancelButton = getContentView().findViewById(R.id.fragment_checkout_confirm_cancel_button);
         mConfirmButton = getContentView().findViewById(R.id.fragment_checkout_confirm_confirm_button);
+        mOutsideCancelView.setOnClickListener(this);
         mCancelButton.setOnClickListener(this);
         mConfirmButton.setOnClickListener(this);
     }
