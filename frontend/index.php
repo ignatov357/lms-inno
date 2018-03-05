@@ -1,8 +1,3 @@
-<?php
-	if(!empty($_COOKIE['accessToken'])) {
-		header('Location: catalogue.php');
-	}
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,7 +39,11 @@
                             result.accessToken +
                             "; path=; domain=.awes-projects.com; expires=" +
                             date.toUTCString();
-                        window.location.replace('catalogue.php');
+                        if(amILibrarian()){
+                            window.location.replace('librarian.php');
+                        } else {
+                            window.location.replace('catalogue.php');
+                        }
                     },
                     error: function (data) {
                         alert(data.responseJSON.errorMessage);
@@ -62,8 +61,8 @@
     </div>
     <br/>
     <form id="form-login">
-        <h3>CARD ID: <input name="card-id" required></h3>
-        <h3>PASSWORD:<input name="password" type="password" required></h3>
+        <h3>CARD ID:  <input name="card-id" class="text-form" required></h3>
+        <h3>PASSWORD: <input name="password" class="text-form" type="password" required></h3>
         <div class="centered">
             <button class="btn">LOG IN</button>
         </div>

@@ -1,5 +1,11 @@
+@font-face{
+    font-family: Akrobat;
+    src: url("../fonts/akrobat.otf") format("opentype");
+}
+
 body{
     background: #f9fbe7;
+    font: 150% Akrobat;
 }
 
 .btn{
@@ -11,4 +17,15 @@ body{
 .centered{
     margin: auto;
     text-align: center;
+}
+
+input.text-form{
+    background: rgba(255,255,255,0) ;
+    border-bottom: 3px solid #cddc39;
+    border-right: 0px;
+    border-left: 0px;
+    border-top: 0px;
+    color: black;
+    font: 150% Akrobat;
+
 }
