@@ -48,7 +48,6 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
             onDocumentsUpdated();
             LogSystem.ui.println("patron library recreation done");
         }
-
     }
 
     @Override
@@ -120,6 +119,11 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
             if (d.getId()==documentId) return d;
         return null;
     }
+
+    public void showDocumentInfo(Document document){
+        DocumentDetailFragment documentDetailFragment = new DocumentDetailFragment();
+    }
+
 
     public static class PatronLibraryListItemHolder extends RecyclerView.ViewHolder{
 
@@ -314,6 +318,15 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
         @Override
         public void onClick(View view) {
             mPatronLibraryFragment.onCheckOut((int)view.getTag());
+        }
+    }
+
+    public static class OnDetailsShowClickListener implements View.OnClickListener{
+
+
+        @Override
+        public void onClick(View view) {
+
         }
     }
 

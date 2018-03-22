@@ -6,6 +6,7 @@ import com.awesprojects.lmsclient.api.data.documents.Article;
 import com.awesprojects.lmsclient.api.data.documents.Book;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 import com.awesprojects.lmsclient.api.data.users.User;
+import com.awesprojects.lmsclient.api.internal.ApiCall;
 import com.awesprojects.lmsclient.api.internal.Responsable;
 import com.awesprojects.lmsclient.utils.Config;
 import com.awesprojects.lmsclient.utils.requests.GetRequest;
@@ -26,6 +27,7 @@ public class ManageAPI {
             request.withData("type",user.getType()+"");
         }
 
+        @ApiCall
         public static Responsable addUser(AccessToken accessToken,User user){
             PostRequest.Builder request = RequestFactory.post();
             request.withURL("/manage/users/addUser");
@@ -42,6 +44,7 @@ public class ManageAPI {
             }
         }
 
+        @ApiCall
         public static Responsable modifyUser(AccessToken accessToken,User user){
             PostRequest.Builder request = RequestFactory.post();
             request.withURL("/manage/users/modifyUser");
@@ -55,10 +58,12 @@ public class ManageAPI {
             }
         }
 
+        @ApiCall
         public static Responsable removeUser(AccessToken accessToken,User user){
             return removeUser(accessToken,user.getId());
         }
 
+        @ApiCall
         public static Responsable removeUser(AccessToken accessToken,int userID){
             PostRequest.Builder request = RequestFactory.post();
             request.withURL("/manage/users/modifyUser");
@@ -75,6 +80,7 @@ public class ManageAPI {
         }
 
 
+        @ApiCall
         public static Responsable generateNewPassword(AccessToken accessToken,int userID){
             PostRequest.Builder request = RequestFactory.post();
             request.withURL("/manage/users/generateNewPassword");
@@ -92,6 +98,7 @@ public class ManageAPI {
             }
         }
 
+        @ApiCall
         public static Responsable getDocumentsUserCheckedOut(AccessToken accessToken,int userId){
             GetRequest.Builder request = RequestFactory.get();
             request.withURL("/manage/users/getDocumentsUserCheckedOut");
@@ -114,6 +121,7 @@ public class ManageAPI {
             }
         }
 
+        @ApiCall
         public static Responsable getUser(AccessToken accessToken,int id){
             GetRequest.Builder request = RequestFactory.get();
             request.withURL("/manage/users/getUser");
@@ -127,7 +135,8 @@ public class ManageAPI {
             }
         }
 
-        public static Responsable[] getUsers(AccessToken accessToken){
+        @ApiCall
+        public static Responsable getUsers(AccessToken accessToken){
             GetRequest.Builder request = RequestFactory.get();
             request.withURL("/manage/users/getUsers");
             request.withHeader("Access-Token",accessToken.getToken());
@@ -138,9 +147,9 @@ public class ManageAPI {
                 for (int i = 0;i<usersArray.length();i++){
                     users[i] = User.parseUser(usersArray.getJSONObject(i));
                 }
-                return users;
+                return new ResponsableContainer<>(users);
             }else{
-                return new Responsable[]{Response.getResult(response)};
+                return Response.getResult(response);
             }
         }
 
@@ -182,6 +191,7 @@ public class ManageAPI {
             }
         }
 
+        @ApiCall
         public static Responsable addDocument(AccessToken accessToken,Document document){
             PostRequest.Builder request = RequestFactory.post();
             request.withURL("/manage/documents/addDocument");
@@ -195,6 +205,7 @@ public class ManageAPI {
             }
         }
 
+        @ApiCall
         public static Responsable modifyDocument(AccessToken accessToken,Document document){
             PostRequest.Builder request = RequestFactory.post();
             request.withURL("/manage/documents/modifyDocument");
@@ -210,10 +221,12 @@ public class ManageAPI {
             }
         }
 
+        @ApiCall
         public static Responsable removeDocument(AccessToken accessToken,Document document){
             return removeDocument(accessToken,document.getId());
         }
 
+        @ApiCall
         public static Responsable removeDocument(AccessToken accessToken,int documentID){
             PostRequest.Builder request = RequestFactory.post();
             request.withURL("/manage/documents/removeDocument");

@@ -59,6 +59,10 @@ public class HomeActivity extends Activity {
 
     }
 
+    public AbstractHomeInterface getHomeInterface(){
+        return mHomeInterface;
+    }
+
     @Override
     protected void onDestroy() {
         mHomeInterface.destroy();
@@ -89,6 +93,14 @@ public class HomeActivity extends Activity {
     protected void onPause() {
         super.onPause();
         mHomeInterface.pause();
+    }
+
+    public void hideHomeUI(boolean animated){
+
+    }
+
+    public void showHomeUI(boolean animated){
+
     }
 
     public final ViewGroup getRootViewGroup(){

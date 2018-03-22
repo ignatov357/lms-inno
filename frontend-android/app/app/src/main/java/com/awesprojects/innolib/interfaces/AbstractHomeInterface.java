@@ -101,7 +101,6 @@ public abstract class AbstractHomeInterface {
         mBottomNavigationView = bnv;
         mBottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavViewClickListener(this));
-
     }
 
     public void onMenuItemSelected(MenuItem menuItem){

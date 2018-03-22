@@ -44,7 +44,7 @@ android {
             minSdkVersion 21
             applicationId 'com.awesprojects.innolib'
             signingConfig signingConfigs.config
-            targetSdkVersion 24
+            targetSdkVersion 26
             versionCode 1
             versionName '1.0'
         }

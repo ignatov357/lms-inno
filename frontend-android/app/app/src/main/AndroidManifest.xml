@@ -26,7 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.WelcomeActivity" />
+        <activity
+            android:name=".activities.WelcomeActivity"
+            android:theme="@style/WelcomeStyle">
+        </activity>
         <activity
             android:name=".activities.HomeActivity"
             android:theme="@style/HomeTheme">
