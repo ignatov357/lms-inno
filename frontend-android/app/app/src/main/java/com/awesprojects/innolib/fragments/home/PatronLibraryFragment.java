@@ -1,6 +1,5 @@
 package com.awesprojects.innolib.fragments.home;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,12 +8,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.awesprojects.innolib.InnolibApplication;
 import com.awesprojects.innolib.R;
+import com.awesprojects.innolib.fragments.home.abstracts.AbstractLibraryFragment;
 import com.awesprojects.innolib.managers.DocumentManager;
-import com.awesprojects.lmsclient.api.DocumentsAPI;
+import com.awesprojects.innolib.utils.logger.LogSystem;
+import com.awesprojects.lmsclient.api.data.documents.Article;
 import com.awesprojects.lmsclient.api.data.documents.Book;
 import com.awesprojects.lmsclient.api.data.documents.Document;
+import com.awesprojects.lmsclient.api.data.documents.EMaterial;
+
+import java.util.ArrayList;
 
 /**
  * Created by ilya on 2/26/18.
@@ -24,12 +27,13 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
 
     PatronLibraryListAdapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
-    Document[] mDocuments;
+    ArrayList<Document> mDocuments;
     OnCheckoutClickListener mOnCheckoutClickListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDocuments = new ArrayList<>();
         mAdapter = new PatronLibraryListAdapter(this);
         mLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         mOnCheckoutClickListener = new OnCheckoutClickListener(this);
@@ -38,10 +42,11 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
         setRefreshListListener(() -> updateDocuments());
         if (savedInstanceState==null) {
             updateDocuments();
-            System.out.println("patron library creation done");
+            LogSystem.ui.println("patron library creation done");
         }else{
-            onDocumentsUpdated((Document[]) savedInstanceState.getSerializable("Documents"));
-            System.out.println("patron library recreation done");
+            mDocuments = (ArrayList<Document>) savedInstanceState.getSerializable("Documents");
+            onDocumentsUpdated();
+            LogSystem.ui.println("patron library recreation done");
         }
 
     }
@@ -56,13 +61,24 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
         DocumentManager.getDocumentAsync(true,(documents) -> onDocumentsUpdated(documents));
     }
 
-    public void onDocumentsUpdated(Document[] documents){
-        if (documents==null) return;
-        mDocuments = documents;
+    public void updateArrayList(Document[] documents){
+        mDocuments.clear();
+        for (int i = 0; i < documents.length; i++) {
+            mDocuments.add(documents[i]);
+        }
+    }
+
+    public void onDocumentsUpdated(Document[] documents) {
+        if (documents == null) return;
+        updateArrayList(documents);
+        onDocumentsUpdated();
+    }
+
+    public void onDocumentsUpdated(){
         mAdapter.mDocuments = mDocuments;
         mAdapter.notifyDataSetChanged();
         setListRefreshing(false);
-        System.out.println("documents received : "+documents.length);
+        //LogSystem.ui.println("documents received : "+documents.length);
     }
 
 
@@ -72,9 +88,24 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
         super.onSaveInstanceState(outState);
     }
 
+    public int getDocumentPosition(Document document){
+        for (int i = 0; i < mDocuments.size(); i++) {
+            if (mDocuments.get(i).getId() == document.getId())
+                return i;
+        }
+        return -1;
+    }
+
     public void onCheckOut(int documentId){
         Document document = findDocumentById(documentId);
         LibraryCheckoutConfirmFragment confirmFragment = new LibraryCheckoutConfirmFragment();
+        confirmFragment.setResultListener((code,doc,reason) -> {
+            int pos = getDocumentPosition(doc);
+            mDocuments.remove(pos);
+            mAdapter.mDocuments = mDocuments;
+            mAdapter.notifyItemRemoved(pos);
+            PatronProfileFragment.refreshCheckedoutList();
+        });
         Bundle bundle = new Bundle();
         bundle.putSerializable("DOCUMENT",document);
         confirmFragment.setArguments(bundle);
@@ -95,6 +126,10 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
         TextView mTitleTextView;
         TextView mAuthorsTextView;
         TextView mStockTextView;
+        TextView mCheckoutUnavailableTextView;
+        TextView mDocumentTypeTextView;
+        TextView mInfoTopTextView;
+        TextView mInfoBottomTextView;
         Button mCheckoutButton;
         View mBestsellerLayout;
         TextView mKeywordsTextView;
@@ -109,11 +144,42 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
             mColorRed = itemView.getResources().getColor(R.color.colorDarkRed);
             mKeywordsTextView = itemView.findViewById(R.id.home_library_list_element_keywords_textview);
             mBestsellerLayout = itemView.findViewById(R.id.home_library_list_element_bestseller_layout);
+            mDocumentTypeTextView = itemView.findViewById(R.id.home_library_list_element_type_textview);
             mCheckoutButton = itemView.findViewById(R.id.home_library_list_element_checkout_button);
+            mCheckoutUnavailableTextView = itemView.findViewById(R.id.home_library_list_element_checkout_unavailable_reason_textview);
             mTitleTextView = itemView.findViewById(R.id.home_library_list_element_title_textview);
             mAuthorsTextView = itemView.findViewById(R.id.home_library_list_element_authors_textview);
+            mInfoTopTextView = itemView.findViewById(R.id.home_library_list_element_info_top_textview);
+            mInfoBottomTextView = itemView.findViewById(R.id.home_library_list_element_info_bottom_textview);
             mStockTextView = itemView.findViewById(R.id.home_library_list_element_stock_textview);
             mStockColorNormal = mStockTextView.getTextColors().getDefaultColor();
+        }
+
+        public void setCheckoutAvailable(boolean available,String reason){
+            mCheckoutButton.setVisibility(available ? View.VISIBLE : View.INVISIBLE);
+            mCheckoutUnavailableTextView.setVisibility( available ? View.INVISIBLE : View.VISIBLE);
+            if (!available){
+                mCheckoutUnavailableTextView.setText(reason);
+            }
+        }
+
+        public void setTopInfo(String topInfo){
+            mInfoTopTextView.setVisibility( topInfo==null ? View.GONE : View.VISIBLE);
+            if (topInfo!=null){
+                mInfoTopTextView.setText(topInfo);
+            }
+        }
+
+        public void setBottomInfo(String bottomInfo){
+            mInfoBottomTextView.setVisibility( bottomInfo==null ? View.GONE : View.VISIBLE);
+            if (bottomInfo!=null){
+                mInfoBottomTextView.setText(bottomInfo);
+            }
+        }
+
+        public void setDocumentType(int type){
+            String typeStr = DocumentManager.getInstance().getDocumentType(type,itemView.getContext());
+            mDocumentTypeTextView.setText(typeStr.toUpperCase());
         }
 
         public void setTitle(String title){
@@ -173,11 +239,15 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
     public static class PatronLibraryListAdapter extends RecyclerView.Adapter<PatronLibraryListItemHolder>{
 
         PatronLibraryFragment mPatronLibraryFragment;
-        Document[] mDocuments;
+        ArrayList<Document> mDocuments;
+        String mCheckoutDisabledReference;
+        String mCheckoutDisabledMagazine;
 
         public PatronLibraryListAdapter(PatronLibraryFragment patronLibraryFragment){
             mPatronLibraryFragment = patronLibraryFragment;
             mDocuments = mPatronLibraryFragment.mDocuments;
+            mCheckoutDisabledReference = patronLibraryFragment.getString(R.string.home_library_list_document_checkout_unavailable_reference);
+            mCheckoutDisabledMagazine = patronLibraryFragment.getString(R.string.home_library_list_document_checkout_unavailable_magazine);
         }
 
         @Override
@@ -189,17 +259,30 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
         @Override
         public void onBindViewHolder(PatronLibraryListItemHolder holder, int position) {
             if (mDocuments==null) return;
-            Document doc = mDocuments[position];
-            holder.setCheckoutListener(doc.getId(),
-                    mPatronLibraryFragment.mOnCheckoutClickListener);
+            Document doc = mDocuments.get(position);
+            holder.setDocumentType(doc.getType());
+            holder.setCheckoutListener(doc.getId(), mPatronLibraryFragment.mOnCheckoutClickListener);
             holder.setTitle(doc.getTitle());
             holder.setAuthors(doc.getAuthors());
             holder.setStockCount(doc.getInstockCount());
             holder.setKeywords(preparedKeywords(doc));
+            holder.setCheckoutAvailable(true,null);
             if (doc instanceof Book) {
                 holder.setBestseller(((Book) doc).isBestseller());
-            }else {
+                if (((Book) doc).isReference())
+                    holder.setCheckoutAvailable(false,mCheckoutDisabledReference.toUpperCase());
+                holder.setTopInfo(((Book) doc).getEdition()+" edition");
+                holder.setBottomInfo("Published by "+((Book) doc).getPublisher()+" in "+((Book) doc).getPublicationYear());
+            }else{
                 holder.setBestseller(false);
+            }
+            if (doc instanceof Article){
+                holder.setTopInfo("Edited by "+((Article) doc).getJournalIssueEditors());
+                holder.setBottomInfo("Published in "+((Article) doc).getJournalTitle()+" in "+((Article) doc).getJournalIssuePublicationDate());
+            }
+            if (doc instanceof EMaterial){
+                holder.setTopInfo(null);
+                holder.setBottomInfo(null);
             }
         }
 
@@ -216,7 +299,7 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
         @Override
         public int getItemCount() {
             if (mPatronLibraryFragment.mDocuments!=null)
-                return mPatronLibraryFragment.mDocuments.length;
+                return mPatronLibraryFragment.mDocuments.size();
             return 0;
         }
     }

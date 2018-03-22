@@ -1,8 +1,6 @@
-package com.awesprojects.innolib.fragments.home;
+package com.awesprojects.innolib.fragments.home.abstracts;
 
 import android.os.Bundle;
-
-import com.awesprojects.innolib.R;
 
 /**
  * Created by ilya on 3/4/18.

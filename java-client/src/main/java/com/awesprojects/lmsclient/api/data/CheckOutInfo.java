@@ -3,8 +3,10 @@ package com.awesprojects.lmsclient.api.data;
 import lombok.Data;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 @Data
-public class CheckOutInfo {
+public class CheckOutInfo implements Serializable {
 
     boolean overdue = false;
 

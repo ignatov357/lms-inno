@@ -1,4 +1,4 @@
-package com.awesprojects.innolib.fragments.home;
+package com.awesprojects.innolib.fragments.home.abstracts;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;

@@ -18,9 +18,15 @@ public class Article extends Document implements Responsable,Serializable{
 
     public Article(JSONObject doc) {
         super(doc);
-        journalTitle = doc.optString("journal_title");
-        journalIssuePublicationDate = doc.optString("journal_issue_publication_date");
-        journalIssueEditors = doc.optString("journal_issue_editors");
+        journalTitle = doc.optString("journal_title",null);
+        journalIssuePublicationDate = doc.optString("journal_issue_publication_date", null);
+        journalIssueEditors = doc.optString("journal_issue_editors", null);
+        if (journalTitle==null)
+            journalTitle = doc.optString("journalTitle");
+        if (journalIssuePublicationDate==null)
+            journalIssuePublicationDate = doc.optString("journalIssuePublicationDate");
+        if (journalIssueEditors==null)
+            journalIssueEditors = doc.optString("journalIssueEditors");
     }
 
     protected String journalTitle;

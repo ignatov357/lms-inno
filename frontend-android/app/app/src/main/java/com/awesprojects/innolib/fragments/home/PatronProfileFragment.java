@@ -13,7 +13,9 @@ import android.widget.TextView;
 
 import com.awesprojects.innolib.InnolibApplication;
 import com.awesprojects.innolib.R;
+import com.awesprojects.innolib.fragments.home.abstracts.AbstractProfileFragment;
 import com.awesprojects.innolib.managers.DocumentManager;
+import com.awesprojects.innolib.utils.logger.LogSystem;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 
 import java.util.Calendar;
@@ -22,13 +24,21 @@ import java.util.Calendar;
  * Created by ilya on 2/4/18.
  */
 
-public class PatronProfileFragment extends AbstractProfileFragment{
+public class PatronProfileFragment extends AbstractProfileFragment {
+
+    public static PatronProfileFragment mBindedInstance;
+
+    public static void refreshCheckedoutList(){
+            //mBindedInstance.updateCheckedOutDocs();
+        mPendingUpdate = true;
+    }
 
     RecyclerView mCheckedOutDocsView;
     CheckedOutDocsAdapter mCheckedOutDocsAdapter;
     SwipeRefreshLayout mCheckedOutSwipeRefreshLayout;
     NestedScrollView mNestedScrollView;
     Document[] mCheckedOutDocuments;
+    static boolean mPendingUpdate = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,11 +55,13 @@ public class PatronProfileFragment extends AbstractProfileFragment{
         }else{
             onUpdatedCheckedOutDocs((Document[])savedInstanceState.getSerializable("CHECKED_OUT_DOCUMENTS"));
         }
+        mBindedInstance = this;
        // mNestedScrollView.addView(mCheckedOutDocsView);
     }
 
     public void updateCheckedOutDocs(){
         DocumentManager.getCheckedOutDocuments(InnolibApplication.getAccessToken(), (documents) -> {
+            System.out.println("checkout docs update completed");
             onUpdatedCheckedOutDocs(documents);
         });
     }
@@ -63,7 +75,20 @@ public class PatronProfileFragment extends AbstractProfileFragment{
 
     @Override
     public void onDestroy() {
+        if (mBindedInstance==this)
+            mBindedInstance = null;
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        System.out.println("profile on resume");
+        if (mPendingUpdate){
+            System.out.print("pending update compliting...");
+            updateCheckedOutDocs();
+            mPendingUpdate = false;
+        }
     }
 
     @Override

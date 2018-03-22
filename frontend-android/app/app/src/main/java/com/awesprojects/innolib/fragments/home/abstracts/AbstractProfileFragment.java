@@ -1,9 +1,8 @@
-package com.awesprojects.innolib.fragments.home;
+package com.awesprojects.innolib.fragments.home.abstracts;
 
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.support.v7.widget.Toolbar;
 
 import com.awesprojects.innolib.R;
 import com.awesprojects.innolib.managers.UserManager;

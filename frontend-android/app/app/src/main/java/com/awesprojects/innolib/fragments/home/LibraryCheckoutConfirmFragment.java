@@ -7,12 +7,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.awesprojects.innolib.InnolibApplication;
 import com.awesprojects.innolib.R;
+import com.awesprojects.innolib.fragments.home.abstracts.AbstractHomeOverlayFragment;
 import com.awesprojects.innolib.managers.DocumentManager;
-import com.awesprojects.lmsclient.api.DocumentsAPI;
 import com.awesprojects.lmsclient.api.Response;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 
@@ -21,6 +20,10 @@ import com.awesprojects.lmsclient.api.data.documents.Document;
  */
 
 public class LibraryCheckoutConfirmFragment extends AbstractHomeOverlayFragment implements View.OnClickListener {
+
+    public interface OnCheckoutResultListener {
+        void onResult(int status,Document document,String reason);
+    }
 
     public LibraryCheckoutConfirmFragment(){
         super();
@@ -33,6 +36,11 @@ public class LibraryCheckoutConfirmFragment extends AbstractHomeOverlayFragment 
     Button mCancelButton;
     Button mConfirmButton;
     View mOutsideCancelView;
+    OnCheckoutResultListener mResultListener;
+
+    public void setResultListener(OnCheckoutResultListener listener){
+        mResultListener = listener;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +90,8 @@ public class LibraryCheckoutConfirmFragment extends AbstractHomeOverlayFragment 
         getFragmentManager().beginTransaction()
                 .remove(this)
                 .commit();
+        if (mResultListener!=null)
+            mResultListener.onResult(0,mDocument,null);
     }
 
     public void onCheckOutFailed(String desc){

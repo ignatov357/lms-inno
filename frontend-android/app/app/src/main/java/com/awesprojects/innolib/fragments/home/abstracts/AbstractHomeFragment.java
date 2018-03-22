@@ -1,4 +1,4 @@
-package com.awesprojects.innolib.fragments.home;
+package com.awesprojects.innolib.fragments.home.abstracts;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.awesprojects.innolib.R;
 import com.awesprojects.innolib.activities.HomeActivity;
 import com.awesprojects.innolib.fragments.AbstractExtendedFragment;
+import com.awesprojects.innolib.utils.logger.LogSystem;
 import com.awesprojects.lmsclient.api.data.users.User;
 
 /**
@@ -61,13 +62,13 @@ public class AbstractHomeFragment extends AbstractExtendedFragment {
 
     public void onPause() {
         super.onPause();
-        System.out.println(getClass()+" paused");
+        LogSystem.ui.println(getClass()+" paused");
     }
 
     @Override
     public void onResume() {
         //if (mContent!=null) getContentView().setAlpha(0f);
-        System.out.println(getClass()+" resumed");
+        LogSystem.ui.println(getClass()+" resumed");
         super.onResume();
         getContentView().requestApplyInsets();
         /*Fade fade = new Fade(Fade.IN);
@@ -79,7 +80,7 @@ public class AbstractHomeFragment extends AbstractExtendedFragment {
     public void onShow(){
         getContentView().requestLayout();
         getContentView().requestApplyInsets();
-        System.out.print(getClass()+" shown");
+        LogSystem.ui.print(getClass()+" shown");
     }
 
     public void onHide(){

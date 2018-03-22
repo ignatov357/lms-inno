@@ -15,4 +15,6 @@
     <color name="colorDocumentKeywords">#3838a3</color>
     <color name="colorDarkYellow">#b39e00</color>
     <color name="colorDarkRed">#a72400</color>
+    <color name="colorDocumentTitle">#222222</color>
+    <color name="colorDocumentAuthor">#444444</color>
 </resources>

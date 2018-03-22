@@ -1,26 +1,22 @@
 package com.awesprojects.innolib.interfaces;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.graphics.Path;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.transition.Fade;
-import android.transition.PathMotion;
 import android.transition.Slide;
-import android.transition.Transition;
 import android.transition.TransitionSet;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import com.awesprojects.innolib.activities.HomeActivity;
-import com.awesprojects.innolib.fragments.home.AbstractHomeFragment;
+import com.awesprojects.innolib.fragments.home.abstracts.AbstractHomeFragment;
+import com.awesprojects.innolib.utils.logger.LogSystem;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -202,11 +198,11 @@ public abstract class AbstractHomeInterface {
         ft.add(mHomeFragmentContainer.getId(),fragment,id+"");
         ft.commit();
         mCurrentFragment = fragment;
-        System.out.println("CURRENT FRAGMENT : "+mCurrentFragment.getClass()+" hash:"+mCurrentFragment.hashCode());
+        LogSystem.ui.println("CURRENT FRAGMENT : "+mCurrentFragment.getClass()+" hash:"+mCurrentFragment.hashCode());
     }
 
     public final void saveInstanceState(Bundle bundle){
-        System.out.println("save");
+        LogSystem.ui.println("save");
         if (mCurrentFragment!=null && mCurrentFragment.getTag()!=null)
             mCurrentFragment.setMenuId(Integer.parseInt(mCurrentFragment.getTag()));
         saveFragmentsToBundle(bundle);
@@ -226,7 +222,7 @@ public abstract class AbstractHomeInterface {
     }
 
     public final void restoreInstanceState(Bundle bundle){
-        System.out.println("restore");
+        LogSystem.ui.println("restore");
         if (mSelectedItem!=-1)
             onMenuItemIdSelected(mSelectedItem);
         onRestoreInstanceState(bundle);
@@ -239,7 +235,7 @@ public abstract class AbstractHomeInterface {
 
     private void restoreFragmentState(int id,Fragment fragment){
         Bundle b = mFragmentStates.get(id);
-        System.out.println("restore fragment state "+fragment.getClass()+" "+(b!=null));
+        LogSystem.ui.println("restore fragment state "+fragment.getClass()+" "+(b!=null));
         if (b==null) return;
         try {
             Class frag = Class.forName("android.app.Fragment");
@@ -286,7 +282,7 @@ public abstract class AbstractHomeInterface {
         if (b==null)
             b = new Bundle();
         fragment.onSaveInstanceState(b);
-        System.out.println("saving fragment state "+fragment.getClass()+" "+b.toString());
+        LogSystem.ui.println("saving fragment state "+fragment.getClass()+" "+b.toString());
         mFragmentStates.put(id,b);
     }
 

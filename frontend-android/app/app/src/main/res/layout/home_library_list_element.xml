@@ -20,17 +20,32 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/home_library_list_element_preview_imageview"
+            <LinearLayout
                 android:layout_width="@dimen/home_library_element_preview_size"
-                android:layout_height="@dimen/home_library_element_preview_size"
-                android:tint="@color/cardview_shadow_start_color"
-                android:tintMode="multiply"
-                android:src="@drawable/ic_account_box_black_36dp" />
+                android:layout_height="match_parent"
+                android:layout_margin="4dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/home_library_list_element_preview_imageview"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/home_library_element_preview_size"
+                    android:src="@drawable/ic_account_box_black_36dp"
+                    android:tint="@color/cardview_shadow_start_color"
+                    android:tintMode="multiply" />
+
+                <TextView
+                    android:id="@+id/home_library_list_element_type_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom|center"
+                    android:text="TextView" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -58,15 +73,86 @@
                     android:id="@+id/home_library_list_element_title_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
                     android:text="Title"
-                    android:textAppearance="@android:style/TextAppearance.Material.Large" />
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                    android:textColor="@color/colorDocumentTitle" />
 
                 <TextView
                     android:id="@+id/home_library_list_element_authors_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginStart="4dp"
                     android:text="Authors"
-                    android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                    android:textAppearance="@android:style/TextAppearance.Material.Small"
+                    android:textColor="@color/colorDocumentAuthor" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/home_library_list_element_info_top_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:text="TextView" />
+
+                        <TextView
+                            android:id="@+id/home_library_list_element_info_bottom_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_weight="1"
+                            android:text="TextView" />
+
+                        <TextView
+                            android:id="@+id/home_library_list_element_stock_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:text="in stock" />
+
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical">
+
+                        <Button
+                            android:id="@+id/home_library_list_element_checkout_button"
+                            style="@android:style/Widget.Material.Light.Button.Borderless.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_library_list_document_checkout"
+                            android:theme="@android:style/Widget.Material.Light.Button.Borderless.Colored" />
+
+                        <TextView
+                            android:id="@+id/home_library_list_element_checkout_unavailable_reason_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="TextView"
+                            android:visibility="invisible" />
+
+                    </FrameLayout>
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/home_library_list_element_keywords_textview"
@@ -74,27 +160,6 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorDocumentKeywords"
                     android:visibility="gone" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/home_library_list_element_stock_textview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="in stock" />
-
-                    <Button
-                        android:id="@+id/home_library_list_element_checkout_button"
-                        style="@android:style/Widget.Material.Light.Button.Borderless.Small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/home_library_list_document_checkout"
-                        android:theme="@android:style/Widget.Material.Light.Button.Borderless.Colored" />
-                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>

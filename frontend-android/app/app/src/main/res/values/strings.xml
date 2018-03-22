@@ -36,6 +36,8 @@
     <string name="home_library_list_document_stock_last">One copy left</string>
     <string name="home_library_list_document_stock_default"> copies left</string>
     <string name="home_library_list_document_checkout">CHECKOUT</string>
+    <string name="home_library_list_document_checkout_unavailable_reference">Reference book</string>
+    <string name="home_library_list_document_checkout_unavailable_magazine">Magazine</string>
     <string name="home_library_list_document_bestseller">BESTSELLER</string>
     <string name="home_library_checkout_cancel_button">Cancel</string>
     <string name="home_library_checkout_confirm_button">Confirm</string>
@@ -54,4 +56,7 @@
     <string name="welcome_next">Next</string>
     <string name="welcome_finish">Start</string>
     <string name="welcome_welcome_header">Welcome!</string>
+    <string name="document_0">Book</string>
+    <string name="document_1">Article</string>
+    <string name="document_2">A/V</string>
 </resources>

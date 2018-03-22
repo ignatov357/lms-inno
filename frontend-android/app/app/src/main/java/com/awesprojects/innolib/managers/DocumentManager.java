@@ -3,6 +3,7 @@ package com.awesprojects.innolib.managers;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.awesprojects.innolib.R;
 import com.awesprojects.lmsclient.api.DocumentsAPI;
 import com.awesprojects.lmsclient.api.ResponsableContainer;
 import com.awesprojects.lmsclient.api.UsersAPI;
@@ -112,6 +113,29 @@ public class DocumentManager {
         protected void onPostExecute(Responsable responsable) {
             super.onPostExecute(responsable);
             onDocumentCheckOutListener.onDocumentCheckedOut(responsable);
+        }
+    }
+
+    boolean isStringLoaded=false;
+    String mDocumentBook;
+    String mDocumentArticle;
+    String mDocumentAV;
+
+    private void ensureStringsLoaded(Context context){
+        if (!isStringLoaded){
+            mDocumentBook = context.getResources().getString(R.string.document_0);
+            mDocumentArticle = context.getResources().getString(R.string.document_1);
+            mDocumentAV = context.getResources().getString(R.string.document_2);
+        }
+    }
+
+    public String getDocumentType(int type,Context context){
+        ensureStringsLoaded(context);
+        switch (type){
+            case 0: return mDocumentBook;
+            case 1: return mDocumentArticle;
+            case 2: return mDocumentAV;
+            default: return "Unknown";
         }
     }
 

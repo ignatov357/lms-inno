@@ -3,6 +3,7 @@ package com.awesprojects.innolib;
 import android.app.Application;
 import android.transition.TransitionManager;
 
+import com.awesprojects.innolib.utils.logger.LogSystem;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 
 /**
@@ -32,6 +33,7 @@ public class InnolibApplication extends Application{
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        LogSystem.ensureInit();
     }
 
 
