@@ -1,6 +1,8 @@
 package com.awesprojects.innolib.fragments.home;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.transition.Fade;
@@ -37,6 +39,13 @@ public class AbstractHomeFragment extends AbstractExtendedFragment {
 
     public int getMenuId(){
         return menuId;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof Activity && !(context instanceof HomeActivity))
+            throw new IllegalArgumentException("Home fragment cannot be attached to non-home activity");
     }
 
     @Override
@@ -83,6 +92,18 @@ public class AbstractHomeFragment extends AbstractExtendedFragment {
     }
 
     public void onHide(){
+
+    }
+
+    public HomeActivity getHomeActivity(){
+        return (HomeActivity) getActivity();
+    }
+
+    public void hideHomeUI(boolean animated){
+
+    }
+
+    public void showHomeUI(boolean animated){
 
     }
 }

@@ -62,6 +62,8 @@ public class Response implements Responsable {
     public static Response getResult(String httpResponse){
         int resultCode = getResultCode(httpResponse);
         JSONObject object = getJsonBody(httpResponse);
+        if (object==null)
+            return new Response(resultCode);
         if (object.has("errorMessage")){
             return new Response(resultCode,object.getString("errorMessage"));
         }else{
@@ -77,7 +79,6 @@ public class Response implements Responsable {
     }
 
     public static JSONObject getJsonBody(String httpResponse){
-
         String body = getBody(httpResponse);
         if (body!=null || !body.equals(""))
             return new JSONObject(body);

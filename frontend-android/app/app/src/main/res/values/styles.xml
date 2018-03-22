@@ -10,6 +10,11 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
+    <style name="WelcomeStyle" parent="ApplicationTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
     <style name="HomeTheme" parent="ApplicationTheme">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>

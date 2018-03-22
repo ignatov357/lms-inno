@@ -6,6 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$PROJECT_DIR$/libs/lombok.jar" />
+        </processorPath>
         <module name="lms-client" />
       </profile>
     </annotationProcessing>
