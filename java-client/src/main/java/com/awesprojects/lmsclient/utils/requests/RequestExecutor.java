@@ -13,8 +13,12 @@ import java.io.InputStream;
 import java.net.*;
 import java.security.cert.Certificate;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class RequestExecutor {
+
+    public static final String TAG = "RequestExecutor";
+    public static Logger log = Logger.getLogger(TAG);
 
     public static String executeRequest(String request){
         return executeRequest(Config.getCurrentConfig().getApiDomain(),request);
@@ -31,11 +35,14 @@ public class RequestExecutor {
             apiRequest = secureConnection ?
                     new ApiSecureRequest(address, port) : new ApiRequest(address, port);
         }catch(Throwable t){
-            t.printStackTrace();
+            log.warning("execute request failed : "+t.toString());
             return null;
         }
         return apiRequest.execute(request);
     }
+
+
+
 
     public static class ApiRequest extends AbstractApiRequest{
 
@@ -50,11 +57,11 @@ public class RequestExecutor {
             String response;
             try {
                 if (Config.getCurrentConfig().isVerbose())
-                Config.getCurrentConfig().getOut().println("request: "+request);
+                log.fine("request: "+request);
                 socket.getOutputStream().write(request.getBytes());
                 socket.getOutputStream().flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.warning(e.toString());
                 return null;
             }
             try {
@@ -67,10 +74,10 @@ public class RequestExecutor {
 
                 String ret = sb.toString();
                 if (Config.getCurrentConfig().isVerbose())
-                Config.getCurrentConfig().getOut().println("response: "+ret);
+                log.fine("response: "+ret);
                 return ret;
             } catch (IOException e) {
-                e.printStackTrace();
+                log.warning(e.toString());
                 return null;
             }
         }
@@ -86,6 +93,7 @@ public class RequestExecutor {
 
         @Override
         public String execute(String request) {
+            //TODO: implement
             return null;
         }
     }

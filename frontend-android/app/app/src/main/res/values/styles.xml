@@ -4,10 +4,17 @@
     <style name="ApplicationTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:statusBarColor">@color/colorStatusBar</item>
+
     </style>
     
     <style name="SplashTheme" parent="ApplicationTheme">
         <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="StartTheme" parent="ApplicationTheme">
+        <item name="android:navigationBarColor">@color/colorStatusBar</item>
     </style>
 
     <style name="WelcomeStyle" parent="ApplicationTheme">
@@ -17,7 +24,8 @@
 
     <style name="HomeTheme" parent="ApplicationTheme">
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:navigationBarColor">@color/colorSecondaryDark</item>
     </style>
 
 </resources>

@@ -10,6 +10,7 @@ import android.os.Message;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.awesprojects.innolib.InnolibApplication;
 import com.awesprojects.innolib.R;
@@ -23,8 +24,13 @@ import com.awesprojects.innolib.utils.SignInHandler;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 import com.awesprojects.lmsclient.api.data.users.User;
 
+import java.util.logging.Logger;
+
 public class StartActivity extends Activity implements SignInFragment.OnSignInListener,
-        SignInMethodsFragment.Callback,IdentityConfirmFragment.Callback,SignInHandler.SignInResult{
+        SignInMethodsFragment.Callback, IdentityConfirmFragment.Callback, SignInHandler.SignInResult {
+
+    public static final String TAG = "SignInFragment";
+    public static Logger log = Logger.getLogger(TAG);
 
     public static final String PREFERENCE_IS_SIGNED_IN = "is_signed_in";
     public static final String PREFERENCE_IS_SIGNING_IN_METHODS_DEFINED = "is_signing_in_methods_defined";
@@ -44,32 +50,33 @@ public class StartActivity extends Activity implements SignInFragment.OnSignInLi
         //int a =0;
         //a++; a--;
         //int b = a/a;
+        //setTheme(R.style.StartTheme);
         super.onCreate(savedInstanceState);
-        mPreferences = getSharedPreferences(InnolibApplication.PREFERENCES_APPLICATION_STATE,MODE_PRIVATE);
-        mSignInPreferences = getSharedPreferences(InnolibApplication.PREFERENCES_SIGNIN_METHODS,MODE_PRIVATE);
+        mPreferences = getSharedPreferences(InnolibApplication.PREFERENCES_APPLICATION_STATE, MODE_PRIVATE);
+        mSignInPreferences = getSharedPreferences(InnolibApplication.PREFERENCES_SIGNIN_METHODS, MODE_PRIVATE);
         setContentView(R.layout.activity_start);
         mContainer = findViewById(R.id.activity_start_main_container);
-        boolean isWelcomeScreenShown = mPreferences.getBoolean(WelcomeActivity.PREFERENCE_WELCOME_SCREEN_SHOWN,false);
-        boolean isSignedIn = mPreferences.getBoolean(PREFERENCE_IS_SIGNED_IN,false);
+        boolean isWelcomeScreenShown = mPreferences.getBoolean(WelcomeActivity.PREFERENCE_WELCOME_SCREEN_SHOWN, false);
+        boolean isSignedIn = mPreferences.getBoolean(PREFERENCE_IS_SIGNED_IN, false);
         if (!isWelcomeScreenShown) {
             Intent welcomeActivityIntent = new Intent(this, WelcomeActivity.class);
             startActivity(welcomeActivityIntent);
         }
-        if (!isSignedIn){
+        if (!isSignedIn) {
             startSigningIn();
-        }else{
+        } else {
             checkSecurity(false);
         }
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
     }
 
-    public void checkSecurity(boolean trainMode){
+    public void checkSecurity(boolean trainMode) {
         this.trainMode = trainMode;
-        if (mSignInPreferences.getBoolean("identity_check",false)){
+        if (mSignInPreferences.getBoolean("identity_check", false)) {
             mIdentityConfirmFragment = new IdentityConfirmFragment();
             mIdentityConfirmFragment.setCallbackListener(this);
             if (trainMode) {
@@ -80,21 +87,18 @@ public class StartActivity extends Activity implements SignInFragment.OnSignInLi
             FragmentTransaction ft = getFragmentManager().beginTransaction();
             if (trainMode)
                 ft.addToBackStack("IdentifyFragmentAdd");
-            ft.add(R.id.activity_start_main_container,mIdentityConfirmFragment,"IdentityConfirmFragment");
+            ft.add(R.id.activity_start_main_container, mIdentityConfirmFragment, "IdentityConfirmFragment");
             ft.commit();
             mCurrentFragment = mIdentityConfirmFragment;
-        }else{
+        } else {
             onIdentityConfirmSuccess();
         }
     }
 
-    public void startSigningIn(){
+    public void startSigningIn() {
         mSignInMethodsFragment = new SignInMethodsFragment();
         mSignInMethodsFragment.setRetainInstance(false);
         mSignInMethodsFragment.setCallbackListener(this);
-        getFragmentManager().beginTransaction()
-                .add(R.id.activity_start_main_container, mSignInMethodsFragment,"SignInMethodsFragment")
-                .commit();
         mSignInFragment = new SignInFragment();
         mSignInFragment.setRetainInstance(false);
         mSignInFragment.setEnterTransition(new Slide(Gravity.RIGHT));
@@ -103,16 +107,18 @@ public class StartActivity extends Activity implements SignInFragment.OnSignInLi
         mSignInFragment.setReturnTransition(new Slide(Gravity.LEFT));
         mSignInFragment.setOnSignInListener(this);
         getFragmentManager().beginTransaction()
-                .add(R.id.activity_start_main_container,mSignInFragment,"SignInFragment")
+                .add(R.id.activity_start_main_container, mSignInMethodsFragment, "SignInMethodsFragment")
+                .add(R.id.activity_start_main_container, mSignInFragment, "SignInFragment")
                 .commit();
         mCurrentFragment = mSignInFragment;
+        setTheme(R.style.StartTheme);
     }
 
     @Override
     public void onSignIn(AccessToken accessToken) {
-        if (accessToken==null)
+        if (accessToken == null)
             return;
-        mPreferences.edit().putBoolean("is_signed_in",true);
+        mPreferences.edit().putBoolean(PREFERENCE_IS_SIGNED_IN, true).apply();
         InnolibApplication.setAccessToken(accessToken);
         getFragmentManager().beginTransaction()
                 .remove(mSignInFragment)
@@ -140,12 +146,12 @@ public class StartActivity extends Activity implements SignInFragment.OnSignInLi
 
     @Override
     public void onIdentityConfirmSuccess() {
-        byte[] card = mIdentityConfirmFragment==null ? null : mIdentityConfirmFragment.getUserCardData();
-        if (card==null) {
-            if (InnolibApplication.getAccessToken()==null
+        byte[] card = mIdentityConfirmFragment == null ? null : mIdentityConfirmFragment.getUserCardData();
+        if (card == null) {
+            if (InnolibApplication.getAccessToken() == null
                     || InnolibApplication.getAccessToken().getExpirationDate() < System.currentTimeMillis()) {
                 validateAccessToken();
-            }else{
+            } else {
                 finishAllAndShowHome();
             }
         }
@@ -153,41 +159,57 @@ public class StartActivity extends Activity implements SignInFragment.OnSignInLi
     }
 
     @Override
-    public void onIdentityConfirmFail() {}
+    public void onIdentityConfirmFail() {
+    }
 
-    public void validateAccessToken(){
-        int userId = Integer.parseInt(SecureStorageManager.getInstance().get("USER_ID"));
-        String password = SecureStorageManager.getInstance().get("USER_PASSWORD");
-        SignInManager.getInstance().getSignInHandler().attach(this);
-        SignInManager.getInstance().startApiSigningIn(userId+"",password);
+    public void validateAccessToken() {
+        String idStr = SecureStorageManager.getInstance().get("USER_ID");
+        if (idStr == null) {
+            log.severe("user id was not found in storage, but expected");
+            mPreferences.edit().putBoolean(PREFERENCE_IS_SIGNED_IN, false).commit();
+            Intent restartIntent = new Intent(this,StartActivity.class);
+            startActivity(restartIntent);
+            finish();
+        } else {
+            int userId = Integer.parseInt(idStr);
+            String password = SecureStorageManager.getInstance().get("USER_PASSWORD");
+            SignInManager.getInstance().getSignInHandler().attach(this);
+            SignInManager.getInstance().startApiSigningIn(userId + "", password);
+        }
     }
 
     @Override
     public void onSignInResult(Message msg) {
-        if (msg.what==200){
-            InnolibApplication.setAccessToken((AccessToken) msg.obj);
-            finishAllAndShowHome();
+        switch (msg.what) {
+            case 200:
+                InnolibApplication.setAccessToken((AccessToken) msg.obj);
+                finishAllAndShowHome();
+                break;
+            default:
+                //TODO: nice implementation
+                Toast.makeText(this, "sign in error:" + msg.what, Toast.LENGTH_SHORT).show();
+                finish();
         }
     }
 
-    public void finishAllAndShowHome(){
+    public void finishAllAndShowHome() {
         mPreferences.edit()
-                .putBoolean(PREFERENCE_IS_SIGNED_IN,true)
+                .putBoolean(PREFERENCE_IS_SIGNED_IN, true)
                 .commit();
         //int userID = Integer.parseInt(SecureStorageManager.getInstance().get("USER_ID"));
-        UserManager.getInstance().getUserInfoAsync(InnolibApplication.getAccessToken(),(responsable) -> {
-            if (responsable instanceof User){
-                runOnUiThread( () -> showHome((User)responsable) );
+        UserManager.getInstance().getUserInfoAsync(InnolibApplication.getAccessToken(), (responsable) -> {
+            if (responsable instanceof User) {
+                runOnUiThread(() -> showHome((User) responsable));
             }
         });
     }
 
-    public void showHome(User user){
-        Intent intent = new Intent(this,HomeActivity.class);
+    public void showHome(User user) {
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra("CURRENT_USER",user);
+        intent.putExtra("CURRENT_USER", user);
         startActivity(intent);
-        overridePendingTransition(R.anim.activity_fade_in,R.anim.activity_hold);
+        overridePendingTransition(R.anim.activity_fade_in, R.anim.activity_hold);
         finish();
     }
 

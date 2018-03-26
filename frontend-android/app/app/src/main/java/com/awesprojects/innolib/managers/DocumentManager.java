@@ -41,9 +41,9 @@ public class DocumentManager {
         getDocumentAsyncTask.execute(availableOnly);
     }
     public interface OnGetDocumentsListener {
-        public void onDocumentGet(Document[] documents);
+        public void onDocumentGet(Responsable documents);
     }
-    private static class GetDocumentAsyncTask extends AsyncTask<Boolean,Integer,Document[]>{
+    private static class GetDocumentAsyncTask extends AsyncTask<Boolean,Integer,Responsable>{
         OnGetDocumentsListener onGetDocumentsListener;
         public void setListener(OnGetDocumentsListener listener){
             onGetDocumentsListener = listener;
@@ -53,11 +53,11 @@ public class DocumentManager {
             super.onPreExecute();
         }
         @Override
-        protected Document[] doInBackground(Boolean ... availableOnly) {
+        protected Responsable doInBackground(Boolean ... availableOnly) {
             return DocumentsAPI.getDocuments(availableOnly[0]);
         }
         @Override
-        protected void onPostExecute(Document[] documents) {
+        protected void onPostExecute(Responsable documents) {
             super.onPostExecute(documents);
             onGetDocumentsListener.onDocumentGet(documents);
         }
@@ -81,7 +81,7 @@ public class DocumentManager {
         protected void onPostExecute(Responsable documents) {
             super.onPostExecute(documents);
             if (documents instanceof ResponsableContainer)
-                onGetDocumentsListener.onDocumentGet(((ResponsableContainer<Document[]>) documents).get());
+                onGetDocumentsListener.onDocumentGet(documents);
         }
     }
 

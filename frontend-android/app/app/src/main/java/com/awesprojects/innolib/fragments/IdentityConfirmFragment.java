@@ -46,7 +46,7 @@ import javax.crypto.SecretKey;
  * Created by ilya on 2/23/18.
  */
 
-public class IdentityConfirmFragment extends Fragment
+public class IdentityConfirmFragment extends AbstractExtendedFragment
         implements PinKeyboardView.PinKeyboardCallback, View.OnClickListener{
 
     LinearLayout mContent;
@@ -160,7 +160,8 @@ public class IdentityConfirmFragment extends Fragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContent = (LinearLayout) getActivity().getLayoutInflater().inflate(R.layout.fragment_identity_confirm,null);
+        setContentView(R.layout.fragment_identity_confirm);
+        mContent = (LinearLayout) getContentView();
         mPinView = mContent.findViewById(R.id.fragment_identity_confirm_pin_field_view);
         mPinKeyboard = mContent.findViewById(R.id.fragment_identity_confirm_keyboard_view);
         mPinKeyboard.setKeyboardCallback(this);

@@ -1,101 +1,35 @@
 package com.awesprojects.innolib.utils.logger;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * Created by ilya on 3/5/18.
  */
 
-public class LogSystem{
+public class LogSystem {
 
-    public static PrintStream ui;
-    public static PrintStream out;
-    public static PrintStream err;
+    public static final String TAG = "LogSystem";
+    private static Logger log = null;
 
-    private static LogOutputStream outputStream;
-    private static VoidOutputStream voidOutputStream;
+    static {
+        try {
+            LogManager.getLogManager().readConfiguration(new ByteArrayInputStream(new String(
+                    "handlers = com.awesprojects.innolib.utils.logger.LogHandler\n" +
+                            ".level = ALL \0"
+            ).getBytes()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-    private static ArrayList<LineReceiver> lineReceivers;
-
-    static{
-        lineReceivers = new ArrayList<>(16);
-        outputStream = new LogOutputStream("[OUT]:");
-        voidOutputStream = new VoidOutputStream();
-        ui = new PrintStream(voidOutputStream);
-        out = new PrintStream(outputStream);
-        err = new PrintStream(voidOutputStream);
-        outputStream.setLineReceiver((line) -> {
-            onOutLineReceived(line);
-        });
-        System.setErr(err);
-        System.setOut(out);
+        log = Logger.getLogger(TAG);
+        log.config("log system configured");
     }
 
-    public static void ensureInit(){
+    public static void ensureInit() {
         String str = " this method calls static initialization";
     }
-
-    public interface LineReceiver{
-        void onLineReceived(String line);
-    }
-
-    public static void onOutLineReceived(String line){
-        for (LineReceiver l : lineReceivers){
-            try{
-                l.onLineReceived(line);
-            }catch(Throwable t){}
-        }
-    }
-
-    public static void attachLineReceiver(LineReceiver lineReceiver){
-        lineReceivers.add(lineReceiver);
-    }
-
-    public static void detachLineReceiver(LineReceiver lineReceiver){
-        lineReceivers.remove(lineReceiver);
-    }
-
-    public static class VoidOutputStream extends OutputStream{
-        @Override
-        public void write(int i) throws IOException {
-
-        }
-    }
-
-    public static class LogOutputStream extends OutputStream{
-
-        final String mPrefix;
-        final StringBuilder stringBuilder;
-        LineReceiver lineReceiver;
-
-        public LogOutputStream(String prefix){
-            this.mPrefix = prefix;
-            stringBuilder = new StringBuilder(1024);
-        }
-
-        public void setLineReceiver(LineReceiver receiver){
-            lineReceiver = receiver;
-        }
-
-        @Override
-        public void write(int i) throws IOException {
-            //if ((char)i!='\n')
-                stringBuilder.append((char) i);
-            if ((char)i=='\n'){
-                String line = stringBuilder.toString();
-                if (lineReceiver!=null)
-                    lineReceiver.onLineReceived(line);
-                stringBuilder.delete(0,stringBuilder.length()-1);
-            }
-        }
-
-
-    }
-
-
-
 
 }

@@ -6,11 +6,17 @@ import android.transition.TransitionManager;
 import com.awesprojects.innolib.utils.logger.LogSystem;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
 /**
  * Created by ilya on 2/23/18.
  */
 
 public class InnolibApplication extends Application{
+
+    public static final String TAG = "Application";
+    public static Logger log = Logger.getLogger(TAG);
 
     public static final String PREFERENCES_APPLICATION_STATE = "application_state";
     public static final String PREFERENCES_SIGNIN_METHODS = "sign_in";
@@ -34,6 +40,11 @@ public class InnolibApplication extends Application{
         super.onCreate();
         mInstance = this;
         LogSystem.ensureInit();
+        getMainLooper().getThread().setUncaughtExceptionHandler((thread,throwable) -> {
+            log.severe("uncaught exception in app thread : "+throwable.toString());
+            log.severe("application is forced to close");
+            System.exit(-1);
+        });
     }
 
 

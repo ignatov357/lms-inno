@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home_library_list_element_root_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="2dp"
@@ -22,7 +23,7 @@
 
             <LinearLayout
                 android:layout_width="@dimen/home_library_element_preview_size"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="4dp"
                 android:orientation="vertical">
 
@@ -97,7 +98,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/home_library_list_element_info_top_textview"
@@ -106,7 +108,8 @@
                             android:layout_gravity="center"
                             android:layout_marginStart="4dp"
                             android:layout_weight="1"
-                            android:text="TextView" />
+                            android:text="TextView"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/home_library_list_element_info_bottom_textview"
@@ -116,7 +119,8 @@
                             android:layout_marginStart="4dp"
                             android:layout_marginTop="4dp"
                             android:layout_weight="1"
-                            android:text="TextView" />
+                            android:text="TextView"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/home_library_list_element_stock_textview"
@@ -132,7 +136,8 @@
                     <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical">
+                        android:layout_gravity="center_vertical"
+                        android:visibility="gone">
 
                         <Button
                             android:id="@+id/home_library_list_element_checkout_button"

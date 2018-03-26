@@ -37,7 +37,6 @@ public class AbstractProfileFragment extends AbstractHomeFragment {
         mFullNameTextView = getContentView().findViewById(R.id.fragment_home_profile_full_name_textview);
         mUserTypeTextView = getContentView().findViewById(R.id.fragment_home_profile_user_type_textview);
         setUserName(getUser().getName());
-       // getFullNameTextView().setText(getUser().getName());
         setUserType(UserManager.getUserType(getUser()));
     }
 

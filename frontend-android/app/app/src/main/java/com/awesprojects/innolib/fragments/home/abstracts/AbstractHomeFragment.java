@@ -17,11 +17,16 @@ import com.awesprojects.innolib.fragments.AbstractExtendedFragment;
 import com.awesprojects.innolib.utils.logger.LogSystem;
 import com.awesprojects.lmsclient.api.data.users.User;
 
+import java.util.logging.Logger;
+
 /**
  * Created by ilya on 2/25/18.
  */
 
 public class AbstractHomeFragment extends AbstractExtendedFragment {
+
+    public static final String TAG = "HomeFragment";
+    public static Logger log = Logger.getLogger(TAG);
 
     private User mUser;
     private int menuId;
@@ -71,13 +76,13 @@ public class AbstractHomeFragment extends AbstractExtendedFragment {
 
     public void onPause() {
         super.onPause();
-        LogSystem.ui.println(getClass()+" paused");
+        log.finest(getClass().getSimpleName()+" paused");
     }
 
     @Override
     public void onResume() {
         //if (mContent!=null) getContentView().setAlpha(0f);
-        LogSystem.ui.println(getClass()+" resumed");
+        log.finest(getClass().getSimpleName()+" resumed");
         super.onResume();
         getContentView().requestApplyInsets();
         /*Fade fade = new Fade(Fade.IN);
@@ -89,7 +94,7 @@ public class AbstractHomeFragment extends AbstractExtendedFragment {
     public void onShow(){
         getContentView().requestLayout();
         getContentView().requestApplyInsets();
-        LogSystem.ui.print(getClass()+" shown");
+        log.info(getClass()+" shown");
     }
 
     public void onHide(){
@@ -101,10 +106,10 @@ public class AbstractHomeFragment extends AbstractExtendedFragment {
     }
 
     public void hideHomeUI(boolean animated){
-
+        getHomeActivity().hideHomeUI(animated);
     }
 
     public void showHomeUI(boolean animated){
-
+        getHomeActivity().showHomeUI(animated);
     }
 }

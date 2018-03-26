@@ -19,11 +19,16 @@ import com.awesprojects.innolib.managers.SignInManager;
 import com.awesprojects.innolib.utils.SignInHandler;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 
+import java.util.logging.Logger;
+
 /**
  * Created by ilya on 2/4/18.
  */
 
 public class SignInFragment extends Fragment implements View.OnClickListener,SignInHandler.SignInResult{
+
+    public static final String TAG = "SignInFragment";
+    public static Logger log = Logger.getLogger(TAG);
 
     public interface OnSignInListener{
         public void onSignIn(AccessToken accessToken);
@@ -55,6 +60,12 @@ public class SignInFragment extends Fragment implements View.OnClickListener,Sig
 
     public void setOnSignInListener(OnSignInListener onSignInListener){
         this.mSignInListener = onSignInListener;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mContent.requestApplyInsets();
     }
 
     @Override
@@ -97,6 +108,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener,Sig
             mUserIdEditText.setEnabled(true);
             mUserPasswordEditText.setEnabled(true);
         }
+        if (msg.what!=200)
+            log.warning("sigh in attempt failed : "+msg.what);
         switch (msg.what){
             case -1:{
                 //mResponseInfo.setVisibility(View.VISIBLE);
@@ -109,9 +122,14 @@ public class SignInFragment extends Fragment implements View.OnClickListener,Sig
                 break;
             }
             case 200:{
+                log.config("successful sign in");
                 onSignInSucceed((AccessToken)msg.obj);
                 mResponseInfo.setText("");
                 //mResponseInfo.setVisibility(View.GONE);
+                break;
+            }
+            case 0:{
+                mResponseInfo.setText(R.string.signin_info_connection_problem);
                 break;
             }
             default:{
