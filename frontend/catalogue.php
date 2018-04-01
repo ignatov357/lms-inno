@@ -24,7 +24,7 @@
             $("#books-field").append(getDocumentsField());
             $(".btn").click(function () {
                 var book_id = $(this).attr("id").replace("checkout-book-", "");
-                checkoutBook(book_id);
+                checkoutDocument(book_id);
             });
 
             $("#load-cab").click(function () {
@@ -42,7 +42,7 @@
                 $("#books-field").append(getDocumentsField());
                 $(".btn").click(function () {
                     var book_id = $(this).attr("id").replace("checkout-book-", "");
-                    checkoutBook(book_id);
+                    checkoutDocument(book_id);
                 });
                 return false;
             });
