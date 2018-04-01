@@ -1,9 +1,12 @@
 package com.awesprojects.innolib.adapters;
 
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.awesprojects.innolib.R;
@@ -76,8 +79,10 @@ public class PatronLibraryListAdapter extends RecyclerView.Adapter<PatronLibrary
         holder.setAuthors(doc.getAuthors());
        // holder.setStockCount(doc.getInstockCount());
         holder.setKeywords(preparedKeywords(doc));
+
         //holder.setCheckoutAvailable(true, null);
         if (doc instanceof Book) {
+            holder.setImageResource(R.drawable.ic_library_books_black_36dp);
             holder.setBestseller(((Book) doc).isBestseller());
             // if (((Book) doc).isReference())
             //holder.setCheckoutAvailable(false, mCheckoutDisabledReference.toUpperCase());
@@ -87,10 +92,12 @@ public class PatronLibraryListAdapter extends RecyclerView.Adapter<PatronLibrary
             holder.setBestseller(false);
         }
         if (doc instanceof Article) {
+            holder.setImageResource(R.drawable.ic_insert_drive_file_black_36dp);
             holder.setTopInfo("Edited by " + ((Article) doc).getJournalIssueEditors());
             holder.setBottomInfo("Published in " + ((Article) doc).getJournalTitle() + " in " + ((Article) doc).getJournalIssuePublicationDate());
         }
         if (doc instanceof EMaterial) {
+            holder.setImageResource(R.drawable.ic_video_library_black_36dp);
             holder.setTopInfo(null);
             holder.setBottomInfo(null);
         }
@@ -108,6 +115,7 @@ public class PatronLibraryListAdapter extends RecyclerView.Adapter<PatronLibrary
     public static class PatronLibraryListItemHolder extends RecyclerView.ViewHolder {
 
         View mRootView;
+        ImageView mDocumentImageView;
         TextView mTitleTextView;
         TextView mAuthorsTextView;
         TextView mStockTextView;
@@ -125,6 +133,7 @@ public class PatronLibraryListAdapter extends RecyclerView.Adapter<PatronLibrary
             super(itemView);
 
             mRootView = itemView.findViewById(R.id.home_library_list_element_root_view);
+            mDocumentImageView = itemView.findViewById(R.id.home_library_list_element_preview_imageview);
             mKeywordsTextView = itemView.findViewById(R.id.home_library_list_element_keywords_textview);
             mBestsellerLayout = itemView.findViewById(R.id.home_library_list_element_bestseller_layout);
             mDocumentTypeTextView = itemView.findViewById(R.id.home_library_list_element_type_textview);
@@ -154,6 +163,10 @@ public class PatronLibraryListAdapter extends RecyclerView.Adapter<PatronLibrary
                     mCheckoutButton.setText(reason);
             }
         }*/
+
+        public void setImageResource(@DrawableRes int img){
+            mDocumentImageView.setImageResource(img);
+        }
 
         public void setTopInfo(String topInfo) {
             mInfoTopTextView.setVisibility(topInfo == null ? View.GONE : View.VISIBLE);
@@ -226,7 +239,8 @@ public class PatronLibraryListAdapter extends RecyclerView.Adapter<PatronLibrary
         @Override
         public void onClick(View view) {
             Document document = (Document) view.getTag();
-            mAdapter.mOnShowDocumentDetailsListener.onShow(view,document);
+            if (mAdapter.mOnShowDocumentDetailsListener!=null)
+                mAdapter.mOnShowDocumentDetailsListener.onShow(view,document);
         }
 
     }

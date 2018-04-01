@@ -69,7 +69,8 @@ public class PostRequest extends Request{
             sb.append("Content-Type: application/x-www-form-urlencoded").append("\n");
             sb.append("Content-Length: ").append(computeDataLength()).append("\n");
         }
-        sb.append("Connection: close\n");
+        if (isCloseConnection())
+            sb.append("Connection: close\n");
         if (hasHeaders())
             compileHeaders(sb);
         sb.append("\n");

@@ -9,12 +9,12 @@ public class Student extends User implements Responsable,Serializable {
 
     public Student(JSONObject object){
         super(object);
-        setType(0);
+        setType(1);
     }
 
     public Student(){
         super();
-        setType(0);
+        setType(1);
     }
 
 

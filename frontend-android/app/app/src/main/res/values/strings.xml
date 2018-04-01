@@ -51,8 +51,11 @@
     <string name="home_profile_tab_checked_out_books">Checked out books</string>
     <string name="home_settings_title">Settings</string>
     <string name="user_type_librarian">Librarian</string>
-    <string name="user_type_faculty">Faculty member</string>
     <string name="user_type_student">Student</string>
+    <string name="user_type_teacher_assistant">Teacher assistant</string>
+    <string name="user_type_professor">Professor</string>
+    <string name="user_type_instructor">Instructor</string>
+    <string name="user_type_visiting_professor">Visiting professor</string>
     <string name="welcome_description">Welcome to the new LMS system for Innopolis University by AwesTeam group. Click next to sign in, using your library id</string>
     <string name="welcome_next">Next</string>
     <string name="welcome_finish">Start</string>

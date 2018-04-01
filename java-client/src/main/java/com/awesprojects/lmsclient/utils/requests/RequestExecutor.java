@@ -29,6 +29,15 @@ public class RequestExecutor {
     }
 
     public static String executeRequest(String address,int port,String request){
+        AbstractApiRequest apiRequest = createApiRequest(address, port, request);
+        return apiRequest.execute(request);
+    }
+
+    public static AbstractApiRequest createApiRequest(String request){
+        return  createApiRequest(Config.getCurrentConfig().getApiDomain(),80,request);
+    }
+
+    public static AbstractApiRequest createApiRequest(String address,int port,String request){
         boolean secureConnection = Config.getCurrentConfig().isSecure();
         AbstractApiRequest apiRequest = null;
         try {
@@ -36,9 +45,8 @@ public class RequestExecutor {
                     new ApiSecureRequest(address, port) : new ApiRequest(address, port);
         }catch(Throwable t){
             log.warning("execute request failed : "+t.toString());
-            return null;
         }
-        return apiRequest.execute(request);
+        return apiRequest;
     }
 
 
@@ -50,6 +58,11 @@ public class RequestExecutor {
 
         public ApiRequest(String address,int port) throws IOException {
             socket = SocketFactory.getDefault().createSocket(address, port);
+        }
+
+        @Override
+        public Socket getSocket() {
+            return socket;
         }
 
         @Override
@@ -96,10 +109,16 @@ public class RequestExecutor {
             //TODO: implement
             return null;
         }
+
+        @Override
+        public SSLSocket getSocket() {
+            return socket;
+        }
     }
 
-    private static abstract class AbstractApiRequest{
+    public static abstract class AbstractApiRequest{
         public abstract String execute(String request);
+        public abstract Socket getSocket();
     }
 
 

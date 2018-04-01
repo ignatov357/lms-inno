@@ -6,30 +6,54 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/activity_log_main_textview"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="log"
-                    android:textColor="@android:color/black"
-                    android:textSize="10dp"
-                    android:typeface="monospace" />
-            </LinearLayout>
-        </ScrollView>
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/activity_log_main_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="log"
+                        android:textColor="@android:color/black"
+                        android:textSize="10dp"
+                        android:typeface="monospace" />
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+
+        <android.support.design.widget.TabLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/activity_log_application_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Left" />
+
+            <android.support.design.widget.TabItem
+                android:id="@+id/activity_log_debug_tab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Center" />
+
+        </android.support.design.widget.TabLayout>
 
     </LinearLayout>
 

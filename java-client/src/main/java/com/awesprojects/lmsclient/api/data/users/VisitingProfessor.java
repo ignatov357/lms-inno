@@ -5,16 +5,16 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 
-public class Librarian extends User implements Responsable,Serializable {
+public class VisitingProfessor extends User implements Serializable,Responsable{
 
-    public Librarian(JSONObject object){
+    public VisitingProfessor(JSONObject object){
         super(object);
-        setType(0);
+        setType(2);
     }
 
-    public Librarian(){
+    public VisitingProfessor(){
         super();
-        setType(0);
+        setType(2);
     }
 
 }

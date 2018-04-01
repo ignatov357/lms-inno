@@ -1,5 +1,8 @@
 package com.awesprojects.innolib.managers;
 
+import android.content.Context;
+
+import com.awesprojects.innolib.R;
 import com.awesprojects.lmsclient.api.ManageAPI;
 import com.awesprojects.lmsclient.api.UsersAPI;
 import com.awesprojects.lmsclient.api.data.AccessToken;
@@ -46,6 +49,18 @@ public class UserManager {
             if (callback != null)
                 callback.onResponse(r);
         }).start();
+    }
+
+    public static String getUserTypeString(Context context, int type){
+        switch (type){
+            case 0: return context.getResources().getString(R.string.user_type_librarian);
+            case 1: return context.getResources().getString(R.string.user_type_student);
+            case 2: return context.getResources().getString(R.string.user_type_teacher_assistant);
+            case 3: return context.getResources().getString(R.string.user_type_professor);
+            case 4: return context.getResources().getString(R.string.user_type_instructor);
+            case 5: return context.getResources().getString(R.string.user_type_visiting_professor);
+            default: return "Unknown type";
+        }
     }
 
 }

@@ -12,8 +12,6 @@ import com.awesprojects.innolib.fragments.home.PatronProfileFragment;
 import com.awesprojects.innolib.managers.DocumentManager;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -22,11 +20,22 @@ import java.util.List;
 
 public class CheckedOutDocsAdapter extends RecyclerView.Adapter<CheckedOutDocsAdapter.CheckedOutDocsHolder>{
 
+    public interface OnShowCheckedOutDocumentDetailsListener {
+        void onShow(View holderRootView, Document document);
+    }
+
     final PatronProfileFragment mPatronProfileFragment;
     List<Document> mDocuments;
+    OnShowCheckedOutDocumentDetailsListener mOnShowCheckedOutDocumentDetailsListener;
+    OnShowDetailsListener mHolderListener;
 
     public CheckedOutDocsAdapter(PatronProfileFragment profileFragment){
         mPatronProfileFragment = profileFragment;
+        mHolderListener = new OnShowDetailsListener(this);
+    }
+
+    public void setOnShowCheckedOutDocumentDetailsListener(OnShowCheckedOutDocumentDetailsListener onShowCheckedOutDocumentDetailsListener) {
+        mOnShowCheckedOutDocumentDetailsListener = onShowCheckedOutDocumentDetailsListener;
     }
 
     public void setDocuments(List<Document> documents){
@@ -43,6 +52,7 @@ public class CheckedOutDocsAdapter extends RecyclerView.Adapter<CheckedOutDocsAd
     @Override
     public void onBindViewHolder(CheckedOutDocsHolder holder, int position) {
         Document d = mDocuments.get(position);
+        holder.setItemOnClickListener(d,mHolderListener);
         holder.setDocType(d.getType());
         holder.setTitle(d.getTitle());
         holder.setAuthor(d.getAuthors());
@@ -61,13 +71,17 @@ public class CheckedOutDocsAdapter extends RecyclerView.Adapter<CheckedOutDocsAd
         TextView mDocType;
         TextView mDocAuthor;
         TextView mTimeLeft;
+        View mOverdueIndicator;
+        ViewGroup mRootView;
 
         public CheckedOutDocsHolder(View itemView) {
             super(itemView);
+            mRootView = itemView.findViewById(R.id.home_profile_checkedout_element_root_view);
             mDocName = itemView.findViewById(R.id.home_profile_checkedout_element_title);
             mDocType = itemView.findViewById(R.id.home_profile_checkedout_element_type);
             mDocAuthor = itemView.findViewById(R.id.home_profile_checkedout_element_author);
             mTimeLeft = itemView.findViewById(R.id.home_profile_checkedout_element_left_time);
+            mOverdueIndicator = itemView.findViewById(R.id.home_profile_checkedout_element_overedue_indicator);
         }
 
         public void setTitle(String title){
@@ -84,19 +98,37 @@ public class CheckedOutDocsAdapter extends RecyclerView.Adapter<CheckedOutDocsAd
         }
 
         public void setReturnDate(long millis){
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(millis*1000);
-            StringBuilder sb = new StringBuilder();
-            int day = c.get(Calendar.DAY_OF_MONTH);
-            int month = c.get(Calendar.MONTH)+1;
-            int year = c.get(Calendar.YEAR) % 100;
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            int minute = c.get(Calendar.MINUTE);
-            sb.append("return till ");
-            sb.append(day).append(".").append(month<10 ? "0"+month : month).append(".").append(year < 10 ? "0"+year : year);
-            sb.append(" at ").append(hour).append(":").append(minute<10 ? "0"+minute : minute);
-            mTimeLeft.setText(sb.toString());
+            if (millis*1000<System.currentTimeMillis()){
+                mOverdueIndicator.setVisibility(View.VISIBLE);
+            }else{
+                mOverdueIndicator.setVisibility(View.INVISIBLE);
+            }
+            String returnAt = DocumentManager.getPrettyReturnDate(millis*1000);
+            mTimeLeft.setText(returnAt);
         }
+
+        public void setItemOnClickListener(Document tag, View.OnClickListener listener) {
+            mRootView.setOnClickListener(listener);
+            mRootView.setTag(tag);
+        }
+
+    }
+
+    public class OnShowDetailsListener implements View.OnClickListener {
+
+        CheckedOutDocsAdapter mAdapter;
+
+        public OnShowDetailsListener(CheckedOutDocsAdapter adapter) {
+            mAdapter = adapter;
+        }
+
+        @Override
+        public void onClick(View view) {
+            Document document = (Document) view.getTag();
+            if (mAdapter.mOnShowCheckedOutDocumentDetailsListener!=null)
+                mAdapter.mOnShowCheckedOutDocumentDetailsListener.onShow(view,document);
+        }
+
     }
 
 }

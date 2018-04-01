@@ -47,6 +47,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="settings" />
+
+            <Button
+                android:id="@+id/fragment_home_settings_show_log_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Button" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

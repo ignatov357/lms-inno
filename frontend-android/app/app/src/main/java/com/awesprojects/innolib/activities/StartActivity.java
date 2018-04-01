@@ -50,14 +50,17 @@ public class StartActivity extends Activity implements SignInFragment.OnSignInLi
         //int a =0;
         //a++; a--;
         //int b = a/a;
-        //setTheme(R.style.StartTheme);
-        super.onCreate(savedInstanceState);
         mPreferences = getSharedPreferences(InnolibApplication.PREFERENCES_APPLICATION_STATE, MODE_PRIVATE);
         mSignInPreferences = getSharedPreferences(InnolibApplication.PREFERENCES_SIGNIN_METHODS, MODE_PRIVATE);
-        setContentView(R.layout.activity_start);
-        mContainer = findViewById(R.id.activity_start_main_container);
         boolean isWelcomeScreenShown = mPreferences.getBoolean(WelcomeActivity.PREFERENCE_WELCOME_SCREEN_SHOWN, false);
         boolean isSignedIn = mPreferences.getBoolean(PREFERENCE_IS_SIGNED_IN, false);
+        if (!isSignedIn || !isWelcomeScreenShown)
+            setTheme(R.style.StartTheme);
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_start);
+        mContainer = findViewById(R.id.activity_start_main_container);
+
         if (!isWelcomeScreenShown) {
             Intent welcomeActivityIntent = new Intent(this, WelcomeActivity.class);
             startActivity(welcomeActivityIntent);

@@ -3,6 +3,7 @@ package com.awesprojects.innolib.fragments.home;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,8 +14,11 @@ import com.awesprojects.innolib.R;
 import com.awesprojects.innolib.fragments.home.abstracts.AbstractHomeOverlayFragment;
 import com.awesprojects.innolib.managers.DocumentManager;
 import com.awesprojects.lmsclient.api.Response;
+import com.awesprojects.lmsclient.api.data.CheckOutInfo;
+import com.awesprojects.lmsclient.api.data.documents.Article;
 import com.awesprojects.lmsclient.api.data.documents.Book;
 import com.awesprojects.lmsclient.api.data.documents.Document;
+import com.awesprojects.lmsclient.api.data.documents.EMaterial;
 
 /**
  * Created by Ilya on 3/20/2018.
@@ -33,6 +37,7 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
     TextView mStockTextView;
     TextView mEditionTextView;
     TextView mKeywordsTextView;
+    TextView mBottomInfoTextView;
     Button mCheckoutButton;
     int mStockColorNormal;
     int mColorRed;
@@ -54,9 +59,13 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
         mKeywordsTextView = getContentView().findViewById(R.id.fragment_document_detail_keywords_textview);
         mPreviewImageView = getContentView().findViewById(R.id.fragment_document_detail_preview_imageview);
         mEditionTextView = getContentView().findViewById(R.id.fragment_document_detail_edition_textview);
+        mBottomInfoTextView = getContentView().findViewById(R.id.fragment_document_detail_bottom_info_textview);
         mCheckoutButton = getContentView().findViewById(R.id.fragment_document_detail_checkout_button);
         mStockTextView = getContentView().findViewById(R.id.fragment_document_detail_instock_textview);
         setupDocument(mDocument);
+        if (mDocument.getCheckOutInfo()!=null){
+            setupCheckOutInfo(mDocument.getCheckOutInfo());
+        }
         getContentView().requestApplyInsets();
        // hideHomeUI(true);
     }
@@ -65,19 +74,41 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
         setDocumentTitle(document.getTitle());
         mStockTextView.setText("1234536773723");
         setStockCount(document.getInstockCount());
-        mAuthorTextView.setText(document.getAuthors());
+        mAuthorTextView.setText("By "+document.getAuthors());
         setKeywords(preparedKeywords(document));
         mPreviewImageView.setImageResource(R.drawable.ic_library_books_black_36dp);
+        mCheckoutButton.setEnabled(true);
+        mBottomInfoTextView.setVisibility(View.GONE);
         if (document instanceof Book){
+            mPreviewImageView.setImageResource(R.drawable.ic_library_books_black_36dp);
             mEditionTextView.setText(((Book) document).getEdition()+" edition");
+            if (((Book) document).isReference()){
+                mBottomInfoTextView.setVisibility(View.VISIBLE);
+                mBottomInfoTextView.setText("This is a reference book");
+                mCheckoutButton.setEnabled(false);
+            }
         }else{
             mEditionTextView.setVisibility(View.GONE);
+        }
+        if (document instanceof Article){
+            mPreviewImageView.setImageResource(R.drawable.ic_insert_drive_file_black_48dp);
+        }
+        if (document instanceof EMaterial){
+            mPreviewImageView.setImageResource(R.drawable.ic_video_library_black_48dp);
         }
         if (document.getInstockCount()==0){
             mCheckoutButton.setText("Request for a "+
                     DocumentManager.getInstance().getDocumentType(document.getType(),getHomeActivity()).toLowerCase());
         }
         mCheckoutButton.setOnClickListener(this);
+    }
+
+    public void setupCheckOutInfo(CheckOutInfo checkOutInfo){
+        ViewGroup vg = getContentView().findViewById(R.id.fragment_document_detail_checkout_layout);
+        TextView returnDate  = vg.findViewById(R.id.fragment_document_detail_return_date_textview);
+        String returnAt = DocumentManager.getPrettyReturnDate(checkOutInfo.getReturnTill());
+        returnDate.setText(returnAt);
+        mCheckoutButton.setVisibility(View.GONE);
     }
 
     public void setOnCheckoutListener(LibraryCheckoutConfirmFragment.OnCheckoutResultListener listener){

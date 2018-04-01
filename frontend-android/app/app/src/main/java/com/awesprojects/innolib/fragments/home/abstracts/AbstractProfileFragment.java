@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.awesprojects.innolib.R;
+import com.awesprojects.innolib.managers.DocumentManager;
 import com.awesprojects.innolib.managers.UserManager;
 
 /**
@@ -51,14 +52,8 @@ public class AbstractProfileFragment extends AbstractHomeFragment {
     }
 
     public void setUserType(int type){
-        String str;
-        if (type==2){
-            str = getResources().getString(R.string.user_type_librarian);
-        }else if (type==1){
-            str = getResources().getString(R.string.user_type_faculty).replace(' ','\n');
-        }else{
-            str = getResources().getString(R.string.user_type_student);
-        }
+        String str = UserManager.getUserTypeString(getActivity(),type);
+        str = str.replace(' ','\n');
         getUserTypeTextView().setText(str.toUpperCase());
     }
 }

@@ -70,4 +70,16 @@ public class DocumentsAPI {
         return Response.getResult(response);
     }
 
+
+    @ApiCall
+    public static Response renewDocument(String accessToken,int documentID){
+        PostRequest.Builder builder = RequestFactory.post();
+        builder.withURL("/documents/renewDocument");
+        builder.withHeader("Access-Token", accessToken);
+        builder.withData("documentID", documentID + "");
+        String response = builder.create().execute();
+        return Response.getResult(response);
+    }
+
+
 }

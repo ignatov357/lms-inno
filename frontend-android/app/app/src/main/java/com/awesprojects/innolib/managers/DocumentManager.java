@@ -11,6 +11,8 @@ import com.awesprojects.lmsclient.api.data.AccessToken;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 import com.awesprojects.lmsclient.api.internal.Responsable;
 
+import java.util.Calendar;
+
 /**
  * Created by ilya on 3/1/18.
  */
@@ -137,6 +139,21 @@ public class DocumentManager {
             case 2: return mDocumentAV;
             default: return "Unknown";
         }
+    }
+
+    public static String getPrettyReturnDate(long millis){
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(millis*1000);
+        StringBuilder sb = new StringBuilder();
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int month = c.get(Calendar.MONTH)+1;
+        int year = c.get(Calendar.YEAR) % 100;
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+        sb.append("return till ");
+        sb.append(day).append(".").append(month<10 ? "0"+month : month).append(".").append(year < 10 ? "0"+year : year);
+        sb.append(" at ").append(hour).append(":").append(minute<10 ? "0"+minute : minute);
+        return sb.toString();
     }
 
 }

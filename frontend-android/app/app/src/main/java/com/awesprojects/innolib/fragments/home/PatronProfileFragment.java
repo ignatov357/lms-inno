@@ -6,6 +6,8 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +44,7 @@ public class PatronProfileFragment extends AbstractProfileFragment {
     SwipeRefreshLayout mCheckedOutSwipeRefreshLayout;
     NestedScrollView mNestedScrollView;
     ArrayList<Document> mCheckedOutDocuments;
+    OnDetailsShowListener mDetailsShowListener;
     static boolean mPendingUpdate = false;
 
     @Override
@@ -62,6 +65,8 @@ public class PatronProfileFragment extends AbstractProfileFragment {
             onUpdatedCheckedOutDocs();
         }
         mBindedInstance = this;
+        mDetailsShowListener = new OnDetailsShowListener(this);
+        mCheckedOutDocsAdapter.setOnShowCheckedOutDocumentDetailsListener(mDetailsShowListener);
        // mNestedScrollView.addView(mCheckedOutDocsView);
     }
 
@@ -118,8 +123,39 @@ public class PatronProfileFragment extends AbstractProfileFragment {
         super.onSaveInstanceState(outState);
     }
 
+    public void onShowDocumentInfo(View documentHolder, Document document) {
+        DocumentInfoFragment documentDetailFragment = new DocumentInfoFragment();
+        /*documentDetailFragment.setOnCheckoutListener(((status, doc, reason) -> {
+            int pos = getDocumentPosition(doc);
+            mDocuments.remove(pos);
+            mAdapter.setDocuments(mDocuments);
+            mAdapter.notifyItemRemoved(pos);
+            PatronProfileFragment.refreshCheckedoutList();
+        }));*/
+        documentDetailFragment.setEnterTransition(new Slide(Gravity.BOTTOM));
+        documentDetailFragment.setExitTransition(new Slide(Gravity.BOTTOM));
+        Bundle args = new Bundle();
+        args.putSerializable("DOCUMENT", document);
+        documentDetailFragment.setArguments(args);
+        getFragmentManager().beginTransaction()
+                .addToBackStack("DetailsShow")
+                .add(getHomeActivity().getHomeInterface().getOverlayContainer().getId(), documentDetailFragment, "DocumentInfoFragment")
+                .commit();
+    }
 
 
 
+    public static class OnDetailsShowListener implements CheckedOutDocsAdapter.OnShowCheckedOutDocumentDetailsListener{
+
+        private PatronProfileFragment mPatronProfileFragment;
+
+        public OnDetailsShowListener(PatronProfileFragment fragment){
+            mPatronProfileFragment = fragment;
+        }
+        @Override
+        public void onShow(View holderRootView, Document document) {
+            mPatronProfileFragment.onShowDocumentInfo(holderRootView, document);
+        }
+    }
 
 }
