@@ -57,6 +57,7 @@ public class UserManager {
     }
 
     public static String getUserTypeString(Context context, int type){
+        log.finest("requested user type string for type = "+type);
         switch (type){
             case 0: return context.getResources().getString(R.string.user_type_librarian);
             case 1: return context.getResources().getString(R.string.user_type_student);
