@@ -3,7 +3,7 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true">
-        <processorPath useClasspath="false">
+        <processorPath>
           <entry name="$PROJECT_DIR$/libs/lombok.jar" />
         </processorPath>
       </profile>
@@ -17,7 +17,7 @@
         <module name="lms-client" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.8">
+    <bytecodeTargetLevel target="8">
       <module name="lms-client" target="1.8" />
     </bytecodeTargetLevel>
   </component>

@@ -34,6 +34,10 @@ public class LongPollRequest extends GetRequest{
         }
     }
 
+    public Socket getSocket(){
+        return socket;
+    }
+
     public static class Builder extends AbstractBuilder<Builder,LongPollRequest>{
 
         private LongPollRequest request;
