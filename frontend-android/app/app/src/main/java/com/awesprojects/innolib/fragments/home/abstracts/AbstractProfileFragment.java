@@ -52,7 +52,6 @@ public class AbstractProfileFragment extends AbstractHomeFragment {
 
     public void setUserType(int type){
         String str = UserManager.getUserTypeString(getActivity(),type);
-        str = str.replace(' ','\n');
         getUserTypeTextView().setText(str.toUpperCase());
     }
 }

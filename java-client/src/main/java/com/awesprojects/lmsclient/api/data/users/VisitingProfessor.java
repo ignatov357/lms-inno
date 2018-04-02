@@ -9,12 +9,12 @@ public class VisitingProfessor extends User implements Serializable,Responsable{
 
     public VisitingProfessor(JSONObject object){
         super(object);
-        setType(2);
+        setType(5);
     }
 
     public VisitingProfessor(){
         super();
-        setType(2);
+        setType(5);
     }
 
 }
