@@ -1,19 +1,14 @@
 package com.awesprojects.innolib.widgets;
 
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.BounceInterpolator;
 import android.widget.TextView;
 
 /**
@@ -76,7 +71,7 @@ public class PinFieldView extends TextView {
     }
 
     public int getPinLength(){
-        return mCurrentPin.toString().length();
+        return mCurrentPin.length();
     }
 
     public int[] getPin(){

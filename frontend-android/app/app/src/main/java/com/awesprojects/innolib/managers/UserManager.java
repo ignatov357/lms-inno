@@ -9,11 +9,16 @@ import com.awesprojects.lmsclient.api.data.AccessToken;
 import com.awesprojects.lmsclient.api.data.users.User;
 import com.awesprojects.lmsclient.api.internal.Responsable;
 
+import java.util.logging.Logger;
+
 /**
  * Created by ilya on 2/25/18.
  */
 
 public class UserManager {
+
+    public static final String TAG = "UserManager";
+    private static final Logger log = Logger.getLogger(TAG);
 
     private static UserManager mInstance;
 
@@ -32,7 +37,7 @@ public class UserManager {
     }
 
     public interface OnResponseCallback{
-        public void onResponse(Responsable responsable);
+        void onResponse(Responsable responsable);
     }
 
     public void getUserAsync(AccessToken accessToken,int userID,OnResponseCallback callback){

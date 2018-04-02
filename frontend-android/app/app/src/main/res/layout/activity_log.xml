@@ -31,7 +31,7 @@
                         android:layout_weight="1"
                         android:text="log"
                         android:textColor="@android:color/black"
-                        android:textSize="10dp"
+                        android:textSize="10sp"
                         android:typeface="monospace" />
                 </LinearLayout>
             </ScrollView>

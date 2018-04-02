@@ -1,15 +1,19 @@
 package com.awesprojects.innolib.managers;
 
-import android.app.Notification;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.v7.app.NotificationCompat;
+
+import java.util.logging.Logger;
 
 /**
  * Created by ilya on 4/1/18.
  */
 
 public class NotificationManager {
+
+    public static final String TAG = "NotificationManager";
+    private static final Logger log = Logger.getLogger(TAG);
 
     public class Notification{
         private String mTitle;

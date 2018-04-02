@@ -31,7 +31,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener,Sig
     public static Logger log = Logger.getLogger(TAG);
 
     public interface OnSignInListener{
-        public void onSignIn(AccessToken accessToken);
+        void onSignIn(AccessToken accessToken);
     }
 
     ViewGroup mContent;

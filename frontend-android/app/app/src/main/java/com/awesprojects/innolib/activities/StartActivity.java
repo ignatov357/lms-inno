@@ -169,7 +169,7 @@ public class StartActivity extends Activity implements SignInFragment.OnSignInLi
         String idStr = SecureStorageManager.getInstance().get("USER_ID");
         if (idStr == null) {
             log.severe("user id was not found in storage, but expected");
-            mPreferences.edit().putBoolean(PREFERENCE_IS_SIGNED_IN, false).commit();
+            mPreferences.edit().putBoolean(PREFERENCE_IS_SIGNED_IN, false).apply();
             Intent restartIntent = new Intent(this,StartActivity.class);
             startActivity(restartIntent);
             finish();
@@ -198,7 +198,7 @@ public class StartActivity extends Activity implements SignInFragment.OnSignInLi
     public void finishAllAndShowHome() {
         mPreferences.edit()
                 .putBoolean(PREFERENCE_IS_SIGNED_IN, true)
-                .commit();
+                .apply();
         //int userID = Integer.parseInt(SecureStorageManager.getInstance().get("USER_ID"));
         UserManager.getInstance().getUserInfoAsync(InnolibApplication.getAccessToken(), (responsable) -> {
             if (responsable instanceof User) {

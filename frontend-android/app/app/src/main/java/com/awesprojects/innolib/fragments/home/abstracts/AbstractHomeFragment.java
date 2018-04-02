@@ -1,20 +1,11 @@
 package com.awesprojects.innolib.fragments.home.abstracts;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.transition.Fade;
-import android.transition.TransitionManager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import com.awesprojects.innolib.R;
 import com.awesprojects.innolib.activities.HomeActivity;
 import com.awesprojects.innolib.fragments.AbstractExtendedFragment;
-import com.awesprojects.innolib.utils.logger.LogSystem;
 import com.awesprojects.lmsclient.api.data.users.User;
 
 import java.util.logging.Logger;

@@ -77,7 +77,7 @@ public class LogHandler extends ConsoleHandler {
         int day = c.get(Calendar.DAY_OF_MONTH);
         int month = c.get(Calendar.MONTH);
         int year = c.get(Calendar.YEAR);
-        sb.append((year % 10000) + "")
+        sb.append(year % 10000).append("")
                 .append("-")
                 .append(month < 10 ? "0" + month : month)
                 .append("-")

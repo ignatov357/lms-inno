@@ -29,12 +29,28 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Medium"
                 android:textColor="@color/colorDocumentTitle" />
 
-            <ImageView
-                android:id="@+id/home_profile_checkedout_element_overedue_indicator"
+            <LinearLayout
+                android:id="@+id/home_profile_checkedout_element_overdue_indicator"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@android:drawable/ic_notification_overlay" />
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="OVERDUE" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:layout_weight="1"
+                    android:scaleType="center"
+                    android:src="@android:drawable/ic_notification_overlay" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <TextView

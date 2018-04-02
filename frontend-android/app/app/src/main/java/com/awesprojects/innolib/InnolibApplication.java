@@ -1,12 +1,10 @@
 package com.awesprojects.innolib;
 
 import android.app.Application;
-import android.transition.TransitionManager;
 
 import com.awesprojects.innolib.utils.logger.LogSystem;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**

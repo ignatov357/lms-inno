@@ -71,6 +71,7 @@ public class SecureStorageManager {
         try {
             FileInputStream fis = new FileInputStream(mStorage);
             ObjectInputStream ois = new ObjectInputStream(fis);
+            //noinspection unchecked
             mData = (HashMap<String, String>) ois.readObject();
             return true;
         } catch (FileNotFoundException e) {

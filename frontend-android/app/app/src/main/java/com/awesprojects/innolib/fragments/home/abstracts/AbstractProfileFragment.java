@@ -5,7 +5,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.awesprojects.innolib.R;
-import com.awesprojects.innolib.managers.DocumentManager;
 import com.awesprojects.innolib.managers.UserManager;
 
 /**

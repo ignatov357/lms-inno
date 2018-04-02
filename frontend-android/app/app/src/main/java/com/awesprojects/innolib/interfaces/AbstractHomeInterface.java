@@ -3,13 +3,11 @@ package com.awesprojects.innolib.interfaces;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.transition.Fade;
-import android.transition.Scene;
 import android.transition.Slide;
 import android.transition.TransitionManager;
 import android.transition.TransitionSet;
@@ -21,7 +19,6 @@ import android.view.ViewGroup;
 
 import com.awesprojects.innolib.activities.HomeActivity;
 import com.awesprojects.innolib.fragments.home.abstracts.AbstractHomeFragment;
-import com.awesprojects.innolib.utils.logger.LogSystem;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -132,7 +129,7 @@ public abstract class AbstractHomeInterface {
             addTransitions(abstractHomeFragment);
             mHomeFragmentMap.put(menuID,abstractHomeFragment);
             //getFragmentManager().beginTransaction().attach(abstractHomeFragment);
-        } catch (Throwable t){}
+        } catch (Throwable ignored){}
     }
 
     public void setBottomNavigationView(BottomNavigationView bnv){
@@ -289,6 +286,7 @@ public abstract class AbstractHomeInterface {
     private void loadFragmentsFromBundle(Bundle savedState){
         //mHomeFragmentMap = (HashMap<Integer, AbstractHomeFragment>)
         //        savedState.getSerializable("FragmentsMap");
+        //noinspection unchecked
         mHomeFragmentClassMap = (HashMap<Integer, Class<? extends AbstractHomeFragment>>)
                 savedState.getSerializable("FragmentClassesHashMap");
        /* for (Map.Entry<Integer,Class<? extends AbstractHomeFragment>> fragmentPair
@@ -302,6 +300,7 @@ public abstract class AbstractHomeInterface {
     }
 
     private void loadFragmentsStatesFromBundle(Bundle savedState){
+        //noinspection unchecked
         mFragmentStates = (HashMap<Integer,Bundle>) savedState.getSerializable("FragmentsStates");
     }
 

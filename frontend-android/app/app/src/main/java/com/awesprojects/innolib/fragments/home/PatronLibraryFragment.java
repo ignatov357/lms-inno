@@ -1,6 +1,8 @@
 package com.awesprojects.innolib.fragments.home;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
@@ -15,6 +17,7 @@ import com.awesprojects.lmsclient.api.ResponsableContainer;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 /**
@@ -28,24 +31,44 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
 
     PatronLibraryListAdapter mAdapter;
     RecyclerView.LayoutManager mLayoutManager;
+    RecyclerView.ItemAnimator mListItemAnimator;
     ArrayList<Document> mDocuments;
     OnDetailsShowListener mDetailsShowListener;
+    TabLayout mTabLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTabLayout = getContentView().findViewById(R.id.fragment_home_library_tab_layout);
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                mAdapter.setDocumentsType(tab.getPosition() - 1);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
         mDocuments = new ArrayList<>();
         mAdapter = new PatronLibraryListAdapter(this);
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        mListItemAnimator = new DefaultItemAnimator();
         mDetailsShowListener = new OnDetailsShowListener(this);
         mAdapter.setOnShowDocumentDetailsListener(mDetailsShowListener);
         getList().setAdapter(mAdapter);
         getList().setLayoutManager(mLayoutManager);
+        getList().setItemAnimator(mListItemAnimator);
         setRefreshListListener(() -> updateDocuments());
         if (savedInstanceState == null) {
             updateDocuments();
             log.fine("patron library creation done");
         } else {
+            //noinspection unchecked
             mDocuments = (ArrayList<Document>) savedInstanceState.getSerializable("Documents");
             onDocumentsUpdated();
             log.fine("patron library recreation done");
@@ -59,8 +82,10 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
 
 
     public void updateDocuments() {
+        setListRefreshing(true);
         DocumentManager.getDocumentAsync(true, (documents) -> {
             if (documents instanceof ResponsableContainer) {
+                //noinspection unchecked
                 onDocumentsUpdated(((ResponsableContainer<Document[]>) documents).get());
             } else {
                 //TODO: second case
@@ -70,9 +95,7 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
 
     public void updateArrayList(Document[] documents) {
         mDocuments.clear();
-        for (int i = 0; i < documents.length; i++) {
-            mDocuments.add(documents[i]);
-        }
+        Collections.addAll(mDocuments, documents);
     }
 
     public void onDocumentsUpdated(Document[] documents) {
@@ -117,11 +140,14 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
     public void onShowDocumentInfo(View documentHolder, Document document) {
         DocumentInfoFragment documentDetailFragment = new DocumentInfoFragment();
         documentDetailFragment.setOnCheckoutListener(((status, doc, reason) -> {
-            int pos = getDocumentPosition(doc);
-            mDocuments.remove(pos);
-            mAdapter.setDocuments(mDocuments);
-            mAdapter.notifyItemRemoved(pos);
-            PatronProfileFragment.refreshCheckedoutList();
+            doc.setInstockCount(doc.getInstockCount()-1);
+            if (doc.getInstockCount()<=0) {
+                int pos = getDocumentPosition(doc);
+                mDocuments.remove(pos);
+                mAdapter.setDocuments(mDocuments);
+                mAdapter.notifyItemRemoved(pos);
+                PatronProfileFragment.refreshCheckedoutList();
+            }
         }));
         documentDetailFragment.setEnterTransition(new Slide(Gravity.BOTTOM));
         documentDetailFragment.setExitTransition(new Slide(Gravity.BOTTOM));

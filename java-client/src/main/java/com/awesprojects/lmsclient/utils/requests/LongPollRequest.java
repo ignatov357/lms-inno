@@ -2,8 +2,11 @@ package com.awesprojects.lmsclient.utils.requests;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.Socket;
 
 public class LongPollRequest extends GetRequest{
+
+    Socket socket;
 
     public LongPollRequest(){
         super();
@@ -15,10 +18,19 @@ public class LongPollRequest extends GetRequest{
         super.buildRequest(sb);
         RequestExecutor.AbstractApiRequest apiRequest =  RequestExecutor.createApiRequest(sb.toString());
         try {
-            return apiRequest.getSocket().getInputStream();
+            socket = apiRequest.getSocket();
+            return socket.getInputStream();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void close(){
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

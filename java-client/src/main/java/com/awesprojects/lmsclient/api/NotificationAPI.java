@@ -1,5 +1,6 @@
 package com.awesprojects.lmsclient.api;
 
+import com.awesprojects.lmsclient.api.data.Notification;
 import com.awesprojects.lmsclient.utils.requests.LongPollRequest;
 
 import java.util.HashMap;
@@ -8,31 +9,51 @@ import java.util.logging.Logger;
 public class NotificationAPI {
 
 
-    public static final String NAME = "DocumentsAPI";
+    public static final String NAME = "NotificationAPI";
     private static final Logger log = Logger.getLogger(NAME);
 
     static {
-        log.fine("document api log configured");
+        log.fine("notification api log configured");
     }
 
-    private static HashMap<ConnectionReference,LongPollRequest> connections;
+    private static HashMap<Integer,NotificationConnectionReference> connections;
 
-    public static void create(LongPollRequest request){
-        ConnectionReference connectionReference = new ConnectionReference(request.hashCode());
-        connections.put(connectionReference,request);
+    public static NotificationConnectionReference create(LongPollRequest request){
+        NotificationConnectionReference connectionReference = new NotificationConnectionReference(request.hashCode(),request);
+        connections.put(request.hashCode(),connectionReference);
+        return connectionReference;
     }
 
+    private static void remove(int id){
+        connections.remove(id);
+    }
 
-    private static class ConnectionReference{
+    public interface NotificationReceiver{
+        int onReceiveNotification(Notification notification);
+    }
 
-        private int mId;
+    private static class NotificationConnectionReference {
 
-        public ConnectionReference(int id){
-            mId = id;
+        private int id;
+
+        private LongPollRequest request;
+
+        public NotificationConnectionReference(int id, LongPollRequest request){
+            this.id = id;
+            this.request = request;
         }
 
         public int getId(){
-            return mId;
+            return id;
+        }
+
+        public void open(){
+            request.open();
+        }
+
+        public void close(){
+            request.close();
+            remove(getId());
         }
     }
 

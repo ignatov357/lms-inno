@@ -105,7 +105,7 @@ public class SignInMethodsFragment extends Fragment implements View.OnClickListe
                 .putBoolean("sign_in_using_fingerprint",useFingerprint)
                 .putBoolean("sign_in_using_pin",usePin)
                 .putBoolean("identity_check",securityEnabled)
-                .commit();
+                .apply();
         SharedPreferences appStatePrefs = getActivity().getSharedPreferences(
                 InnolibApplication.PREFERENCES_APPLICATION_STATE,MODE_PRIVATE);
         return securityEnabled;
@@ -132,8 +132,8 @@ public class SignInMethodsFragment extends Fragment implements View.OnClickListe
             if (b){
                 mFingerprintUseCheckBox.setEnabled(true);
                 mCardUseCheckBox.setEnabled(true);
-                mFingerprintUseCheckBox.setChecked(true && supportsFingerprint);
-                mCardUseCheckBox.setChecked(true && supportsNFC);
+                mFingerprintUseCheckBox.setChecked(supportsFingerprint);
+                mCardUseCheckBox.setChecked(supportsNFC);
                 mInfoTextView.setVisibility(View.INVISIBLE);
             }else{
                 mFingerprintUseCheckBox.setChecked(false);

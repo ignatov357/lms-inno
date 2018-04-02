@@ -1,7 +1,5 @@
 package com.awesprojects.innolib.interfaces;
 
-import android.app.Activity;
-
 import com.awesprojects.innolib.activities.HomeActivity;
 
 /**

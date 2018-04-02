@@ -3,7 +3,6 @@ package com.awesprojects.innolib.fragments;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -293,7 +292,7 @@ public class IdentityConfirmFragment extends AbstractExtendedFragment
         StringBuilder pin = new StringBuilder();
         int[] pinArray = mLastReceivedPin;
         for (int i = 0; i < pinArray.length; i++) {
-            pin.append(pinArray[i]+"");
+            pin.append(pinArray[i]).append("");
         }
         secureStorageTransaction.put("PIN",pin.toString());
         if (cardEnabled){
@@ -543,9 +542,7 @@ public class IdentityConfirmFragment extends AbstractExtendedFragment
             try {
                 byte[] bytes = ndef.getNdefMessage().toByteArray();
                 byte[] usefulData = new byte[64];
-                for (int i = 0; i < 64; i++) {
-                    usefulData[i] = bytes[i];
-                }
+                System.arraycopy(bytes, 0, usefulData, 0, 64);
                 onDataReceived(usefulData);
             } catch (IOException e) {
                 e.printStackTrace();

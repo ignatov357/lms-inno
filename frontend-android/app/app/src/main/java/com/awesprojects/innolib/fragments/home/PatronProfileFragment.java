@@ -1,6 +1,5 @@
 package com.awesprojects.innolib.fragments.home;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -8,23 +7,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.Slide;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.awesprojects.innolib.InnolibApplication;
 import com.awesprojects.innolib.R;
 import com.awesprojects.innolib.adapters.CheckedOutDocsAdapter;
 import com.awesprojects.innolib.fragments.home.abstracts.AbstractProfileFragment;
 import com.awesprojects.innolib.managers.DocumentManager;
-import com.awesprojects.innolib.utils.logger.LogSystem;
 import com.awesprojects.lmsclient.api.ResponsableContainer;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.Collections;
 
 /**
  * Created by ilya on 2/4/18.
@@ -61,6 +55,7 @@ public class PatronProfileFragment extends AbstractProfileFragment {
         if (savedInstanceState==null){
             updateCheckedOutDocs();
         }else{
+            //noinspection unchecked
             mCheckedOutDocuments = (ArrayList<Document>)savedInstanceState.getSerializable("CHECKED_OUT_DOCUMENTS");
             onUpdatedCheckedOutDocs();
         }
@@ -71,9 +66,11 @@ public class PatronProfileFragment extends AbstractProfileFragment {
     }
 
     public void updateCheckedOutDocs(){
+        mCheckedOutSwipeRefreshLayout.setRefreshing(true);
         DocumentManager.getCheckedOutDocuments(InnolibApplication.getAccessToken(), (documents) -> {
             System.out.println("checkout docs update completed");
             if (documents instanceof ResponsableContainer) {
+                //noinspection unchecked
                 onUpdatedCheckedOutDocs( ((ResponsableContainer<Document[]>)documents).get());
             }else{
                 //TODO: second case
@@ -94,9 +91,7 @@ public class PatronProfileFragment extends AbstractProfileFragment {
 
     public void updateArrayList(Document[] documents) {
         mCheckedOutDocuments.clear();
-        for (int i = 0; i < documents.length; i++) {
-            mCheckedOutDocuments.add(documents[i]);
-        }
+        Collections.addAll(mCheckedOutDocuments, documents);
     }
 
     @Override

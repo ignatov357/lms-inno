@@ -8,16 +8,19 @@ import com.awesprojects.lmsclient.api.DocumentsAPI;
 import com.awesprojects.lmsclient.api.ResponsableContainer;
 import com.awesprojects.lmsclient.api.UsersAPI;
 import com.awesprojects.lmsclient.api.data.AccessToken;
-import com.awesprojects.lmsclient.api.data.documents.Document;
 import com.awesprojects.lmsclient.api.internal.Responsable;
 
 import java.util.Calendar;
+import java.util.logging.Logger;
 
 /**
  * Created by ilya on 3/1/18.
  */
 
 public class DocumentManager {
+
+    public static final String TAG = "DocumentManager";
+    private static final Logger log = Logger.getLogger(TAG);
 
     private static DocumentManager mInstance;
 
@@ -43,8 +46,9 @@ public class DocumentManager {
         getDocumentAsyncTask.execute(availableOnly);
     }
     public interface OnGetDocumentsListener {
-        public void onDocumentGet(Responsable documents);
+        void onDocumentGet(Responsable documents);
     }
+
     private static class GetDocumentAsyncTask extends AsyncTask<Boolean,Integer,Responsable>{
         OnGetDocumentsListener onGetDocumentsListener;
         public void setListener(OnGetDocumentsListener listener){
@@ -94,9 +98,11 @@ public class DocumentManager {
         asyncTask.setListener(checkOutListener);
         asyncTask.execute(accessToken,documentId);
     }
+
     public interface OnDocumentCheckOutListener {
         void onDocumentCheckedOut(Responsable responsable);
     }
+
     private static class CheckOutDocumentAsyncTask extends AsyncTask<Object,Integer,Responsable>{
 
         OnDocumentCheckOutListener onDocumentCheckOutListener;
@@ -115,6 +121,38 @@ public class DocumentManager {
         protected void onPostExecute(Responsable responsable) {
             super.onPostExecute(responsable);
             onDocumentCheckOutListener.onDocumentCheckedOut(responsable);
+        }
+    }
+
+    public static void renewDocumentAsync(AccessToken accessToken,int documentId,
+                                          OnDocumentRenewListener renewListener){
+        RenewDocumentAsyncTask asyncTask = new RenewDocumentAsyncTask();
+        asyncTask.setListener(renewListener);
+        asyncTask.execute(accessToken,documentId);
+    }
+
+    public interface OnDocumentRenewListener {
+        void onDocumentRenewed(Responsable responsable);
+    }
+
+    private static class RenewDocumentAsyncTask extends AsyncTask<Object,Integer,Responsable>{
+
+        OnDocumentRenewListener onDocumentRenewListener;
+
+        public void setListener(OnDocumentRenewListener listener){
+            onDocumentRenewListener = listener;
+        }
+        @Override
+        protected Responsable doInBackground(Object... objects) {
+            String token = ((AccessToken)objects[0]).getToken();
+            int id = (int) objects[1];
+            return DocumentsAPI.renewDocument(token,id);
+        }
+
+        @Override
+        protected void onPostExecute(Responsable responsable) {
+            super.onPostExecute(responsable);
+            onDocumentRenewListener.onDocumentRenewed(responsable);
         }
     }
 
@@ -150,7 +188,7 @@ public class DocumentManager {
         int year = c.get(Calendar.YEAR) % 100;
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
-        sb.append("return till ");
+        sb.append("Return till ");
         sb.append(day).append(".").append(month<10 ? "0"+month : month).append(".").append(year < 10 ? "0"+year : year);
         sb.append(" at ").append(hour).append(":").append(minute<10 ? "0"+minute : minute);
         return sb.toString();

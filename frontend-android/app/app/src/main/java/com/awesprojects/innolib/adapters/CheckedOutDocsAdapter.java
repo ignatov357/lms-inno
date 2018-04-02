@@ -81,7 +81,7 @@ public class CheckedOutDocsAdapter extends RecyclerView.Adapter<CheckedOutDocsAd
             mDocType = itemView.findViewById(R.id.home_profile_checkedout_element_type);
             mDocAuthor = itemView.findViewById(R.id.home_profile_checkedout_element_author);
             mTimeLeft = itemView.findViewById(R.id.home_profile_checkedout_element_left_time);
-            mOverdueIndicator = itemView.findViewById(R.id.home_profile_checkedout_element_overedue_indicator);
+            mOverdueIndicator = itemView.findViewById(R.id.home_profile_checkedout_element_overdue_indicator);
         }
 
         public void setTitle(String title){
@@ -103,7 +103,7 @@ public class CheckedOutDocsAdapter extends RecyclerView.Adapter<CheckedOutDocsAd
             }else{
                 mOverdueIndicator.setVisibility(View.INVISIBLE);
             }
-            String returnAt = DocumentManager.getPrettyReturnDate(millis*1000);
+            String returnAt = DocumentManager.getPrettyReturnDate(millis*1000).toLowerCase();
             mTimeLeft.setText(returnAt);
         }
 

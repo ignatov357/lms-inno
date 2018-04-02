@@ -12,11 +12,16 @@ import com.awesprojects.lmsclient.api.UsersAPI;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 import com.awesprojects.lmsclient.api.internal.Responsable;
 
+import java.util.logging.Logger;
+
 /**
  * Created by ilya on 2/23/18.
  */
 
 public class SignInManager {
+
+    public static final String TAG = "SignInManager";
+    private static final Logger log = Logger.getLogger(TAG);
 
     private static SignInManager mInstance;
 
@@ -44,15 +49,13 @@ public class SignInManager {
     public boolean isDeviceSupportsNfc(Context context){
         ensureManagersInitialized(context);
         if (true) return true;
-        return mNfcManager.getDefaultAdapter()!=null ? true : false;
+        return mNfcManager.getDefaultAdapter() != null;
     }
 
-    public boolean isDeviceSupportsFingerprint(Context context){
+    public boolean isDeviceSupportsFingerprint(Context context) {
         ensureManagersInitialized(context);
         if (true) return true;
-        if (Build.VERSION.SDK_INT>=23)
-            return mFingerprintManager.isHardwareDetected();
-        return false;
+        return Build.VERSION.SDK_INT >= 23 && mFingerprintManager.isHardwareDetected();
     }
 
     public void startApiSigningIn(String id_str,String password){

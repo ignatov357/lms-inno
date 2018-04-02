@@ -1,6 +1,7 @@
 package com.awesprojects.innolib.fragments.home;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,16 @@ import com.awesprojects.lmsclient.api.data.documents.Book;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 import com.awesprojects.lmsclient.api.data.documents.EMaterial;
 
+import java.util.logging.Logger;
+
 /**
  * Created by Ilya on 3/20/2018.
  */
 
 public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements View.OnClickListener{
+
+    public static final String TAG = "DocInfoFragment";
+    private static final Logger log = Logger.getLogger(TAG);
 
     public interface OnCheckoutResultListener {
         void onResult(int status, Document document, String reason);
@@ -32,16 +38,20 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
 
     Document mDocument;
     ImageView mPreviewImageView;
+    View mBestsellerIndicator;
     Toolbar mToolbar;
     TextView mAuthorTextView;
     TextView mStockTextView;
     TextView mEditionTextView;
     TextView mKeywordsTextView;
     TextView mBottomInfoTextView;
+    TextView mTopInfo1TextView;
+    TextView mPriceTextView;
     Button mCheckoutButton;
     int mStockColorNormal;
     int mColorRed;
     int mColorYellow;
+    boolean checkoutMode=true;
     LibraryCheckoutConfirmFragment.OnCheckoutResultListener mResultListener;
 
     @Override
@@ -55,17 +65,18 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
         mColorYellow = getResources().getColor(R.color.colorDarkYellow);
         mColorRed = getResources().getColor(R.color.colorDarkRed);
         mToolbar = getContentView().findViewById(R.id.fragment_document_detail_toolbar);
+        mBestsellerIndicator = getContentView().findViewById(R.id.fragment_document_detail_bestseller_indicator);
         mAuthorTextView = getContentView().findViewById(R.id.fragment_document_detail_authors_textview);
         mKeywordsTextView = getContentView().findViewById(R.id.fragment_document_detail_keywords_textview);
         mPreviewImageView = getContentView().findViewById(R.id.fragment_document_detail_preview_imageview);
         mEditionTextView = getContentView().findViewById(R.id.fragment_document_detail_edition_textview);
+        mTopInfo1TextView = getContentView().findViewById(R.id.fragment_document_detail_top_first_textview);
         mBottomInfoTextView = getContentView().findViewById(R.id.fragment_document_detail_bottom_info_textview);
         mCheckoutButton = getContentView().findViewById(R.id.fragment_document_detail_checkout_button);
         mStockTextView = getContentView().findViewById(R.id.fragment_document_detail_instock_textview);
+        mPriceTextView = getContentView().findViewById(R.id.fragment_document_detail_price_textview);
         setupDocument(mDocument);
-        if (mDocument.getCheckOutInfo()!=null){
-            setupCheckOutInfo(mDocument.getCheckOutInfo());
-        }
+        setupCheckOutInfo(mDocument.getCheckOutInfo());
         getContentView().requestApplyInsets();
        // hideHomeUI(true);
     }
@@ -78,7 +89,18 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
         setKeywords(preparedKeywords(document));
         mPreviewImageView.setImageResource(R.drawable.ic_library_books_black_36dp);
         mCheckoutButton.setEnabled(true);
+        mTopInfo1TextView.setVisibility(View.GONE);
         mBottomInfoTextView.setVisibility(View.GONE);
+        if (document.getPrice()!=null) {
+            try {
+                float price = Float.parseFloat(document.getPrice());
+                if (price > 0)
+                    mPriceTextView.setText("Price : "+document.getPrice());
+            } catch (Throwable t) {
+                log.info("unable to parse price for doc with id = "+document.getId());
+                mPriceTextView.setText("Price : "+document.getPrice());
+            }
+        }
         if (document instanceof Book){
             mPreviewImageView.setImageResource(R.drawable.ic_library_books_black_36dp);
             mEditionTextView.setText(((Book) document).getEdition()+" edition");
@@ -87,11 +109,20 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
                 mBottomInfoTextView.setText("This is a reference book");
                 mCheckoutButton.setEnabled(false);
             }
+            if (((Book) document).isBestseller()){
+                mBestsellerIndicator.setVisibility(View.VISIBLE);
+            }else{
+                mBestsellerIndicator.setVisibility(View.INVISIBLE);
+            }
         }else{
             mEditionTextView.setVisibility(View.GONE);
         }
         if (document instanceof Article){
             mPreviewImageView.setImageResource(R.drawable.ic_insert_drive_file_black_48dp);
+            mEditionTextView.setVisibility(View.VISIBLE);
+            mEditionTextView.setText("Published in " + ((Article) document).getJournalTitle() + " in " + ((Article) document).getJournalIssuePublicationDate());
+            mTopInfo1TextView.setVisibility(View.VISIBLE);
+            mTopInfo1TextView.setText("Issue edited by "+((Article) document).getJournalIssueEditors());
         }
         if (document instanceof EMaterial){
             mPreviewImageView.setImageResource(R.drawable.ic_video_library_black_48dp);
@@ -105,10 +136,22 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
 
     public void setupCheckOutInfo(CheckOutInfo checkOutInfo){
         ViewGroup vg = getContentView().findViewById(R.id.fragment_document_detail_checkout_layout);
+        if (checkOutInfo==null){
+            vg.setVisibility(View.GONE);
+            return;
+        }
         TextView returnDate  = vg.findViewById(R.id.fragment_document_detail_return_date_textview);
+        View overdueIndicator = vg.findViewById(R.id.fragment_document_detail_overdue_indicator);
         String returnAt = DocumentManager.getPrettyReturnDate(checkOutInfo.getReturnTill());
         returnDate.setText(returnAt);
-        mCheckoutButton.setVisibility(View.GONE);
+        if (checkOutInfo.getReturnTill()*1000<System.currentTimeMillis())
+            overdueIndicator.setVisibility(View.VISIBLE);
+        else
+            overdueIndicator.setVisibility(View.GONE);
+        TextView currentFine  = vg.findViewById(R.id.fragment_document_detail_fine_textview);
+        currentFine.setText("Current fine : "+checkOutInfo.getFine());
+        mCheckoutButton.setText("RENEW");
+        checkoutMode = false;
     }
 
     public void setOnCheckoutListener(LibraryCheckoutConfirmFragment.OnCheckoutResultListener listener){
@@ -173,28 +216,70 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
 
     @Override
     public void onClick(View view) {
-        checkOut();
+        if (checkoutMode)
+            checkOut();
+        else
+            renew();
     }
 
     public void onCheckOutSucceed() {
-        Toast.makeText(getActivity(),"operation succeed",Toast.LENGTH_LONG).show();
+        Snackbar.make(getContentView(),"Checkout succeed",Snackbar.LENGTH_SHORT).show();
         if (mResultListener != null)
             mResultListener.onResult(0, mDocument, null);
     }
 
     public void onCheckOutFailed(String desc) {
-        Toast.makeText(getActivity(),desc,Toast.LENGTH_LONG).show();
+        final Snackbar s = Snackbar.make(getContentView(),desc,Snackbar.LENGTH_LONG);
+        s.setAction("OK",(view) -> {s.dismiss();});
+        s.show();
     }
 
-    public void checkOut(){
-        DocumentManager.checkOutDocumentAsync(InnolibApplication.getAccessToken(), mDocument.getId(),
+    public void onRenewSucceed(){
+        Snackbar.make(getContentView(),"Renew succeed",Snackbar.LENGTH_SHORT).show();
+        if (mResultListener != null)
+            mResultListener.onResult(0, mDocument, null);
+    }
+
+    public void onRenewFailed(String desc){
+        final Snackbar s = Snackbar.make(getContentView(),desc,Snackbar.LENGTH_LONG);
+        s.setAction("OK",(view) -> {s.dismiss();});
+        s.show();
+    }
+
+
+
+
+
+    boolean savedCheckoutEnabledState;
+
+    public void renew(){
+        mCheckoutButton.setEnabled(false);
+        DocumentManager.renewDocumentAsync(InnolibApplication.getAccessToken(),mDocument.getId(),
                 (responsable) -> {
+                    mCheckoutButton.setEnabled(true);
                     if (responsable instanceof Response) {
                         int status = ((Response) responsable).getStatus();
                         if (status == 200) {
                             onCheckOutSucceed();
                         } else {
-                            onCheckOutFailed(responsable.toString());
+                            onCheckOutFailed(((Response) responsable).getDescription());
+                        }
+                    }
+                });
+    }
+
+    public void checkOut(){
+        savedCheckoutEnabledState = mCheckoutButton.isEnabled();
+        mCheckoutButton.setEnabled(false);
+        DocumentManager.checkOutDocumentAsync(InnolibApplication.getAccessToken(), mDocument.getId(),
+                (responsable) -> {
+                    mCheckoutButton.setEnabled(savedCheckoutEnabledState);
+                    if (responsable instanceof Response) {
+                        int status = ((Response) responsable).getStatus();
+                        if (status == 200) {
+                            onCheckOutSucceed();
+                        } else {
+                            onCheckOutFailed(((Response) responsable).getDescription());
                         }
                     }
                 });

@@ -1,11 +1,10 @@
 package com.awesprojects.innolib.adapters;
 
 import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionManager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,21 +29,55 @@ public class PatronLibraryListAdapter extends RecyclerView.Adapter<PatronLibrary
     }
 
     PatronLibraryFragment mPatronLibraryFragment;
+
+    ArrayList<Document> mCurrentDocuments;
     ArrayList<Document> mDocuments;
+    ArrayList<Document> mBookDocuments;
+    ArrayList<Document> mArticleDocuments;
+    ArrayList<Document> mAVDocuments;
     String mCheckoutDisabledReference;
     String mCheckoutDisabledMagazine;
     View.OnClickListener mOnHolderClickListener;
     OnShowDocumentDetailsListener mOnShowDocumentDetailsListener;
+    int mCurrentDocumentsType = -1;
 
     public PatronLibraryListAdapter(PatronLibraryFragment patronLibraryFragment) {
+        super();
         mPatronLibraryFragment = patronLibraryFragment;
         mCheckoutDisabledReference = patronLibraryFragment.getString(R.string.home_library_list_document_checkout_unavailable_reference);
         mCheckoutDisabledMagazine = patronLibraryFragment.getString(R.string.home_library_list_document_checkout_unavailable_magazine);
         mOnHolderClickListener = new OnShowDetailsListener(this);
+        mBookDocuments = new ArrayList<>();
+        mArticleDocuments = new ArrayList<>();
+        mAVDocuments = new ArrayList<>();
     }
 
     public void setDocuments(ArrayList<Document> documents) {
         mDocuments = documents;
+        mBookDocuments.clear();
+        mArticleDocuments.clear();
+        mAVDocuments.clear();
+        for ( Document d : documents) {
+            switch (d.getType()){
+                case 0: { mBookDocuments.add(d); break; }
+                case 1: { mArticleDocuments.add(d); break; }
+                case 2: { mAVDocuments.add(d); break; }
+            }
+        }
+        setDocumentsType(mCurrentDocumentsType);
+    }
+
+    public void setDocumentsType(int type){
+        ArrayList<Document> previousDocuments = mCurrentDocuments;
+        if (type==-1)
+            mCurrentDocuments = mDocuments;
+        if (type==0)
+            mCurrentDocuments = mBookDocuments;
+        if (type==1)
+            mCurrentDocuments = mArticleDocuments;
+        if (type==2)
+            mCurrentDocuments = mAVDocuments;
+        notifyDataSetChanged();
     }
 
     public void setOnShowDocumentDetailsListener(OnShowDocumentDetailsListener listener) {
@@ -70,8 +103,8 @@ public class PatronLibraryListAdapter extends RecyclerView.Adapter<PatronLibrary
 
     @Override
     public void onBindViewHolder(PatronLibraryListItemHolder holder, int position) {
-        if (mDocuments == null) return;
-        Document doc = mDocuments.get(position);
+        if (mCurrentDocuments == null) return;
+        Document doc = mCurrentDocuments.get(position);
         holder.setDocumentType(doc.getType());
         holder.setItemOnClickListener(doc, mOnHolderClickListener);
         //holder.setCheckoutListener(doc.getId(), mOnCheckoutClickListener);
@@ -107,8 +140,8 @@ public class PatronLibraryListAdapter extends RecyclerView.Adapter<PatronLibrary
 
     @Override
     public int getItemCount() {
-        if (mDocuments != null)
-            return mDocuments.size();
+        if (mCurrentDocuments != null)
+            return mCurrentDocuments.size();
         return 0;
     }
 
