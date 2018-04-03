@@ -1,5 +1,6 @@
 frontend-android/app/build
 frontend-android/app/app/build
+frontend-android/app/.idea/
 java-client/target
 java-client/libs/.*
-java-client/.idea/.workspace.xml
+java-client/.idea/
