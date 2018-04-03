@@ -1,14 +1,20 @@
 package com.awesprojects.innolib.managers;
 
+import android.support.annotation.NonNull;
+
 import com.awesprojects.innolib.InnolibApplication;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilterInputStream;
+import java.io.FilterOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -54,6 +60,7 @@ public class SecureStorageManager {
     private int save() {
         try {
             FileOutputStream fos = new FileOutputStream(mStorage);
+           // EncryptingOutputStream eos = new EncryptingOutputStream(fos);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(mData);
             oos.close();
@@ -70,6 +77,7 @@ public class SecureStorageManager {
     private boolean load() {
         try {
             FileInputStream fis = new FileInputStream(mStorage);
+            //EncryptingInputStream eis = new EncryptingInputStream(fis);
             ObjectInputStream ois = new ObjectInputStream(fis);
             //noinspection unchecked
             mData = (HashMap<String, String>) ois.readObject();
@@ -100,6 +108,33 @@ public class SecureStorageManager {
 
         public int commit() {
             return secureStorageManager.commit(this);
+        }
+    }
+
+    private static final class EncryptingOutputStream extends FilterOutputStream {
+
+        public EncryptingOutputStream(@NonNull OutputStream out) {
+            super(out);
+        }
+
+        @Override
+        public void write(int i) throws IOException {
+            out.write(i^255);
+        }
+
+    }
+
+    private static final class EncryptingInputStream extends FilterInputStream{
+
+        protected EncryptingInputStream(InputStream in) {
+            super(in);
+        }
+
+        @Override
+        public int read() throws IOException {
+            int rb = in.read();
+            if (rb==-1) return -1;
+            return rb^255;
         }
     }
 }

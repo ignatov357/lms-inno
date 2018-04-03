@@ -38,12 +38,16 @@ public class LogHandler extends ConsoleHandler {
                 c.setTimeInMillis(record.getMillis());
                 StringBuilder sb = new StringBuilder();
                 dumpCalendar(c, sb);
-                return new StringBuilder()
+                StringBuilder out = new StringBuilder()
                         .append(sb).append(" ")
                         .append(String.format("%1$-7s ",record.getLevel().getName()))
-                        .append(String.format("[%1$-18s] : ",record.getLoggerName()))
-                        .append(record.getMessage())
-                        .toString();
+                        .append(String.format("[%1$-18s] : ",record.getLoggerName()));
+                if (record.getMessage().equals("THROW")){
+                    out.append("thrown "+record.getThrown());
+                }else {
+                    out.append(record.getMessage());
+                }
+                return out.toString();
             }
         };
     }

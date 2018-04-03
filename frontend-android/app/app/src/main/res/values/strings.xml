@@ -18,6 +18,8 @@
     <string name="signin_methods_pin_info">Pin</string>
     <string name="signin_methods_card_info">University card</string>
     <string name="signin_methods_fingerprint_info">Fingerprint</string>
+    <string name="signout_confirm_title">Confirm sign out</string>
+    <string name="signout_confirm_question">Do you want to sign out?</string>
     <string name="identity_confirm_title">Confirm Identity</string>
     <string name="identity_confirm_pin_mismatch">Wrong pin, try again</string>
     <string name="identity_confirm_train_pin_only_info">Enter your new pin</string>

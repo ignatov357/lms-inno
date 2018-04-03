@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.widget.FrameLayout;
@@ -21,8 +22,10 @@ import com.awesprojects.innolib.managers.SecureStorageManager;
 import com.awesprojects.innolib.managers.SignInManager;
 import com.awesprojects.innolib.managers.UserManager;
 import com.awesprojects.innolib.utils.SignInHandler;
+import com.awesprojects.lmsclient.api.Response;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 import com.awesprojects.lmsclient.api.data.users.User;
+import com.awesprojects.lmsclient.api.internal.Responsable;
 
 import java.util.logging.Logger;
 
@@ -176,11 +179,25 @@ public class StartActivity extends Activity implements SignInFragment.OnSignInLi
         } else {
             int userId = Integer.parseInt(idStr);
             String password = SecureStorageManager.getInstance().get("USER_PASSWORD");
-            SignInManager.getInstance().getSignInHandler().attach(this);
-            SignInManager.getInstance().startApiSigningIn(userId + "", password);
+            //SignInManager.getInstance().getSignInHandler().attach(this);
+            //SignInManager.getInstance().startApiSigningIn(userId + "", password);
+            UserManager.getInstance().signInAsync(this,userId,password, this::onSignInResult);
         }
     }
 
+    public void onSignInResult(Responsable result){
+        if (result instanceof AccessToken){
+            InnolibApplication.setAccessToken(((AccessToken) result));
+            finishAllAndShowHome();
+        }else if (result instanceof Response){
+            log.warning("failed sign in : "+result.toString());
+            //Snackbar.make(mContainer,((Response) result).getDescription(),Snackbar.LENGTH_LONG).show();
+        }else{
+            log.warning("strange response on sign in : "+result);
+            //Snackbar.make(mContainer,"sign in error",Snackbar.LENGTH_LONG).show();
+        }
+    }
+    
     @Override
     public void onSignInResult(Message msg) {
         switch (msg.what) {

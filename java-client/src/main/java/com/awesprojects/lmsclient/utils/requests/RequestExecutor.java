@@ -30,19 +30,24 @@ public class RequestExecutor {
 
     public static String executeRequest(String address,int port,String request){
         AbstractApiRequest apiRequest = createApiRequest(address, port, request);
-        return apiRequest.execute(request);
+        try {
+            apiRequest.connect();
+            return apiRequest.execute(request);
+        }catch (IOException e) {
+            log.fine("error occured while request : "+e.toString());
+        }
+        return null;
     }
 
     public static AbstractApiRequest createApiRequest(String request){
-        return  createApiRequest(Config.getCurrentConfig().getApiDomain(),80,request);
+        return createApiRequest(Config.getCurrentConfig().getApiDomain(),80,request);
     }
 
     public static AbstractApiRequest createApiRequest(String address,int port,String request){
         boolean secureConnection = Config.getCurrentConfig().isSecure();
-        AbstractApiRequest apiRequest = null;
+        AbstractApiRequest apiRequest = apiRequest = secureConnection ? new ApiSecureRequest(address, port) : new ApiRequest(address, port);
         try {
-            apiRequest = secureConnection ?
-                    new ApiSecureRequest(address, port) : new ApiRequest(address, port);
+
         }catch(Throwable t){
             log.warning("execute request failed : "+t.toString());
         }
@@ -55,8 +60,15 @@ public class RequestExecutor {
     public static class ApiRequest extends AbstractApiRequest{
 
         private Socket socket;
+        private String address;
+        private int port;
 
-        public ApiRequest(String address,int port) throws IOException {
+        public ApiRequest(String address,int port){
+            this.address = address;
+            this.port = port;
+        }
+
+        public void connect() throws IOException {
             socket = SocketFactory.getDefault().createSocket(address, port);
         }
 
@@ -99,15 +111,23 @@ public class RequestExecutor {
     public static class ApiSecureRequest extends AbstractApiRequest{
 
         SSLSocket socket;
+        private String address;
+        private int port;
 
-        public ApiSecureRequest(String address,int port) throws IOException {
-            socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(address, port);
+        public ApiSecureRequest(String address,int port){
+            this.address = address;
+            this.port = port;
         }
 
         @Override
         public String execute(String request) {
             //TODO: implement
             return null;
+        }
+
+        @Override
+        public void connect() throws IOException {
+            socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(address, port);
         }
 
         @Override
@@ -118,6 +138,7 @@ public class RequestExecutor {
 
     public static abstract class AbstractApiRequest{
         public abstract String execute(String request);
+        public abstract void connect() throws IOException;
         public abstract Socket getSocket();
     }
 

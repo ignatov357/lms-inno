@@ -20,6 +20,7 @@ public class Response implements Responsable {
     public static final int STATUS_OK = 200;
     public static final int STATUS_ACCESS_TOKEN_ERROR = 401;
     public static final int STATUS_BAD_REQUEST_ERROR = 400;
+    public static final int STATUS_HOST_UNAVAILABLE = -2;
 
     public Response(int status) {
         this(status, "standart for " + status + " response code");
@@ -46,6 +47,10 @@ public class Response implements Responsable {
         return status == STATUS_BAD_REQUEST_ERROR;
     }
 
+    public boolean inHostResolveFailed(){
+        return status == STATUS_HOST_UNAVAILABLE;
+    }
+
 
     public static int getResultCode(String httpResponse) {
         if (httpResponse == null) return -1;
@@ -63,6 +68,8 @@ public class Response implements Responsable {
 
     public static Response getResult(String httpResponse) {
         int resultCode = getResultCode(httpResponse);
+        if (resultCode==-1)
+            return new Response(STATUS_HOST_UNAVAILABLE,"Host unavailable");
         JSONObject object = getJsonBody(httpResponse);
         if (object == null)
             return new Response(resultCode);

@@ -1,6 +1,8 @@
 package com.awesprojects.innolib.fragments.home.abstracts;
 
 import android.os.Bundle;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.View;
 
 /**
@@ -9,6 +11,13 @@ import android.view.View;
 
 public class AbstractHomeOverlayFragment extends AbstractHomeFragment {
 
+
+
+    public AbstractHomeOverlayFragment(){
+        super();
+        setEnterTransition(new Slide(Gravity.BOTTOM));
+        setExitTransition(new Slide(Gravity.BOTTOM));
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
