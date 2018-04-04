@@ -1,6 +1,7 @@
 package com.awesprojects.lmsclient.api;
 
 import com.awesprojects.lmsclient.api.data.ServerNotification;
+import com.awesprojects.lmsclient.api.internal.ApiCall;
 import com.awesprojects.lmsclient.utils.requests.LongPollRequest;
 import com.awesprojects.lmsclient.utils.requests.RequestFactory;
 
@@ -111,6 +112,7 @@ public class NotificationAPI {
             notificationReceiver = receiver;
         }
 
+        @ApiCall(path = "/notifications")
         public void run(){
 
         }

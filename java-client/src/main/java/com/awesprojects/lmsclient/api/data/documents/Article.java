@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
+
 public class Article extends Document implements Responsable,Serializable{
 
     public Article(){
