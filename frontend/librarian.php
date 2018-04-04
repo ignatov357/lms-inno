@@ -120,12 +120,12 @@
 <body>
 <div id="header" style="text-align: center;z-index: 11">
     <a href="" id="table-users">
-        <div style="position: absolute;background: #cddc39;left: 1%; top: 0; width: 10%;height:100%;">
+        <div style="position: absolute;background: #cddc39;left: 1%; top: 0%; width: 15%;height:100%;text-align: center;">
             <h4>USERS EDITING</h4>
         </div>
     </a>
     <a href="" id="table-documents">
-        <div style="position: absolute;background: #cddc39;left: 12%; top: 0; width: 10%;height:100%;">
+        <div style="position: absolute;background: #cddc39;left: 17%; top: 0; width: 15%;height:100%;text-align: center;">
             <h4>DOCUMENTS EDITING</h4>
         </div>
     </a>
@@ -142,8 +142,12 @@
      style="position: absolute; background: rgba(0,0,0,0.3); width: 100%;height: 100%;visibility: hidden;z-index: 6;">
 </div>
 <div id="popup"
-     style="position: absolute; left: 20%; top: 20%; width: 60%; height: 60%; background: white;padding: 20px;visibility: hidden;z-index: 7; overflow: scroll">
+     style="position: absolute; left: 7.5%; top: 10%; width: 80%; height: 75%; background: white;padding: 20px;visibility: hidden;z-index: 7; overflow: scroll">
 </div>
+<div id='popup-2'
+     style="position: absolute; left: 7.5%; top: 10%; width: 80%; height: 75%; background: white;padding: 20px;visibility: hidden;z-index: 9;overflow: scroll;"></div>
+<div id='hider-2'
+     style="position: absolute; left: 0; background: rgba(0,0,0,0.3); width: 100%;height: 100%;top: 0;visibility: hidden;z-index: 8;"></div>
 <button id="add" style="position: absolute; top: 85%; left: 1%;visibility: hidden;padding: 10px" class="btn"></button>
 <button id="modify" style="position: absolute; top: 85%; left: 8%;visibility: hidden;padding: 10px"
         class="btn"></button>

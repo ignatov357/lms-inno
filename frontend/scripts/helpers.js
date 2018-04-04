@@ -338,6 +338,25 @@ function returnDocument(user_id, document_id) {
     })
 }
 
+function renewDocument(document_id) {
+    var req = $.ajax({
+        async: false,
+        type: "POST",
+        url: "http://api.awes-projects.com/documents/renewDocument/",
+        headers: {"Access-Token": getAccessTokenFromCookie()},
+        data : {
+            "documentID" : document_id
+        },
+        success: function () {
+            alert("You have renewed document!");
+        },
+        error: function (obj) {
+            alert(obj.responseText);
+        }
+    })
+
+}
+
 //########################################CATALOGUE#####################################################################
 
 function formHTMLString(query, query_or_response, json_str) {
@@ -443,20 +462,31 @@ function getDocumentsField() {
                 } else {
                     html_text += "<p>" + value.edition + "th edition</p>";
                 }
+                if (value.bestseller == 1) {
+                    html_text += "<div style='background: #fff123; padding: 5px'><p><b>BESTSELLER</b></p></div>";
+                }
             }
 
-            if (value.bestseller == 1) {
-                html_text += "<div style='background: #fff123; padding: 5px'><p><b>BESTSELLER</b></p></div>";
+            if(value['type'] == 1){
+                html_text+="<br><br><p><i>Article in journal <b>" + value.journalTitle +"</b> published <b>" + value.journalIssuePublicationDate +"</b> edited by " + value.journalIssueEditors +"</i></p>"
             }
+
+
 
             if (value.reference == 1) {
-                html_text += "<p><i>This is reference book. You cannot checkout it</i></p></div>";
+                html_text += "<p><i>This is reference document. You cannot checkout it</i></p></div>";
                 return;
             }
 
             html_text += "<br/><button style='padding: 5px;' class='btn' id='checkout-book-" + value.id + "'><p><b>CHECKOUT</b></p></button><p><i>" + value.instockCount + " in stock</i></p></div>";
         });
-        return html_text;
+        $("#books-field").empty();
+        $("#books-field").append(html_text);
+        $(".btn").click(function () {
+            var book_id = $(this).attr("id").replace("checkout-book-", "");
+            checkoutDocument(book_id);
+            getDocumentsField();
+        });
     } else return false;
 }
 
@@ -498,15 +528,26 @@ function getUsersDocumentsFiled() {
                 } else {
                     html_text += "<p>" + value.edition + "th edition</p>";
                 }
+
+                if (value.bestseller == 1) {
+                    html_text += "<div style='background: #fff123; padding: 5px'><p><b>BESTSELLER</b></p></div>";
+                }
             }
 
-            if (value.bestseller == 1) {
-                html_text += "<div style='background: #fff123; padding: 5px'><p><b>BESTSELLER</b></p></div>";
+            if(value['type'] == 1){
+                html_text+="<br><br><p><i>Article in journal <b>" + value.journalTitle +"</b> published <b>" + value.journalIssuePublicationDate +"</b> edited by " + value.journalIssueEditors +"</i></p>"
             }
 
-            html_text += "<br/><h4><i>Return till " + new Date(val.returnTill * 1000).toUTCString() + "</i></h4></div>";
+
+            html_text += "<br/><h4><i>Return till " + new Date(val.returnTill * 1000).toUTCString() + "</i></h4>" +
+                "<button class='renew' name='" + value.id + "'>RENEW DOCUMENT</button></div>";
         });
-        return html_text;
+        $("#books-field").empty();
+        $("#books-field").append(html_text);
+        $(".renew").click(function () {
+            renewDocument($(this).attr("name"));
+            getUsersDocumentsFiled();
+        });
     }
 }
 
@@ -747,7 +788,7 @@ function popupAddUser(object) {
 
     var html = "<select id='popup-sel'><option selected='true' disabled>Choose a type of user</option><option name='0'>Librarian</option><option name='1'>Student</option><option name='2'>TA</option><option name='3'>Professor</option>" +
         "<option name='4'>Instructor</option><option name='5'>VP</option> </select>" +
-        "<p>Name:</br> <input id='name'>  Address:</br> <input id='address'>  Phone number:</br> <input id='phone'></p></br>" +
+        "<p>Name:</br> <input id='name'><br>  Address:</br> <input id='address'> <br> Phone number:</br> <input id='phone'></p></br>" +
         "<p><button id='apply'>ADD</button>  <button id='exit'>CANCEL</button></p>";
 
     $(object).append(html);
@@ -789,7 +830,7 @@ function popupModifyUser(object, id) {
 
     var html = "<select id='popup-sel'><option selected='true' disabled>Choose a type of user</option><option name='0' " + sel0 + ">Librarian</option><option name='1' " + sel1 + ">Student</option><option name='2' " + sel2 + ">TA</option>" +
         "<option name='3' " + sel3 + ">Professor</option><option name='4' " + sel4 + ">Instructor</option><option name='5' " + sel5 + ">VP</option> </select>" +
-        "<p>Name:</br> <input id='name' value='" + userInfo.name + "'>  Address:</br> <input id='address' value='" + userInfo.address + "'>  Phone number:</br> <input id='phone' value='" + userInfo.phone + "'></p></br>" +
+        "<p>Name:</br> <input id='name' value='" + userInfo.name + "'> <br> Address:</br> <input id='address' value='" + userInfo.address + "'> <br> Phone number:</br> <input id='phone' value='" + userInfo.phone + "'></p></br>" +
         "<p><button id='apply'>SAVE</button>  <button id='exit'>CANCEL</button></p>";
 
     $(object).append(html);
@@ -821,21 +862,39 @@ function popupMoreUser(object, id) {
     $(object).empty();
     var user = JSON.parse(getUser(id));
 
-    var type = user.type == 0 ? "Student" : (user.type == 1 ? "Faculty" : "Librarian");
+    var type = "";
+    switch (user.type){
+        case 0:
+            type = "Librarian";
+            break;
+        case 1:
+            type = "Student";
+            break;
+        case 2:
+            type = "TA";
+            break;
+        case 3:
+            type = "Professor";
+            break;
+        case 4:
+            type = "Instructor";
+            break;
+        case 5:
+            type = "VP";
+            break;
+    }
 
     var html = "<h2>" + user.name + "</h2>" +
         "<p><i>" + type + "</i></p></br>" +
         "<p>Phone number: " + user.phone + "</p>" +
-        "<p>Address: " + user.address + "</p></br></br>" +
-        "<div id='usr-doc-table' style='position: absolute; top: 60%; left: 0; width: 100%; height: 40%; overflow-y: scroll; '></div></br>" +
-        "<div id='popup-2' style='position: absolute; left: 20%; top: 20%; width: 60%; height: 60%; background: white;padding: 20px;visibility: hidden;z-index: 9;overflow: scroll;'></div>" +
-        "<div id='hider-2' style='position: absolute; left: 0; background: rgba(0,0,0,0.3); width: 100%;height: 100%;top: 0;visibility: hidden;z-index: 8;'></div>";
+        "<p>Address: " + user.address + "</p></br>" +
+        "<div id='usr-doc-table' style='position: absolute; top: 50%; left: 0; width: 100%; height: 40%; overflow-y: scroll; '></div></br>";
 
     $(object).append(html);
-    updateUserCheckedOutDocumentsTable($("#usr-doc-table"), id);
+    var checker = updateUserCheckedOutDocumentsTable($("#usr-doc-table"), id);
 
-    if (JSON.parse(getDocumentsUserCheckedOut(id))) {
-        html = "<button id='return' style='position: absolute; top: 112%; left: 1%' class='btn'>RETURN DOCUMENT</button>  <button id='exit' style='position: absolute; top: 112%; left: 50%' class='btn'>CANCEL</button>";
+    if (checker) {
+        html = "<button id='return' style='position: absolute; top: 92%; left: 1%;padding: 10px;' class='btn'>RETURN DOCUMENT</button>  <button id='exit' style='position: absolute; top: 92%; left: 50%;padding: 10px;' class='btn'>CANCEL</button>";
         $(object).append(html);
     }
 
@@ -859,10 +918,12 @@ function updateUserCheckedOutDocumentsTable(object, id) {
     var html = "<table id='usr-doc' class='adm-table'><tr class='unselectable'><th>ID</th><th>Type</th><th>Title</th><th>Authors</th><th>Return till</th><th>Info</th></tr>";
 
     var docs_table = JSON.parse(getDocumentsUserCheckedOut(id));
-    if (docs_table == undefined) {
+    if (docs_table == (null || undefined) || (docs_table != null && docs_table.length == '1' && docs_table[0].documentInfo == (undefined || null)) || docs_table.length == '0') {
         $(object).append("<p>No checked out documents</p>");
-        return;
+        return false;
     }
+    console.log("docs_table is " + docs_table + ", docs_table.lenght is " + docs_table.length )
+    console.log("docs_table[0].documentInfo is " + docs_table[0].documentInfo);
 
     docs_table.forEach(function (val) {
         var value = val.documentInfo;
@@ -896,6 +957,8 @@ function updateUserCheckedOutDocumentsTable(object, id) {
     $("#usr-doc tr:not(.unselectable)").click(function () {
         $(this).addClass("selected").siblings().removeClass("selected");
     });
+
+    return true;
 }
 
 function popupMoreUserDocument(object, id) {
