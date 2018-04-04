@@ -901,6 +901,10 @@ function popupMoreUser(object, id) {
 
 
     $("#return").click(function () {
+        if(!$("#usr-doc tr.selected td:first").html()){
+            alert("Choose a document to return first!");
+            return;
+        }
         var doc_id = $("#usr-doc tr.selected td:first").html();
 
         returnDocument(id, doc_id);
