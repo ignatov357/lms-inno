@@ -23,6 +23,7 @@ public class Article extends Document implements Responsable,Serializable{
         journalTitle = doc.optString("journal_title",null);
         journalIssuePublicationDate = doc.optString("journal_issue_publication_date", null);
         journalIssueEditors = doc.optString("journal_issue_editors", null);
+        isReference = doc.optInt("reference",0) == 1;
         if (journalTitle==null)
             journalTitle = doc.optString("journalTitle");
         if (journalIssuePublicationDate==null)
@@ -36,5 +37,7 @@ public class Article extends Document implements Responsable,Serializable{
     protected String journalIssuePublicationDate;
 
     protected String journalIssueEditors;
+
+    protected boolean isReference;
 
 }
