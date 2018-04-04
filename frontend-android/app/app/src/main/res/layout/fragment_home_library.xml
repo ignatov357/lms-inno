@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false">
+    android:background="@color/colorLightBackground">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        android:clipToPadding="true"
         android:fitsSystemWindows="false"
         android:nestedScrollingEnabled="true">
 
@@ -44,35 +45,41 @@
             </LinearLayout>
 
             <android.support.design.widget.TabLayout
+                android:id="@+id/fragment_home_library_tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clipToPadding="true"
-                android:fitsSystemWindows="false"
                 android:visibility="visible"
-                app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:tabGravity="center"
                 app:tabMode="scrollable">
 
                 <android.support.design.widget.TabItem
+                    android:id="@+id/fragment_home_library_tab_all"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:tag="-1"
                     android:text="@string/home_library_tab_all" />
 
                 <android.support.design.widget.TabItem
+                    android:id="@+id/fragment_home_library_tab_books"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:tag="0"
                     android:text="@string/home_library_tab_books"
                     android:visibility="invisible" />
 
                 <android.support.design.widget.TabItem
+                    android:id="@+id/fragment_home_library_tab_articles"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:tag="1"
                     android:text="@string/home_library_tab_articles"
                     android:visibility="gone" />
 
                 <android.support.design.widget.TabItem
+                    android:id="@+id/fragment_home_library_tab_av"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:tag="2"
                     android:text="@string/home_library_tab_av"
                     android:visibility="invisible" />
             </android.support.design.widget.TabLayout>

@@ -7,12 +7,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.awesprojects.innolib.InnolibApplication;
 import com.awesprojects.innolib.R;
+import com.awesprojects.innolib.fragments.home.abstracts.AbstractHomeOverlayFragment;
 import com.awesprojects.innolib.managers.DocumentManager;
-import com.awesprojects.lmsclient.api.DocumentsAPI;
 import com.awesprojects.lmsclient.api.Response;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 
@@ -22,7 +21,11 @@ import com.awesprojects.lmsclient.api.data.documents.Document;
 
 public class LibraryCheckoutConfirmFragment extends AbstractHomeOverlayFragment implements View.OnClickListener {
 
-    public LibraryCheckoutConfirmFragment(){
+    public interface OnCheckoutResultListener {
+        void onResult(int status, Document document, String reason);
+    }
+
+    public LibraryCheckoutConfirmFragment() {
         super();
         setEnterTransition(new Slide(Gravity.BOTTOM));
         setExitTransition(new Slide(Gravity.BOTTOM));
@@ -33,11 +36,16 @@ public class LibraryCheckoutConfirmFragment extends AbstractHomeOverlayFragment 
     Button mCancelButton;
     Button mConfirmButton;
     View mOutsideCancelView;
+    OnCheckoutResultListener mResultListener;
+
+    public void setResultListener(OnCheckoutResultListener listener) {
+        mResultListener = listener;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState==null)
+        if (savedInstanceState == null)
             mDocument = (Document) getArguments().getSerializable("DOCUMENT");
         else
             mDocument = (Document) savedInstanceState.getSerializable("DOCUMENT");
@@ -54,7 +62,7 @@ public class LibraryCheckoutConfirmFragment extends AbstractHomeOverlayFragment 
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable("DOCUMENT",mDocument);
+        outState.putSerializable("DOCUMENT", mDocument);
         super.onSaveInstanceState(outState);
     }
 
@@ -63,36 +71,38 @@ public class LibraryCheckoutConfirmFragment extends AbstractHomeOverlayFragment 
         super.onDestroy();
     }
 
-    public void checkOut(){
-        DocumentManager.checkOutDocumentAsync(InnolibApplication.getAccessToken(),mDocument.getId(),
-        (responsable) -> {
-            if (responsable instanceof Response){
-                int status = ((Response) responsable).getStatus();
-                if (status==200){
-                    onCheckOutSucceed();
-                }else{
-                    onCheckOutFailed(responsable.toString());
-                }
-            }
-        });
+    public void checkOut() {
+        DocumentManager.checkOutDocumentAsync(InnolibApplication.getAccessToken(), mDocument.getId(),
+                (responsable) -> {
+                    if (responsable instanceof Response) {
+                        int status = ((Response) responsable).getStatus();
+                        if (status == 200) {
+                            onCheckOutSucceed();
+                        } else {
+                            onCheckOutFailed(responsable.toString());
+                        }
+                    }
+                });
     }
 
 
-    public void onCheckOutSucceed(){
+    public void onCheckOutSucceed() {
         getFragmentManager().beginTransaction()
                 .remove(this)
                 .commit();
+        if (mResultListener != null)
+            mResultListener.onResult(0, mDocument, null);
     }
 
-    public void onCheckOutFailed(String desc){
+    public void onCheckOutFailed(String desc) {
         mDocumentDescription.setText(desc);
     }
 
     @Override
     public void onClick(View view) {
-        if (view==mConfirmButton){
+        if (view == mConfirmButton) {
             checkOut();
-        }else{
+        } else {
             setExitTransition(new Fade(Fade.OUT));
             getFragmentManager().beginTransaction()
                     .remove(this)

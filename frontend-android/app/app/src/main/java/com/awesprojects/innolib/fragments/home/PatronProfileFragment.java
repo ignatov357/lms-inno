@@ -1,38 +1,54 @@
 package com.awesprojects.innolib.fragments.home;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.awesprojects.innolib.InnolibApplication;
 import com.awesprojects.innolib.R;
+import com.awesprojects.innolib.adapters.CheckedOutDocsAdapter;
+import com.awesprojects.innolib.fragments.home.abstracts.AbstractProfileFragment;
 import com.awesprojects.innolib.managers.DocumentManager;
+import com.awesprojects.lmsclient.api.ResponsableContainer;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.logging.Logger;
 
 /**
  * Created by ilya on 2/4/18.
  */
 
-public class PatronProfileFragment extends AbstractProfileFragment{
+public class PatronProfileFragment extends AbstractProfileFragment {
+
+    public static final String TAG = "PatronProfileFragment";
+    public static Logger log = Logger.getLogger(TAG);
+
+    public static PatronProfileFragment mBindedInstance;
+
+    public static void refreshCheckedoutList(){
+            //mBindedInstance.updateCheckedOutDocs();
+        mPendingUpdate = true;
+    }
 
     RecyclerView mCheckedOutDocsView;
     CheckedOutDocsAdapter mCheckedOutDocsAdapter;
     SwipeRefreshLayout mCheckedOutSwipeRefreshLayout;
     NestedScrollView mNestedScrollView;
-    Document[] mCheckedOutDocuments;
+    ArrayList<Document> mCheckedOutDocuments;
+    OnDetailsShowListener mDetailsShowListener;
+    static boolean mPendingUpdate = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCheckedOutDocuments = new ArrayList<>();
         mNestedScrollView = getContentView().findViewById(R.id.fragment_home_profile_nested_scroll_view);
         mCheckedOutSwipeRefreshLayout = getContentView().findViewById(R.id.fragment_home_profile_list_swiperefresh);
         mCheckedOutDocsView = getContentView().findViewById(R.id.fragment_home_profile_checkedout_recyclerview);
@@ -43,27 +59,61 @@ public class PatronProfileFragment extends AbstractProfileFragment{
         if (savedInstanceState==null){
             updateCheckedOutDocs();
         }else{
-            onUpdatedCheckedOutDocs((Document[])savedInstanceState.getSerializable("CHECKED_OUT_DOCUMENTS"));
+            //noinspection unchecked
+            mCheckedOutDocuments = (ArrayList<Document>)savedInstanceState.getSerializable("CHECKED_OUT_DOCUMENTS");
+            onUpdatedCheckedOutDocs();
         }
+        mBindedInstance = this;
+        mDetailsShowListener = new OnDetailsShowListener(this);
+        mCheckedOutDocsAdapter.setOnShowCheckedOutDocumentDetailsListener(mDetailsShowListener);
        // mNestedScrollView.addView(mCheckedOutDocsView);
     }
 
     public void updateCheckedOutDocs(){
+        mCheckedOutSwipeRefreshLayout.setRefreshing(true);
         DocumentManager.getCheckedOutDocuments(InnolibApplication.getAccessToken(), (documents) -> {
-            onUpdatedCheckedOutDocs(documents);
+            log.finest("checkout docs update completed");
+            if (documents instanceof ResponsableContainer) {
+                //noinspection unchecked
+                onUpdatedCheckedOutDocs( ((ResponsableContainer<Document[]>)documents).get());
+            }else{
+                //TODO: second case
+            }
         });
     }
 
     public void onUpdatedCheckedOutDocs(Document[] documents){
-        mCheckedOutDocuments = documents;
-        mCheckedOutDocsAdapter.mDocuments = mCheckedOutDocuments;
+        updateArrayList(documents);
+        onUpdatedCheckedOutDocs();
+    }
+
+    public void onUpdatedCheckedOutDocs(){
+        mCheckedOutDocsAdapter.setDocuments(mCheckedOutDocuments);
         mCheckedOutDocsAdapter.notifyDataSetChanged();
         mCheckedOutSwipeRefreshLayout.setRefreshing(false);
     }
 
+    public void updateArrayList(Document[] documents) {
+        mCheckedOutDocuments.clear();
+        Collections.addAll(mCheckedOutDocuments, documents);
+    }
+
     @Override
     public void onDestroy() {
+        if (mBindedInstance==this)
+            mBindedInstance = null;
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        log.finest("profile on resume");
+        if (mPendingUpdate){
+            log.finer("pending update completing...");
+            updateCheckedOutDocs();
+            mPendingUpdate = false;
+        }
     }
 
     @Override
@@ -72,85 +122,40 @@ public class PatronProfileFragment extends AbstractProfileFragment{
         super.onSaveInstanceState(outState);
     }
 
-    public static class CheckedOutDocsHolder extends RecyclerView.ViewHolder{
-
-        TextView mDocName;
-        TextView mDocType;
-        TextView mDocAuthor;
-        TextView mTimeLeft;
-
-        public CheckedOutDocsHolder(View itemView) {
-            super(itemView);
-            mDocName = itemView.findViewById(R.id.home_profile_checkedout_element_title);
-            mDocType = itemView.findViewById(R.id.home_profile_checkedout_element_type);
-            mDocAuthor = itemView.findViewById(R.id.home_profile_checkedout_element_author);
-            mTimeLeft = itemView.findViewById(R.id.home_profile_checkedout_element_left_time);
-        }
-
-        public void setTitle(String title){
-            mDocName.setText(title);
-        }
-
-        public void setAuthor(String author){
-            mDocAuthor.setText("By "+author);
-        }
-
-        public void setDocType(int type){
-            if (type==0){
-                mDocType.setText("BOOK");
-            }else if(type==1){
-                mDocType.setText("ARTICLE");
-            }else{
-                mDocType.setText("A/V");
-            }
-        }
-
-        public void setReturnDate(long millis){
-            Calendar c = Calendar.getInstance();
-            c.setTimeInMillis(millis*1000);
-            StringBuilder sb = new StringBuilder();
-            int day = c.get(Calendar.DAY_OF_MONTH);
-            int month = c.get(Calendar.MONTH)+1;
-            int year = c.get(Calendar.YEAR) % 100;
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            int minute = c.get(Calendar.MINUTE);
-            sb.append("return till ");
-            sb.append(day).append(".").append(month<10 ? "0"+month : month).append(".").append(year < 10 ? "0"+year : year);
-            sb.append(" at ").append(hour).append(":").append(minute<10 ? "0"+minute : minute);
-            mTimeLeft.setText(sb.toString());
+    public void onDocumentRenew(Document document,boolean renewed){
+        if (renewed){
+            updateCheckedOutDocs();
         }
     }
 
+    public void onShowDocumentInfo(View documentHolder, Document document) {
+        DocumentInfoFragment documentDetailFragment = new DocumentInfoFragment();
+        documentDetailFragment.setOnRenewListener(this::onDocumentRenew);
+        documentDetailFragment.setEnterTransition(new Slide(Gravity.BOTTOM));
+        documentDetailFragment.setExitTransition(new Slide(Gravity.BOTTOM));
+        Bundle args = new Bundle();
+        args.putSerializable("DOCUMENT", document);
+        documentDetailFragment.setArguments(args);
+        getFragmentManager().beginTransaction()
+                .addToBackStack("DetailsShow")
+                .add(getHomeActivity().getHomeInterface().getOverlayContainer().getId(), documentDetailFragment, "DocumentInfoFragment")
+                .commit();
+    }
 
-    public static class CheckedOutDocsAdapter extends RecyclerView.Adapter<CheckedOutDocsHolder>{
 
-        final PatronProfileFragment mPatronProfileFragment;
-        Document[] mDocuments;
 
-        public CheckedOutDocsAdapter(PatronProfileFragment profileFragment){
-            mPatronProfileFragment = profileFragment;
+    public static class OnDetailsShowListener implements CheckedOutDocsAdapter.OnShowCheckedOutDocumentDetailsListener{
+
+        private PatronProfileFragment mPatronProfileFragment;
+
+        public OnDetailsShowListener(PatronProfileFragment fragment){
+            mPatronProfileFragment = fragment;
         }
-
         @Override
-        public CheckedOutDocsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View vg = ((LayoutInflater)parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                    .inflate(R.layout.home_profile_checkedout_list_element,parent,false);
-            return new CheckedOutDocsHolder(vg);
+        public void onShow(View holderRootView, Document document) {
+            mPatronProfileFragment.onShowDocumentInfo(holderRootView, document);
         }
 
-        @Override
-        public void onBindViewHolder(CheckedOutDocsHolder holder, int position) {
-            Document d = mDocuments[position];
-            holder.setDocType(d.getType());
-            holder.setTitle(d.getTitle());
-            holder.setAuthor(d.getAuthors());
-            holder.setReturnDate(d.getCheckOutInfo()!=null ? d.getCheckOutInfo().getReturnTill() : -1);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mDocuments==null ? 0 : mDocuments.length;
-        }
     }
 
 }

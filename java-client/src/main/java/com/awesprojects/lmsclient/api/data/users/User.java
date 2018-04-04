@@ -37,9 +37,12 @@ public abstract class User implements Responsable,Serializable {
         if (!object.has("type"))
             throw new NullPointerException("unable to determine user type");
         switch (object.optInt("type")){
-            case 0: return new Student(object);
-            case 1: return new Faculty(object);
-            case 2: return new Librarian(object);
+            case 0: return new Librarian(object);
+            case 1: return new Student(object);
+            case 2: return new TeacherAssistant(object);
+            case 3: return new Professor(object);
+            case 4: return new Instructor(object);
+            case 5: return new VisitingProfessor(object);
         }
         throw new ArrayIndexOutOfBoundsException("unknown type : "+object.optInt("type"));
     }
@@ -47,6 +50,7 @@ public abstract class User implements Responsable,Serializable {
     public static User getImpl(){
         return new UserImpl();
     }
+
 
     protected static class UserImpl extends User implements Responsable,Serializable{
         public UserImpl(JSONObject object){

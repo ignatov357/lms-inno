@@ -2,6 +2,7 @@ package com.awesprojects.innolib.interfaces;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.ViewGroup;
 
 import com.awesprojects.innolib.R;
 import com.awesprojects.innolib.activities.HomeActivity;
@@ -13,6 +14,11 @@ import com.awesprojects.innolib.activities.HomeActivity;
 public class LibrarianHomeInterface extends AbstractHomeInterface {
 
     final Activity activity;
+
+    @Override
+    public ViewGroup getOverlayContainer() {
+        return null;
+    }
 
     public LibrarianHomeInterface(HomeActivity activity){
         super(activity);

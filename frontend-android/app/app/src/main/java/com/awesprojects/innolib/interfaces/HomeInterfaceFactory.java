@@ -1,7 +1,5 @@
 package com.awesprojects.innolib.interfaces;
 
-import android.app.Activity;
-
 import com.awesprojects.innolib.activities.HomeActivity;
 
 /**
@@ -12,10 +10,10 @@ public class HomeInterfaceFactory {
 
     public static AbstractHomeInterface createInterfaceByUserType(HomeActivity activity, int type){
         if (true) return new PatronHomeInterface(activity);
-        if (type==2){
+        if (type==3){
             return new LibrarianHomeInterface(activity);
         }
-        if (type==1 || type==0){
+        if (type==2 || type==1 || type==0){
             return new PatronHomeInterface(activity);
         }
         return null;

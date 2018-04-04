@@ -1,11 +1,8 @@
 package com.awesprojects.innolib.activities;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.awesprojects.innolib.interfaces.HomeInterfaceFactory;
 import com.awesprojects.innolib.interfaces.AbstractHomeInterface;
@@ -25,8 +22,8 @@ public class HomeActivity extends Activity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+
         //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         mCurrentUser = (User) getIntent().getSerializableExtra("CURRENT_USER");
@@ -47,6 +44,10 @@ public class HomeActivity extends Activity {
 
     protected void addHomeFragment(){
 
+    }
+
+    public AbstractHomeInterface getHomeInterface(){
+        return mHomeInterface;
     }
 
     @Override
@@ -77,6 +78,14 @@ public class HomeActivity extends Activity {
     protected void onPause() {
         super.onPause();
         mHomeInterface.pause();
+    }
+
+    public void hideHomeUI(boolean animated){
+        mHomeInterface.hideHomeUI(animated);
+    }
+
+    public void showHomeUI(boolean animated){
+        mHomeInterface.showHomeUI(animated);
     }
 
     public final ViewGroup getRootViewGroup(){

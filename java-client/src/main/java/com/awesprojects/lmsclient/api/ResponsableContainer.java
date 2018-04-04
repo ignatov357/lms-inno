@@ -6,11 +6,11 @@ public class ResponsableContainer<A> implements Responsable {
 
     final A object;
 
-    public ResponsableContainer(A obj){
+    public ResponsableContainer(A obj) {
         object = obj;
     }
 
-    public A get(){
+    public A get() {
         return object;
     }
 

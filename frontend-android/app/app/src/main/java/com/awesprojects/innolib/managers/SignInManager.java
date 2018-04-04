@@ -12,11 +12,16 @@ import com.awesprojects.lmsclient.api.UsersAPI;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 import com.awesprojects.lmsclient.api.internal.Responsable;
 
+import java.util.logging.Logger;
+
 /**
  * Created by ilya on 2/23/18.
  */
 
 public class SignInManager {
+
+    public static final String TAG = "SignInManager";
+    private static final Logger log = Logger.getLogger(TAG);
 
     private static SignInManager mInstance;
 
@@ -37,56 +42,18 @@ public class SignInManager {
     public void ensureManagersInitialized(Context context){
         if (mNfcManager==null)
             mNfcManager = (NfcManager) context.getSystemService(Context.NFC_SERVICE);
-        if (mFingerprintManager==null)
+        if (mFingerprintManager==null && Build.VERSION.SDK_INT>=23)
             mFingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
     }
 
     public boolean isDeviceSupportsNfc(Context context){
         ensureManagersInitialized(context);
-        if (true) return true;
-        return mNfcManager.getDefaultAdapter()!=null ? true : false;
+        return mNfcManager.getDefaultAdapter() != null;
     }
 
-    public boolean isDeviceSupportsFingerprint(Context context){
+    public boolean isDeviceSupportsFingerprint(Context context) {
         ensureManagersInitialized(context);
-        if (true) return true;
-        if (Build.VERSION.SDK_INT>=23)
-            return mFingerprintManager.isHardwareDetected();
-        return false;
-    }
-
-    public void startApiSigningIn(String id_str,String password){
-        int id = 0;
-        try{
-            id = Integer.parseInt(id_str);
-        }catch(Throwable t){
-            t.printStackTrace();
-            mHandler.sendEmptyMessage(-1);
-            return;
-        }
-        final int final_id = id;
-        mSigningInThread = new Thread(()->{
-            Responsable responsable = UsersAPI.getAccessToken(final_id,password);
-            if (responsable instanceof AccessToken){
-                Message m = new Message();
-                m.what = 200;
-                m.obj = responsable;
-                mHandler.sendMessage(m);
-            }else if(responsable instanceof Response){
-                Message m = new Message();
-                m.what = ((Response) responsable).getStatus();
-                m.obj = responsable;
-                mHandler.sendMessage(m);
-            }
-            mSigningInThread = null;
-        });
-        mSigningInThread.start();
-    }
-
-    private SignInHandler mHandler = new SignInHandler();
-
-    public SignInHandler getSignInHandler(){
-        return mHandler;
+        return Build.VERSION.SDK_INT >= 23 && mFingerprintManager.isHardwareDetected();
     }
 
 }

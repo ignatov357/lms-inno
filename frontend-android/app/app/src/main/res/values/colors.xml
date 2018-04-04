@@ -3,9 +3,10 @@
     <color name="colorPrimary">#c9eaa0</color>
     <color name="colorPrimaryDark">#2e7d32</color>
     <color name="colorSecondary">#63934a</color>
+    <color name="colorSecondaryDark">#35631e</color>
     <color name="colorAccent">#64dd17</color>
     <color name="colorStatusBar">#44000000</color>
-    <color name="colorLightBackground">#f1f1f1</color>
+    <color name="colorLightBackground">#f8f8f8</color>
     <color name="colorTextWarning">#ff6633</color>
     <color name="colorTransparent">#00000000</color>
     <color name="colorWhite">#FFFFFF</color>
@@ -15,4 +16,7 @@
     <color name="colorDocumentKeywords">#3838a3</color>
     <color name="colorDarkYellow">#b39e00</color>
     <color name="colorDarkRed">#a72400</color>
+    <color name="colorBrightRed">#e93a17</color>
+    <color name="colorDocumentTitle">#222222</color>
+    <color name="colorDocumentAuthor">#444444</color>
 </resources>

@@ -9,12 +9,12 @@ public class Librarian extends User implements Responsable,Serializable {
 
     public Librarian(JSONObject object){
         super(object);
-        setType(2);
+        setType(0);
     }
 
     public Librarian(){
         super();
-        setType(2);
+        setType(0);
     }
 
 }

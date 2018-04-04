@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home_library_list_element_root_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="2dp"
+    android:layout_margin="1dp"
     android:orientation="vertical"
     app:cardUseCompatPadding="true">
 
@@ -20,17 +21,33 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/home_library_list_element_preview_imageview"
+            <LinearLayout
                 android:layout_width="@dimen/home_library_element_preview_size"
-                android:layout_height="@dimen/home_library_element_preview_size"
-                android:tint="@color/cardview_shadow_start_color"
-                android:tintMode="multiply"
-                android:src="@drawable/ic_account_box_black_36dp" />
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/home_library_list_element_preview_imageview"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/home_library_element_preview_size"
+                    android:src="@drawable/ic_library_books_black_36dp"
+                    android:tint="@color/cardview_shadow_start_color"
+                    android:tintMode="multiply" />
+
+                <TextView
+                    android:id="@+id/home_library_list_element_type_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="2dp"
+                    android:gravity="bottom|center"
+                    android:text="TextView" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="6dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -38,6 +55,7 @@
                     android:id="@+id/home_library_list_element_bestseller_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="2dp"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -58,42 +76,99 @@
                     android:id="@+id/home_library_list_element_title_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_marginTop="0dp"
                     android:text="Title"
-                    android:textAppearance="@android:style/TextAppearance.Material.Large" />
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                    android:textColor="@color/colorDocumentTitle" />
 
                 <TextView
                     android:id="@+id/home_library_list_element_authors_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginStart="4dp"
                     android:text="Authors"
-                    android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+                    android:textAppearance="@android:style/TextAppearance.Material.Small"
+                    android:textColor="@color/colorDocumentAuthor" />
 
                 <TextView
                     android:id="@+id/home_library_list_element_keywords_textview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
                     android:textColor="@color/colorDocumentKeywords"
                     android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/home_library_list_element_stock_textview"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="in stock" />
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
-                    <Button
-                        android:id="@+id/home_library_list_element_checkout_button"
-                        style="@android:style/Widget.Material.Light.Button.Borderless.Small"
+                        <TextView
+                            android:id="@+id/home_library_list_element_info_top_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:text="TextView"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/home_library_list_element_info_bottom_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_weight="1"
+                            android:text="TextView"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/home_library_list_element_stock_textview"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:text="in stock" />
+
+                    </LinearLayout>
+
+                    <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/home_library_list_document_checkout"
-                        android:theme="@android:style/Widget.Material.Light.Button.Borderless.Colored" />
+                        android:layout_gravity="center_vertical"
+                        android:visibility="gone">
+
+                        <Button
+                            android:id="@+id/home_library_list_element_checkout_button"
+                            style="@android:style/Widget.Material.Light.Button.Borderless.Small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_library_list_document_checkout"
+                            android:theme="@android:style/Widget.Material.Light.Button.Borderless.Colored" />
+
+                        <TextView
+                            android:id="@+id/home_library_list_element_checkout_unavailable_reason_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="TextView"
+                            android:visibility="invisible" />
+
+                    </FrameLayout>
+
                 </LinearLayout>
 
             </LinearLayout>

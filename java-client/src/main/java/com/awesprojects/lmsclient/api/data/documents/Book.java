@@ -1,12 +1,14 @@
 package com.awesprojects.lmsclient.api.data.documents;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class Book extends Document implements Serializable{
 

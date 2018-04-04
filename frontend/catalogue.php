@@ -19,31 +19,22 @@
     </style>
     <script>
         $(document).ready(function () {
-            $("#books-field").empty();
-
-            $("#books-field").append(getDocumentsField());
-            $(".btn").click(function () {
-                var book_id = $(this).attr("id").replace("checkout-book-", "");
-                checkoutBook(book_id);
-            });
-
             $("#load-cab").click(function () {
                 $("#load-cab div").css({"background": "#F0F4C3"});
                 $("#load-lib div").css({"background": "#cddc39"});
-                $("#books-field").empty();
+                /*$("#books-field").empty();
                 $("#books-field").append(getUsersDocumentsFiled());
+                $("#renew").click(function () {
+                    renewDocument($("#renew").attr("name"));
+                });*/
+                getUsersDocumentsFiled();
                 return false;
             });
             $("#load-lib").click(function () {
                 $("#load-cab div").css({"background": "#cddc39"});
                 $("#load-lib div").css({"background": "#F0F4C3"});
 
-                $("#books-field").empty();
-                $("#books-field").append(getDocumentsField());
-                $(".btn").click(function () {
-                    var book_id = $(this).attr("id").replace("checkout-book-", "");
-                    checkoutBook(book_id);
-                });
+                getDocumentsField();
                 return false;
             });
             $("#log-out").click(function () {
@@ -58,7 +49,7 @@
         <a href="" id="load-cab"><div style="position: absolute;background: #cddc39;left: 1%; top: 0; width: 10%;height:100%;">
                 <h4>MY BOOKS</h4>
             </div></a>
-        <a href="" id="load-lib"><div style="position: absolute;background: #F0F4C3;left: 12%; top: 0; width: 10%;height:100%;">
+        <a href="" id="load-lib"><div style="position: absolute;background: #cddc39;left: 12%; top: 0; width: 10%;height:100%;">
                 <h4>LIBRARY</h4>
             </div></a>
         <a href="index.php" id="log-out"><div style="position: absolute;background: #cddc39;right: 1%; top: 0; width: 10%;height:100%;">

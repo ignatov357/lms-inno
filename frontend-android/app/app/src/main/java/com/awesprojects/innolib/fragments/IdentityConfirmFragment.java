@@ -3,7 +3,6 @@ package com.awesprojects.innolib.fragments;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -46,7 +45,7 @@ import javax.crypto.SecretKey;
  * Created by ilya on 2/23/18.
  */
 
-public class IdentityConfirmFragment extends Fragment
+public class IdentityConfirmFragment extends AbstractExtendedFragment
         implements PinKeyboardView.PinKeyboardCallback, View.OnClickListener{
 
     LinearLayout mContent;
@@ -160,7 +159,8 @@ public class IdentityConfirmFragment extends Fragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContent = (LinearLayout) getActivity().getLayoutInflater().inflate(R.layout.fragment_identity_confirm,null);
+        setContentView(R.layout.fragment_identity_confirm);
+        mContent = (LinearLayout) getContentView();
         mPinView = mContent.findViewById(R.id.fragment_identity_confirm_pin_field_view);
         mPinKeyboard = mContent.findViewById(R.id.fragment_identity_confirm_keyboard_view);
         mPinKeyboard.setKeyboardCallback(this);
@@ -292,7 +292,7 @@ public class IdentityConfirmFragment extends Fragment
         StringBuilder pin = new StringBuilder();
         int[] pinArray = mLastReceivedPin;
         for (int i = 0; i < pinArray.length; i++) {
-            pin.append(pinArray[i]+"");
+            pin.append(pinArray[i]).append("");
         }
         secureStorageTransaction.put("PIN",pin.toString());
         if (cardEnabled){
@@ -542,9 +542,7 @@ public class IdentityConfirmFragment extends Fragment
             try {
                 byte[] bytes = ndef.getNdefMessage().toByteArray();
                 byte[] usefulData = new byte[64];
-                for (int i = 0; i < 64; i++) {
-                    usefulData[i] = bytes[i];
-                }
+                System.arraycopy(bytes, 0, usefulData, 0, 64);
                 onDataReceived(usefulData);
             } catch (IOException e) {
                 e.printStackTrace();

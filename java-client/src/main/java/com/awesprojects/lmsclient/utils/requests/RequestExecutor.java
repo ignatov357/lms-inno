@@ -13,8 +13,12 @@ import java.io.InputStream;
 import java.net.*;
 import java.security.cert.Certificate;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class RequestExecutor {
+
+    public static final String TAG = "RequestExecutor";
+    public static Logger log = Logger.getLogger(TAG);
 
     public static String executeRequest(String request){
         return executeRequest(Config.getCurrentConfig().getApiDomain(),request);
@@ -25,24 +29,52 @@ public class RequestExecutor {
     }
 
     public static String executeRequest(String address,int port,String request){
-        boolean secureConnection = Config.getCurrentConfig().isSecure();
-        AbstractApiRequest apiRequest = null;
+        AbstractApiRequest apiRequest = createApiRequest(address, port, request);
         try {
-            apiRequest = secureConnection ?
-                    new ApiSecureRequest(address, port) : new ApiRequest(address, port);
-        }catch(Throwable t){
-            t.printStackTrace();
-            return null;
+            apiRequest.connect();
+            return apiRequest.execute(request);
+        }catch (IOException e) {
+            log.fine("error occured while request : "+e.toString());
         }
-        return apiRequest.execute(request);
+        return null;
     }
+
+    public static AbstractApiRequest createApiRequest(String request){
+        return createApiRequest(Config.getCurrentConfig().getApiDomain(),80,request);
+    }
+
+    public static AbstractApiRequest createApiRequest(String address,int port,String request){
+        boolean secureConnection = Config.getCurrentConfig().isSecure();
+        AbstractApiRequest apiRequest = apiRequest = secureConnection ? new ApiSecureRequest(address, port) : new ApiRequest(address, port);
+        try {
+
+        }catch(Throwable t){
+            log.warning("execute request failed : "+t.toString());
+        }
+        return apiRequest;
+    }
+
+
+
 
     public static class ApiRequest extends AbstractApiRequest{
 
         private Socket socket;
+        private String address;
+        private int port;
 
-        public ApiRequest(String address,int port) throws IOException {
+        public ApiRequest(String address,int port){
+            this.address = address;
+            this.port = port;
+        }
+
+        public void connect() throws IOException {
             socket = SocketFactory.getDefault().createSocket(address, port);
+        }
+
+        @Override
+        public Socket getSocket() {
+            return socket;
         }
 
         @Override
@@ -50,11 +82,11 @@ public class RequestExecutor {
             String response;
             try {
                 if (Config.getCurrentConfig().isVerbose())
-                Config.getCurrentConfig().getOut().println("request: "+request);
+                log.fine("request: "+request);
                 socket.getOutputStream().write(request.getBytes());
                 socket.getOutputStream().flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.warning(e.toString());
                 return null;
             }
             try {
@@ -67,10 +99,10 @@ public class RequestExecutor {
 
                 String ret = sb.toString();
                 if (Config.getCurrentConfig().isVerbose())
-                Config.getCurrentConfig().getOut().println("response: "+ret);
+                log.fine("response: "+ret);
                 return ret;
             } catch (IOException e) {
-                e.printStackTrace();
+                log.warning(e.toString());
                 return null;
             }
         }
@@ -79,19 +111,35 @@ public class RequestExecutor {
     public static class ApiSecureRequest extends AbstractApiRequest{
 
         SSLSocket socket;
+        private String address;
+        private int port;
 
-        public ApiSecureRequest(String address,int port) throws IOException {
-            socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(address, port);
+        public ApiSecureRequest(String address,int port){
+            this.address = address;
+            this.port = port;
         }
 
         @Override
         public String execute(String request) {
+            //TODO: implement
             return null;
+        }
+
+        @Override
+        public void connect() throws IOException {
+            socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(address, port);
+        }
+
+        @Override
+        public SSLSocket getSocket() {
+            return socket;
         }
     }
 
-    private static abstract class AbstractApiRequest{
+    public static abstract class AbstractApiRequest{
         public abstract String execute(String request);
+        public abstract void connect() throws IOException;
+        public abstract Socket getSocket();
     }
 
 

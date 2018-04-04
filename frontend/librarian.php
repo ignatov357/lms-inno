@@ -7,196 +7,152 @@
     <script src="scripts/helpers.js"></script>
     <script src="scripts/jquery.js"></script>
     <style>
-        .selected{
-            background: #cddc39;
+        #header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #AFB42B;
+            height: 8%;
+
+        }
+
+        .selected {
+            background: #F0F4C3;
         }
     </style>
     <script>
         $(document).ready(function () {
-            $(".t-clickable-1, .t-clickable-2, .t-clickable-3, .t-clickable-4, .t-clickable-5, .t-clickable-6, .t-clickable-7, .t-clickable-8").click(function () {
-                //console.log($(this).html());
-                $(".t-clickable-1,.t-clickable-2, .t-clickable-3, .t-clickable-4, .t-clickable-5, .t-clickable-6, .t-clickable-7, .t-clickable-8").css("background", "#f9fbe7");
-                $("."+$(this).attr("class")).css("background", "#cddc39");
-                var method = $("."+$(this).attr("class")+"[id='c-2']").html();
-                //console.log(method);
+            var state = 'none';
 
-                $("#adm-fields").empty();
-                $("#adm-fields").append(getAdmTable(method));
-                switch (method){
-                    case "addDocument":
-                        $("#apply").click(function () {
-                            var type = $("#type").html();
-                            var title = $("#title").html();
-                            var count = $("#instockCount").html();
-                            var authors = $("#authors").html();
-                            var price = $("#price").html();
-                            var keywords = $("#keywords").html();
-                            var bestseller = $("#bestseller").html();
-                            var publisher = $("#publisher").html();
-                            var edition = $("#edition").html();
-                            var pub_year = $("#publicationYear").html();
-                            var j_title = $("#journalTitle").html();
-                            var j_pub_date = $("#journalIssuePublicationDate").html();
-                            var j_editors = $("#journalIssueEditors").html();
+            $("#table-users").click(function () {
+                state = 'users';
+                $("#add").text("Add user");
+                $("#modify").text("Modify user");
+                $("#remove").text("Remove user");
 
-                            addDocument(type,title,count,authors,price,keywords,bestseller,publisher,edition,pub_year,j_title,j_pub_date,j_editors);
-                        });
-                        break;
-                    case "getDocuments":
-                        break;
-                    case "modifyDocument":
-                        $("#adm-fields table tr").click(function () {
-                            $(this).addClass('selected').siblings().removeClass('selected');
-                        });
-                        $("#apply").click(function () {
-                            var id = $("#adm-fields table tr.selected td:first").html();
-                            //console.log("ID is " + id);
-                            $("#adm-fields").empty().append(getAdmTable("modifyDocument2", id));
-                            $("#apply").click(function () {
-                                var title = $("#title").html();
-                                var count = $("#instockCount").html();
-                                var authors = $("#authors").html();
-                                var price = $("#price").html();
-                                var keywords = $("#keywords").html();
-                                var bestseller = $("#bestseller").html();
-                                var publisher = $("#publisher").html();
-                                var edition = $("#edition").html();
-                                var pub_year = $("#publicationYear").html();
-                                var j_title = $("#journalTitle").html();
-                                var j_pub_date = $("#journalIssuePublicationDate").html();
-                                var j_editors = $("#journalIssueEditors").html();
+                $("#table-documents div").css("background", "#cddc39");
+                $("#table-users div").css("background", "#F0F4C3");
 
-                                modifyDocument(id, title,count,authors,price,keywords,bestseller,publisher,edition,pub_year,j_title,j_pub_date,j_editors);
-                            });
-                        });
-                        break;
-                    case "removeDocument":
-                        $("#adm-fields table tr").click(function () {
-                            $(this).addClass('selected').siblings().removeClass('selected');
-                        });
-                        $("#apply").click(function () {
-                            var id = $("#adm-fields table tr.selected td:first").html();
-                            deleteDocument(id);
-                            $("#adm-fields").empty();
-                        });
-                        break;
-                    case "addUser":
-                        $("#apply").click(function () {
-                            var name = $("#name").html();
-                            var address = $("#address").html();
-                            var phone = $("#phone").html();
-                            var type = $("#type").html();
+                $(".btn").css("visibility", "visible");
 
-                            addUser(name,address,phone,type);
-                        });
-                        break;
-                    case "modifyUser":
-                        $("#adm-fields table tr").click(function () {
-                            $(this).addClass('selected').siblings().removeClass('selected');
-                        });
-                        $("#apply").click(function () {
-                            var id = $("#adm-fields table tr.selected td:first").html();
-                            $("#adm-fields").empty().append(getAdmTable("modifyUser2", id));
-                            $("#apply").click(function () {
-                                var name = $("#name").html();
-                                var address = $("#address").html();
-                                var phone = $("#phone").html();
-                                var type = $("#type").html();
+                updateUsersTable($("#content-table"));
 
-                                modifyUser(id, name, address, phone, type);
-                            });
-                            $("#apply2").click(function () {
-                                generateNewPassword(id);
-                            })
-                        });
-                        break;
-                    case "removeUser":
-                        $("#adm-fields table tr").click(function () {
-                            $(this).addClass('selected').siblings().removeClass('selected');
-                        });
-                        $("#apply").click(function () {
-                            var id = $("#adm-fields table tr.selected td:first").html();
-                            deleteUser(id);
-                            $("#adm-fields").empty();
-                        });
-                        break;
-                    case "userDocuments":
-                        $("#adm-fields table tr").click(function () {
-                            $(this).addClass('selected').siblings().removeClass('selected');
-                        });
-                        $("#apply").click(function () {
-                            var id = $("#adm-fields table tr.selected td:first").html();
-                            $("#adm-fields").empty().append(getAdmTable("userDocuments2", id));
-                            $("#adm-fields table tr").click(function () {
-                                $(this).addClass('selected').siblings().removeClass('selected');
-                            });
-                            $("#apply").click(function () {
-                                var b_id = $("#adm-fields table tr.selected td:first").html();
-                                returnDocument(id, b_id);
-                                $("#adm-fields").empty();
-                            });
-                        });
-                        break;
+                return false
+            });
+            $("#table-documents").click(function () {
+                state = 'documents';
+                $("#add").text("Add document");
+                $("#modify").text("Modify document");
+                $("#remove").text("Remove document");
 
+                $("#table-users div").css("background", "#cddc39");
+                $("#table-documents div").css("background", "#F0F4C3");
+
+                $(".btn").css("visibility", "visible");
+
+                updateDocumentsTable($("#content-table"));
+
+                return false
+            });
+
+            $("#add, #modify, #remove").click(function () {
+                //console.log($('#content-table table tr.selected').html());
+                if (state == 'documents') {
+                    if ($(this).attr("id") == 'add') {
+                        popupShow();
+                        popupAddDocument($("#popup"));
+
+                        return false;
+                    }
+                    if ($('#content-table table tr.selected').html()) {
+                        var id = $("#content-table table tr.selected td:first").html();
+                        switch ($(this).attr("id")) {
+                            case 'modify':
+                                //alert('There will be modify popup');
+                                popupShow();
+
+                                popupModifyDocument($("#popup"), id);
+
+                                break;
+                            case 'remove':
+                                deleteDocument(id);
+                                updateDocumentsTable($("#content-table"));
+
+                                break;
+                        }
+                        return false;
+                    } else {
+                        alert('Choose a document first!');
+                    }
+                } else if (state == 'users') {
+                    if ($(this).attr("id") == 'add') {
+                        popupShow();
+                        popupAddUser($("#popup"));
+
+                        return false;
+                    }
+                    if ($('#content-table table tr.selected').html()) {
+                        var id = $("#content-table table tr.selected td:first").html();
+                        switch ($(this).attr("id")) {
+                            case 'modify':
+                                //alert('There will be modify popup');
+                                popupShow();
+
+                                popupModifyUser($("#popup"), id);
+
+                                break;
+                            case 'remove':
+                                deleteUser(id);
+                                updateUsersTable($("#content-table"));
+
+                                break;
+                        }
+                        return false;
+                    }
+                } else {
+                    alert('Choose a table first!');
                 }
             });
-            return false;
         });
     </script>
 </header>
 <body>
-<div id="functions-window">
-    <table cellpadding="2" border="2" width="50%" style="margin-left: 10%;">
-        <tr>
-            <td>#</td>
-            <th>Function name</th>
-            <th>Description</th>
-        </tr>
-        <tr>
-            <td class="t-clickable-1" id="c-1">1</td>
-            <td class="t-clickable-1" id="c-2">addDocument</td>
-            <td class="t-clickable-1" id="c-3">Add new document</td>
-        </tr>
-        <tr>
-            <td class="t-clickable-2" id="c-1">2</td>
-            <td class="t-clickable-2" id="c-2">modifyDocument</td>
-            <td class="t-clickable-2" id="c-3">Modify existing document</td>
-        </tr>
-        <tr>
-            <td class="t-clickable-3" id="c-1">3</td>
-            <td class="t-clickable-3" id="c-2">removeDocument</td>
-            <td class="t-clickable-3" id="c-3">Remove existing document</td>
-        </tr>
-        <tr>
-            <td class="t-clickable-4" id="c-1">4</td>
-            <td class="t-clickable-4" id="c-2">getDocuments</td>
-            <td class="t-clickable-4" id="c-3">View all existing documents</td>
-        </tr>
-        <tr>
-            <td class="t-clickable-5" id="c-1">5</td>
-            <td class="t-clickable-5" id="c-2">addUser</td>
-            <td class="t-clickable-5" id="c-3">Add new user</td>
-        </tr>
-        <tr>
-            <td class="t-clickable-6" id="c-1">6</td>
-            <td class="t-clickable-6" id="c-2">modifyUser</td>
-            <td class="t-clickable-6" id="c-3">Modify existing user</td>
-        </tr>
-        <tr>
-            <td class="t-clickable-7" id="c-1">7</td>
-            <td class="t-clickable-7" id="c-2">removeUser</td>
-            <td class="t-clickable-7" id="c-3">Remove existing user</td>
-        </tr>
-        <tr>
-            <td class="t-clickable-8" id="c-1">8</td>
-            <td class="t-clickable-8" id="c-2">userDocuments</td>
-            <td class="t-clickable-8" id="c-3">Check user's documents</td>
-        </tr>
-    </table>
-    <br/>
-    <div id="adm-fields">
-
-    </div>
+<div id="header" style="text-align: center;z-index: 11">
+    <a href="" id="table-users">
+        <div style="position: absolute;background: #cddc39;left: 1%; top: 0%; width: 15%;height:100%;text-align: center;">
+            <h4>USERS EDITING</h4>
+        </div>
+    </a>
+    <a href="" id="table-documents">
+        <div style="position: absolute;background: #cddc39;left: 17%; top: 0; width: 15%;height:100%;text-align: center;">
+            <h4>DOCUMENTS EDITING</h4>
+        </div>
+    </a>
+    <a href="index.php" id="log-out">
+        <div style="position: absolute;background: #cddc39;right: 1%; top: 0; width: 10%;height:100%;">
+            <h4>LOG OUT</h4>
+        </div>
+    </a>
 </div>
+<div id="content-table">
+
+</div>
+<div id="hider"
+     style="position: absolute; background: rgba(0,0,0,0.3); width: 100%;height: 100%;visibility: hidden;z-index: 6;">
+</div>
+<div id="popup"
+     style="position: absolute; left: 7.5%; top: 10%; width: 80%; height: 75%; background: white;padding: 20px;visibility: hidden;z-index: 7; overflow: scroll">
+</div>
+<div id='popup-2'
+     style="position: absolute; left: 7.5%; top: 10%; width: 80%; height: 75%; background: white;padding: 20px;visibility: hidden;z-index: 9;overflow: scroll;"></div>
+<div id='hider-2'
+     style="position: absolute; left: 0; background: rgba(0,0,0,0.3); width: 100%;height: 100%;top: 0;visibility: hidden;z-index: 8;"></div>
+<button id="add" style="position: absolute; top: 85%; left: 1%;visibility: hidden;padding: 10px" class="btn"></button>
+<button id="modify" style="position: absolute; top: 85%; left: 8%;visibility: hidden;padding: 10px"
+        class="btn"></button>
+<button id="remove" style="position: absolute; top: 85%; left: 16%;visibility: hidden;padding: 10px"
+        class="btn"></button>
+
 </body>
 </html>

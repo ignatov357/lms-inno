@@ -12,4 +12,6 @@
     <dimen name="android_toolbar_expanded">136dp</dimen>
     <dimen name="android_toolbar_with_tabs_expanded">192dp</dimen>
     <dimen name="bottom_dialog_elevation">24dp</dimen>
+    <dimen name="home_profile_checkout_overdue_pivot_x">9dp</dimen>
+    <dimen name="home_profile_checkout_overdue_pivot_y">9dp</dimen>
 </resources>

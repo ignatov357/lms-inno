@@ -1,15 +1,23 @@
 package com.awesprojects.innolib;
 
 import android.app.Application;
-import android.transition.TransitionManager;
+import android.content.Intent;
+import android.os.Process;
 
+import com.awesprojects.innolib.activities.LogActivity;
+import com.awesprojects.innolib.utils.logger.LogSystem;
 import com.awesprojects.lmsclient.api.data.AccessToken;
+
+import java.util.logging.Logger;
 
 /**
  * Created by ilya on 2/23/18.
  */
 
 public class InnolibApplication extends Application{
+
+    public static final String TAG = "Application";
+    public static Logger log = Logger.getLogger(TAG);
 
     public static final String PREFERENCES_APPLICATION_STATE = "application_state";
     public static final String PREFERENCES_SIGNIN_METHODS = "sign_in";
@@ -28,10 +36,22 @@ public class InnolibApplication extends Application{
     public static void setAccessToken(AccessToken accessToken){
         mAccessToken = accessToken;
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        LogSystem.ensureInit();
+        getMainLooper().getThread().setUncaughtExceptionHandler(this::onFatalException);
+    }
+
+    public void onFatalException(Thread thread,Throwable throwable){
+        log.severe("uncaught exception in app thread : "+throwable.toString());
+        log.severe("application is forced to close");
+        Intent logActivityIntent = new Intent(this, LogActivity.class);
+        startActivity(logActivityIntent);
+        Process.killProcess(Process.myPid());
+        System.exit(10);
     }
 
 

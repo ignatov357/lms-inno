@@ -27,7 +27,7 @@ public class WelcomeActivity extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         if (view == mFinishButton){
-            mPreferences.edit().putBoolean(PREFERENCE_WELCOME_SCREEN_SHOWN,true).commit();
+            mPreferences.edit().putBoolean(PREFERENCE_WELCOME_SCREEN_SHOWN,true).apply();
             finish();
         }
     }

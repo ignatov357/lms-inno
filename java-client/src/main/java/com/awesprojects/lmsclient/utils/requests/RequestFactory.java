@@ -11,7 +11,7 @@ public class RequestFactory {
         return new PostRequest.Builder();
     }
 
-
+    public static LongPollRequest.Builder longPoll() { return new LongPollRequest.Builder();}
 
 
 

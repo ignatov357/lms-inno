@@ -1,6 +1,7 @@
 package com.awesprojects.lmsclient.utils.requests;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -10,9 +11,11 @@ public abstract class Request {
     private List<String[]> headers = new LinkedList<>();
     @Getter
     private String url;
+    @Getter @Setter
+    protected boolean closeConnection;
 
     Request(){
-
+        closeConnection = true;
     }
 
     public boolean hasHeaders(){
