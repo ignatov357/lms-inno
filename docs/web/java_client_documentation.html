@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<!-- saved from url=(0091)file:///C:/Users/Lnc/Desktop/lms-inno/docs/web/Java-client%20%E2%80%94%20Documentation.html -->
+<html lang="ru-RU"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="http://a0188394.xsph.ru/xmlrpc.php">
+<title>Java-client — Documentation</title>
+<link rel="dns-prefetch" href="http://maxcdn.bootstrapcdn.com/">
+<link rel="dns-prefetch" href="http://fonts.googleapis.com/">
+<link rel="dns-prefetch" href="http://s.w.org/">
+<link rel="alternate" type="application/rss+xml" title="Documentation » Лента" href="http://a0188394.xsph.ru/?feed=rss2">
+<link rel="alternate" type="application/rss+xml" title="Documentation » Лента комментариев" href="http://a0188394.xsph.ru/?feed=comments-rss2">
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.4\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.4\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/a0188394.xsph.ru\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.5"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55357,56692,8205,9792,65039],[55357,56692,8203,9792,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="./java_client_documentation_files/wp-emoji-release.min.js.Без названия" type="text/javascript" defer=""></script><script src="./java_client_documentation_files/wp-emoji-release.min.js(1).Без названия" type="text/javascript" defer=""></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="dashicons-css" href="./java_client_documentation_files/dashicons.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="admin-bar-css" href="./java_client_documentation_files/admin-bar.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="obfx-module-pub-css-social-sharing-module-0-css" href="./java_client_documentation_files/public.css" type="text/css" media="all">
+<link rel="stylesheet" id="obfx-module-pub-css-social-sharing-module-1-css" href="./java_client_documentation_files/socicon.css" type="text/css" media="all">
+<link rel="stylesheet" id="obfx-module-pub-css-menu-icons-0-css" href="./java_client_documentation_files/font-awesome.min.css" type="text/css" media="all">
+<link rel="stylesheet" id="ample-bxslider-css" href="./java_client_documentation_files/jquery.bxslider.css" type="text/css" media="all">
+<link rel="stylesheet" id="ample-google-fonts-css" href="./java_client_documentation_files/css" type="text/css" media="all">
+<link rel="stylesheet" id="ample-fontawesome-css" href="./java_client_documentation_files/font-awesome.min(1).css" type="text/css" media="all">
+<link rel="stylesheet" id="ample-style-css" href="./java_client_documentation_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="mpce-theme-css" href="./java_client_documentation_files/theme.min.css" type="text/css" media="all">
+<style id="mpce-theme-inline-css" type="text/css">
+.mp-row-fixed-width {max-width:1170px;}
+</style>
+<link rel="stylesheet" id="mpce-bootstrap-grid-css" href="./java_client_documentation_files/bootstrap-grid.min.css" type="text/css" media="all">
+<script type="text/javascript" src="./java_client_documentation_files/jquery.js.Без названия"></script>
+<script type="text/javascript" src="./java_client_documentation_files/jquery-migrate.min.js.Без названия"></script>
+<script type="text/javascript" src="./java_client_documentation_files/public.js.Без названия"></script>
+<link rel="https://api.w.org/" href="http://a0188394.xsph.ru/index.php?rest_route=/">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="http://a0188394.xsph.ru/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="http://a0188394.xsph.ru/wp-includes/wlwmanifest.xml"> 
+<meta name="generator" content="WordPress 4.9.5">
+<link rel="canonical" href="http://a0188394.xsph.ru/?page_id=290">
+<link rel="shortlink" href="http://a0188394.xsph.ru/?p=290">
+<link rel="alternate" type="application/json+oembed" href="http://a0188394.xsph.ru/index.php?rest_route=%2Foembed%2F1.0%2Fembed&amp;url=http%3A%2F%2Fa0188394.xsph.ru%2F%3Fpage_id%3D290">
+<link rel="alternate" type="text/xml+oembed" href="http://a0188394.xsph.ru/index.php?rest_route=%2Foembed%2F1.0%2Fembed&amp;url=http%3A%2F%2Fa0188394.xsph.ru%2F%3Fpage_id%3D290&amp;format=xml">
+<style type="text/css" media="print">#wpadminbar { display:none; }</style>
+<style type="text/css" media="screen">
+	html { margin-top: 32px !important; }
+	* html body { margin-top: 32px !important; }
+	@media screen and ( max-width: 782px ) {
+		html { margin-top: 46px !important; }
+		* html body { margin-top: 46px !important; }
+	}
+</style>
+<link rel="icon" href="http://a0188394.xsph.ru/wp-content/uploads/2018/02/unnamed-150x150.png" sizes="32x32">
+<link rel="icon" href="http://a0188394.xsph.ru/wp-content/uploads/2018/02/unnamed.png" sizes="192x192">
+<link rel="apple-touch-icon-precomposed" href="http://a0188394.xsph.ru/wp-content/uploads/2018/02/unnamed.png">
+<meta name="msapplication-TileImage" content="http://a0188394.xsph.ru/wp-content/uploads/2018/02/unnamed.png">
+</head>
+
+<body class="page-template-default page page-id-290 logged-in admin-bar no-sidebar-full-width better-responsive-menu wide  customize-support">
+   <div id="page" class="hfeed site">
+      <header id="masthead" class="site-header " role="banner">
+      <div class="header">
+         
+         <div class="main-head-wrap inner-wrap clearfix">
+            <div id="header-left-section">
+                              <div id="header-text" class="">
+                                    <h3 id="site-title">
+                        <a href="http://a0188394.xsph.ru/" title="Documentation" rel="home">Documentation</a>
+                     </h3>
+                                       <p id="site-description">for InnoLib</p>
+                                 </div>
+            </div><!-- #header-left-section -->
+
+            <div id="header-right-section">
+               <nav id="site-navigation" class="main-navigation" role="navigation">
+                  <p class="menu-toggle"></p>
+                  <div class="menu-%d0%b3%d0%bb%d0%b0%d0%b2%d0%bd%d0%be%d0%b5-%d0%bc%d0%b5%d0%bd%d1%8e-container"><ul id="menu-%d0%b3%d0%bb%d0%b0%d0%b2%d0%bd%d0%be%d0%b5-%d0%bc%d0%b5%d0%bd%d1%8e" class="menu menu-primary-container"><li id="menu-item-272" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-272"><a href="http://a0188394.xsph.ru/?page_id=257">Backend</a></li>
+<li id="menu-item-301" class="menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item page-item-290 current_page_item menu-item-301"><a href="http://a0188394.xsph.ru/?page_id=290">Java-client</a></li>
+</ul></div>               </nav>
+               <i class="fa fa-search search-top"></i>
+               <div class="search-form-top">
+                  
+<form action="http://a0188394.xsph.ru/" class="search-form searchform clearfix" method="get">
+   <div class="search-wrap">
+      <input type="text" placeholder="Поиск" class="s field" name="s">
+      <button class="search-icon" type="submit"></button>
+   </div>
+</form><!-- .searchform -->               </div>
+   	      </div>
+   	   </div><!-- .main-head-wrap -->
+           	   </div><!-- .header -->
+	</header><!-- end of header -->
+   <div class="main-wrapper">
+
+               <div class="header-post-title-container clearfix">
+            <div class="inner-wrap">
+               <div class="post-title-wrapper">
+                                 <h1 class="header-post-title-class entry-title">Java-client</h1>
+                              </div>
+                           </div>
+         </div>
+     
+   <div class="single-page clearfix">
+      <div class="inner-wrap">
+         <div id="primary">
+            <div id="content">
+
+               
+                  
+<article id="post-290" class="post-290 page type-page status-publish hentry">
+   
+   <div class="entry-content">
+      <div class="mp-row-fluid motopress-row mpce-dsbl-margin-left mpce-dsbl-margin-right">
+<div class="mp-span12 motopress-clmn  mpce-dsbl-margin-left mpce-dsbl-margin-right">
+<div class="motopress-text-obj">
+<h2>&nbsp;API/Data/Documents</h2>
+</div>
+</div>
+</div>
+<div class="mp-row-fluid motopress-row mpce-dsbl-margin-left mpce-dsbl-margin-right">
+<div class="mp-span12 motopress-clmn  mpce-dsbl-margin-left mpce-dsbl-margin-right">
+<div class="motopress-accordion-obj motopress-accordion motopress-accordion-light ui-accordion ui-widget ui-helper-reset" id="5ac4b75524b8f" role="tablist">
+<div class="motopress-accordion-item">
+<h3 class="ui-accordion-header ui-state-default ui-accordion-icons ui-corner-all" role="tab" id="ui-id-1" aria-controls="ui-id-2" aria-selected="false" aria-expanded="false" tabindex="0"><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>Article</h3>
+<div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="ui-id-2" aria-labelledby="ui-id-1" role="tabpanel" aria-hidden="true" style="display: none;">
+<p>@Data<br>
+@EqualsAndHashCode(callSuper = true)<br>
+@ToString(callSuper = true)<br>
+public class Article extends Document implements Responsable,Serializable{ </p>
+<p>public Article(){<br>
+super();<br>
+setType(1);<br>
+} </p>
+<p>public Article(JSONObject doc) {<br>
+ super(doc);<br>
+journalTitle = doc.optString(«journal_title»,null);<br>
+journalIssuePublicationDate = doc.optString(«journal_issue_publication_date», null);<br>
+journalIssueEditors = doc.optString(«journal_issue_editors», null);<br>
+if (journalTitle==null) journalTitle = doc.optString(«journalTitle»);<br>
+if (journalIssuePublicationDate==null) journalIssuePublicationDate = doc.optString(«journalIssuePublicationDate»);<br>
+if (journalIssueEditors==null) journalIssueEditors = doc.optString(«journalIssueEditors»);<br>
+}<br>
+ //Creates Article with title, publication date and editors. </p>
+<p>protected String journalTitle; </p>
+<p>protected String journalIssuePublicationDate; </p>
+<p>protected String journalIssueEditors;</p>
+</div>
+</div>
+<div class="motopress-accordion-item">
+<h3 class="ui-accordion-header ui-state-default ui-accordion-icons ui-corner-all" role="tab" id="ui-id-3" aria-controls="ui-id-4" aria-selected="false" aria-expanded="false" tabindex="-1"><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>Book</h3>
+<div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="ui-id-4" aria-labelledby="ui-id-3" role="tabpanel" aria-hidden="true" style="display: none;">
+<p>@Data<br>
+@EqualsAndHashCode(callSuper = true)<br>
+@ToString(callSuper = true) public class Book extends Document implements Serializable{<br>
+ public Book(){<br>
+super();<br>
+setType(0);<br>
+setBestseller(false);<br>
+setReference(false);<br>
+setPrice(«0.00»);<br>
+}</p>
+<p>public Book(JSONObject doc) {<br>
+super(doc);<br>
+setType(0);<br>
+reference = doc.optInt(«reference»,0)==1 ? true : false;<br>
+bestseller = doc.optInt(«bestseller»,0)==1 ? true : false;<br>
+publisher = doc.optString(«publisher»,»unknown»);<br>
+edition = doc.optInt(«edition»,-1);<br>
+publicationYear = doc.optString(«publication_year», «-10»);<br>
+if (publicationYear.equals(«-10»)) publicationYear = doc.optString(«publicationYear», «-9″);<br>
+}</p>
+<p>public void setPublicationYear(int year){<br>
+setPublicationYear(year+»»);<br>
+}</p>
+<p>public void setPublicationYear(String year){<br>
+publicationYear = year;<br>
+}<br>
+//Creates Book with parameters of reference, bestseller, pubisher, edition, publication year. protected boolean reference; </p>
+<p>protected boolean bestseller; </p>
+<p>protected String publisher; </p>
+<p>protected int edition; </p>
+<p>protected String publicationYear;</p>
+</div>
+</div>
+<div class="motopress-accordion-item">
+<h3 class="ui-accordion-header ui-state-default ui-corner-all ui-accordion-icons" role="tab" id="ui-id-5" aria-controls="ui-id-6" aria-selected="false" aria-expanded="false" tabindex="-1"><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>Document</h3>
+<div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="ui-id-6" aria-labelledby="ui-id-5" role="tabpanel" aria-hidden="true" style="display: none;">
+<p>@Data<br>
+public abstract class Document implements Responsable,Serializable{<br>
+public Document(){ setId(-1);<br>
+}</p>
+<p>public Document(JSONObject doc){<br>
+type = doc.getInt(«type»);<br>
+id = doc.getInt(«id»);<br>
+authors = doc.getString(«authors»);<br>
+title = doc.getString(«title»);<br>
+price = doc.getString(«price»);<br>
+instockCount = doc.getInt(«instockCount»);<br>
+keywords = doc.optString(«keywords»,null);<br>
+}<br>
+//Creates document with parameters of type, id, authors, title, price, instock count, keywords. </p>
+<p>protected int id; </p>
+<p>protected String authors; </p>
+<p>protected String title; </p>
+<p>protected int type; </p>
+<p>protected String keywords; </p>
+<p>protected String price; </p>
+<p>protected int instockCount; </p>
+<p>protected CheckOutInfo checkOutInfo; </p>
+<p>public static Document parseDocument(JSONObject object){<br>
+if (!object.has(«type»))<br>
+throw new JSONException(«unable to parse document = «+object);<br>
+switch (object.getInt(«type»)){<br>
+case 0: return new Book(object);<br>
+case 1: return new Article(object);<br>
+case 2: return new EMaterial(object);<br>
+}<br>
+throw new NullPointerException(«document class type=»+object.getInt(«type»)+» was not found»);<br>
+}</p>
+</div>
+</div>
+<div class="motopress-accordion-item">
+<h3 class="ui-accordion-header ui-state-default ui-corner-all ui-accordion-icons" role="tab" id="ui-id-7" aria-controls="ui-id-8" aria-selected="false" aria-expanded="false" tabindex="-1"><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>EMaterial</h3>
+<div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="ui-id-8" aria-labelledby="ui-id-7" role="tabpanel" aria-hidden="true" style="display: none;">
+<p>@Data<br>
+@EqualsAndHashCode(callSuper = true)<br>
+@ToString(callSuper = true) </p>
+<p>public class EMaterial extends Document implements Responsable,Serializable {<br>
+public EMaterial(){<br>
+super();<br>
+setType(2);<br>
+} </p>
+<p>public EMaterial(JSONObject doc) { super(doc);<br>
+}</p>
+</div>
+</div>
+<div class="motopress-accordion-item">
+<h3 class="ui-accordion-header ui-state-default ui-corner-all ui-accordion-icons" role="tab" id="ui-id-9" aria-controls="ui-id-10" aria-selected="false" aria-expanded="false" tabindex="-1"><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>Removed Document</h3>
+<div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="ui-id-10" aria-labelledby="ui-id-9" role="tabpanel" aria-hidden="true" style="display: none;">
+<p>public class RemovedDocument extends Document{ </p>
+<p>public RemovedDocument(){<br>
+super();<br>
+setId(-1);<br>
+setTitle(«Removed document»);<br>
+setAuthors(«unknown»);<br>
+setType(-1);<br>
+setPrice(«0»);<br>
+setInstockCount(0);<br>
+setKeywords(«removed»); }<br>
+//Sets parameters to removed document. </p>
+<p>public RemovedDocument(JSONObject object){<br>
+this();<br>
+}</p>
+</div>
+</div>
+<p class="motopress-hide-script"><script type="text/javascript">
+                jQuery(document).ready(function($) {
+                    var mpAccordion = $(".motopress-accordion-obj#5ac4b75524b8f");
+                    if (mpAccordion.data("uiAccordion")) {
+                        mpAccordion.accordion("destroy");
+                    }
+                    if (typeof $.ui !== "undefined") {
+                        if (typeof $.ui.accordion !== "undefined") {
+		                    mpAccordion.accordion({
+		                        active: false,
+		                        collapsible: true,
+		                        header: "> div > h3",
+		                        heightStyle: "content"
+		                    });
+	                    }
+                    }
+                });
+                </script></p>
+</div>
+</div>
+</div>
+<div class="mp-row-fluid motopress-row mpce-dsbl-margin-left mpce-dsbl-margin-right">
+<div class="mp-span12 motopress-clmn  mpce-dsbl-margin-left mpce-dsbl-margin-right">
+<div class="motopress-text-obj">
+<h2>API/Data/Users</h2>
+</div>
+</div>
+</div>
+<div class="mp-row-fluid motopress-row mpce-dsbl-margin-left mpce-dsbl-margin-right">
+<div class="mp-span12 motopress-clmn  mpce-dsbl-margin-left mpce-dsbl-margin-right">
+<div class="motopress-accordion-obj motopress-accordion motopress-accordion-light ui-accordion ui-widget ui-helper-reset" id="5ac4b7552539b" role="tablist">
+<div class="motopress-accordion-item">
+<h3 class="ui-accordion-header ui-state-default ui-corner-all ui-accordion-icons" role="tab" id="ui-id-11" aria-controls="ui-id-12" aria-selected="false" aria-expanded="false" tabindex="0"><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>Faculty</h3>
+<div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="ui-id-12" aria-labelledby="ui-id-11" role="tabpanel" aria-hidden="true" style="display: none;">
+<p>public class Faculty extends User implements Responsable,Serializable {<br>
+public Faculty(JSONObject object){<br>
+super(object);<br>
+setType(1);<br>
+} </p>
+<p>public Faculty(){<br>
+super();<br>
+ setType(1);<br>
+} </p>
+<p>//Creates Faculty with it’s type.</p>
+</div>
+</div>
+<div class="motopress-accordion-item">
+<h3 class="ui-accordion-header ui-state-default ui-corner-all ui-accordion-icons" role="tab" id="ui-id-13" aria-controls="ui-id-14" aria-selected="false" aria-expanded="false" tabindex="-1"><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>Librarian</h3>
+<div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="ui-id-14" aria-labelledby="ui-id-13" role="tabpanel" aria-hidden="true" style="display: none;">
+<p>public class Librarian extends User implements Responsable,Serializable {<br>
+public Librarian(JSONObject object){<br>
+super(object);<br>
+setType(2);<br>
+} </p>
+<p>public Librarian(){<br>
+super();<br>
+setType(2);<br>
+}<br>
+//Creates Librarian with it’s type.</p>
+</div>
+</div>
+<div class="motopress-accordion-item">
+<h3 class="ui-accordion-header ui-state-default ui-corner-all ui-accordion-icons" role="tab" id="ui-id-15" aria-controls="ui-id-16" aria-selected="false" aria-expanded="false" tabindex="-1"><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>Student</h3>
+<div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="ui-id-16" aria-labelledby="ui-id-15" role="tabpanel" aria-hidden="true" style="display: none;">
+<p>public class Student extends User implements Responsable,Serializable {<br>
+public Student(JSONObject object){<br>
+super(object);<br>
+setType(0);<br>
+} </p>
+<p>public Student(){<br>
+super();<br>
+setType(0);<br>
+}<br>
+//Creates Student with it’s type.</p>
+</div>
+</div>
+<div class="motopress-accordion-item">
+<h3 class="ui-accordion-header ui-state-default ui-corner-all ui-accordion-icons" role="tab" id="ui-id-17" aria-controls="ui-id-18" aria-selected="false" aria-expanded="false" tabindex="-1"><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span><span class="ui-accordion-header-icon ui-icon ui-icon-triangle-1-e"></span>User</h3>
+<div class="ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom" id="ui-id-18" aria-labelledby="ui-id-17" role="tabpanel" aria-hidden="true" style="display: none;">
+<p>@Data<br>
+@ToString(exclude = «password»)<br>
+public abstract class User implements Responsable,Serializable { </p>
+<p>public User(){} </p>
+<p>public User(JSONObject object){<br>
+ id = object.optInt(«id»,id);<br>
+name = object.optString(«name»,»unknown»);<br>
+address = object.optString(«address»,»unknown»);<br>
+phone = object.optString(«phone»,»123456″);<br>
+type = object.optInt(«type»,0);<br>
+}<br>
+//Creates parameters of user. </p>
+<p>protected int id = -1; </p>
+<p>protected String name; </p>
+<p>protected String address; </p>
+<p>protected String phone; </p>
+<p>protected int type; </p>
+<p>protected transient String password; </p>
+<p>public static User parseUser(JSONObject object){<br>
+if (!object.has(«type»))<br>
+throw new NullPointerException(«unable to determine user type»);<br>
+switch (object.optInt(«type»)){<br>
+case 0: return new Student(object);<br>
+case 1: return new Faculty(object);<br>
+case 2: return new Librarian(object);<br>
+}</p>
+<p>throw new ArrayIndexOutOfBoundsException(«unknown type : «+object.optInt(«type»));<br>
+}<br>
+//Assigns specific type to user. </p>
+<p>public static User getImpl(){<br>
+ return new UserImpl();<br>
+}</p>
+<p>protected static class UserImpl extends User implements Responsable,Serializable{<br>
+public UserImpl(JSONObject object){<br>
+super(object);<br>
+setType(-2);<br>
+} </p>
+<p>public UserImpl(){ super(); setType(-2); }<br>
+}</p>
+</div>
+</div>
+<p class="motopress-hide-script"><script type="text/javascript">
+                jQuery(document).ready(function($) {
+                    var mpAccordion = $(".motopress-accordion-obj#5ac4b7552539b");
+                    if (mpAccordion.data("uiAccordion")) {
+                        mpAccordion.accordion("destroy");
+                    }
+                    if (typeof $.ui !== "undefined") {
+                        if (typeof $.ui.accordion !== "undefined") {
+		                    mpAccordion.accordion({
+		                        active: false,
+		                        collapsible: true,
+		                        header: "> div > h3",
+		                        heightStyle: "content"
+		                    });
+	                    }
+                    }
+                });
+                </script></p>
+</div>
+</div>
+</div>
+<div class="mp-row-fluid motopress-row mpce-dsbl-margin-left mpce-dsbl-margin-right">
+<div class="mp-span12 motopress-clmn  mpce-dsbl-margin-left mpce-dsbl-margin-right">
+<div class="motopress-text-obj">
+<h2>API/</h2>
+</div>
+</div>
+</div>
+<div class="mp-row-fluid motopress-row mpce-dsbl-margin-left mpce-dsbl-margin-right"></div>
+<div class="mp-span12 motopress-clmn  mpce-dsbl-margin-left mpce-dsbl-margin-right"></div>
+<div class="motopress-accordion-obj motopress-accordion motopress-accordion-light" id="5ac4b755259d4"></div>
+<div class="motopress-accordion-item">
+<h3>AcessToken</h3>
+<div></div>
+</div>
+<p>@Data public class AccessToken implements Responsable,Serializable {<br>
+public AccessToken(String accessToken,long expirationDate){<br>
+this.token = accessToken;<br>
+this.expirationDate = expirationDate;<br>
+} </p>
+<p>private String token; </p>
+<p>private long expirationDate; </p>
+<p>public static AccessToken parse(JSONObject object){<br>
+return new AccessToken(object.getString(«accessToken»),object.optLong(«expirationDate»,-1));<br>
+}</p>
+<p>public String getExpirationDateInString(){<br>
+Calendar c = Calendar.getInstance();<br>
+c.setTimeInMillis(expirationDate*1000);<br>
+StringBuilder sb = new StringBuilder();<br>
+dumpCalendar(c,sb);<br>
+if (Config.getCurrentConfig().isDebug()) {<br>
+sb.append(«(«).append(expirationDate * 1000).append(«)»);<br>
+sb.append(«; now»);<br>
+c.setTimeInMillis(Calendar.getInstance().getTimeInMillis());<br>
+dumpCalendar(c, sb);<br>
+sb.append(«(«).append(Calendar.getInstance().getTimeInMillis()).append(«)»);<br>
+}<br>
+return sb.toString();<br>
+}<br>
+//Finds date when token will expire. </p>
+<p>private void dumpCalendar(Calendar c,StringBuilder sb){<br>
+int s = c.get(Calendar.SECOND);<br>
+int m = c.get(Calendar.MINUTE);<br>
+int h = c.get(Calendar.HOUR_OF_DAY);<br>
+int day = c.get(Calendar.DAY_OF_MONTH);<br>
+int month = c.get(Calendar.MONTH);<br>
+int year = c.get(Calendar.YEAR);<br>
+sb.append(day&lt;10?"0"+day:day+"")
+                .append(".")
+                .append(month&lt;10?"0"+month:month)
+                .append(".")
+                .append((year % 10000) + "")
+                .append(" ")
+                .append(h&lt;10 ? "0"+h : h)
+                .append(":")
+                .append(m&lt;10 ? "0"+m : m)
+                .append(":")
+                .append(s&lt;10 ? "0"+s : s);
+}
+
+[/mp_accordion_item]
+
+[mp_accordion_item title="CheckOutInfo" active="false"]
+
+@Data public class CheckOutInfo implements Serializable {
+boolean overdue = false; 
+int fine = 0; 
+long returnTill; 
+public static CheckOutInfo parseInfo(JSONObject object){
+CheckOutInfo checkOutInfo = new CheckOutInfo(); 
+checkOutInfo.setOverdue(object.optBoolean("isOverdue",false)); 
+checkOutInfo.setFine(object.optInt("fine",0)); 
+checkOutInfo.setReturnTill(object.optInt("returnTill",-1)); 
+return checkOutInfo; 
+} 
+//Checks information.
+
+[/mp_accordion_item]
+
+[/mp_accordion]
+
+[/mp_span]
+
+[/mp_row]
+</p>
+   </div>
+
+   <span class="edit-link"><a class="post-edit-link" href="http://a0188394.xsph.ru/wp-admin/post.php?post=290&amp;action=edit">Изменить</a></span></article>
+                                             </div>
+                     </div>
+
+               </div><!-- .inner-wrap -->
+   </div><!-- .single-page -->
+
+         </div><!-- .main-wrapper -->
+
+      <footer id="colophon">
+         <div class="inner-wrap">
+            
+
+            <div class="footer-bottom clearfix">
+               <div class="copyright-info">
+                  InnoLib2018               </div>
+
+               <div class="footer-nav">
+                              </div>
+            </div>
+         </div>
+      </footer>
+      <a href="http://a0188394.xsph.ru/?page_id=290#masthead" id="scroll-up" style="display: none;"><i class="fa fa-angle-up"></i></a>
+   </div><!-- #page -->
+   <style id="motopress-ce-private-styles" data-posts="" type="text/css"></style><script type="text/javascript" src="./java_client_documentation_files/admin-bar.min.js.Без названия"></script>
+<script type="text/javascript" src="./java_client_documentation_files/theme-custom.js.Без названия"></script>
+<script type="text/javascript" src="./java_client_documentation_files/navigation.js.Без названия"></script>
+<script type="text/javascript" src="./java_client_documentation_files/wp-embed.min.js.Без названия"></script>
+<script type="text/javascript" src="./java_client_documentation_files/core.min.js.Без названия"></script>
+<script type="text/javascript" src="./java_client_documentation_files/widget.min.js.Без названия"></script>
+<script type="text/javascript" src="./java_client_documentation_files/accordion.min.js.Без названия"></script>
+	<!--[if lte IE 8]>
+		<script type="text/javascript">
+			document.body.className = document.body.className.replace( /(^|\s)(no-)?customize-support(?=\s|$)/, '' ) + ' no-customize-support';
+		</script>
+	<![endif]-->
+	<!--[if gte IE 9]><!-->
+		<script type="text/javascript">
+			(function() {
+				var request, b = document.body, c = 'className', cs = 'customize-support', rcs = new RegExp('(^|\\s+)(no-)?'+cs+'(\\s+|$)');
+
+						request = true;
+		
+				b[c] = b[c].replace( rcs, ' ' );
+				// The customizer requires postMessage and CORS (if the site is cross domain)
+				b[c] += ( window.postMessage && request ? ' ' : ' no-' ) + cs;
+			}());
+		</script>
+	<!--<![endif]-->
+			<div id="wpadminbar" class="">
+							<a class="screen-reader-shortcut" href="http://a0188394.xsph.ru/?page_id=290#wp-toolbar" tabindex="1">Перейти к верхней панели</a>
+						<div class="quicklinks" id="wp-toolbar" role="navigation" aria-label="Верхняя панель" tabindex="0">
+				<ul id="wp-admin-bar-root-default" class="ab-top-menu">
+		<li id="wp-admin-bar-wp-logo" class="menupop"><a class="ab-item" aria-haspopup="true" href="http://a0188394.xsph.ru/wp-admin/about.php"><span class="ab-icon"></span><span class="screen-reader-text">О WordPress</span></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-wp-logo-default" class="ab-submenu">
+		<li id="wp-admin-bar-about"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/about.php">О WordPress</a>		</li></ul><ul id="wp-admin-bar-wp-logo-external" class="ab-sub-secondary ab-submenu">
+		<li id="wp-admin-bar-wporg"><a class="ab-item" href="https://ru.wordpress.org/">WordPress.org</a>		</li>
+		<li id="wp-admin-bar-documentation"><a class="ab-item" href="https://codex.wordpress.org/%D0%97%D0%B0%D0%B3%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0">Документация</a>		</li>
+		<li id="wp-admin-bar-support-forums"><a class="ab-item" href="https://ru.forums.wordpress.org/">Форумы поддержки</a>		</li>
+		<li id="wp-admin-bar-feedback"><a class="ab-item" href="https://ru.forums.wordpress.org/forum/20">Обратная связь</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-site-name" class="menupop"><a class="ab-item" aria-haspopup="true" href="http://a0188394.xsph.ru/wp-admin/">Documentation</a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-site-name-default" class="ab-submenu">
+		<li id="wp-admin-bar-dashboard"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/">Консоль</a>		</li></ul><ul id="wp-admin-bar-appearance" class="ab-submenu">
+		<li id="wp-admin-bar-themes"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/themes.php">Темы</a>		</li>
+		<li id="wp-admin-bar-widgets"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/widgets.php">Виджеты</a>		</li>
+		<li id="wp-admin-bar-menus"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/nav-menus.php">Меню</a>		</li>
+		<li id="wp-admin-bar-background" class="hide-if-customize"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/themes.php?page=custom-background">Фон</a>		</li>
+		<li id="wp-admin-bar-header" class="hide-if-customize"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/themes.php?page=custom-header">Заголовок</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-customize" class="hide-if-no-customize"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/customize.php?url=http%3A%2F%2Fa0188394.xsph.ru%2F%3Fpage_id%3D290">Настроить</a>		</li>
+		<li id="wp-admin-bar-updates"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/update-core.php" title="4 обновления плагинов, 10 обновлений тем"><span class="ab-icon"></span><span class="ab-label">14</span><span class="screen-reader-text">4 обновления плагинов, 10 обновлений тем</span></a>		</li>
+		<li id="wp-admin-bar-comments"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/edit-comments.php"><span class="ab-icon"></span><span class="ab-label awaiting-mod pending-count count-0" aria-hidden="true">0</span><span class="screen-reader-text">0 комментариев ожидают проверки</span></a>		</li>
+		<li id="wp-admin-bar-new-content" class="menupop"><a class="ab-item" aria-haspopup="true" href="http://a0188394.xsph.ru/wp-admin/post-new.php"><span class="ab-icon"></span><span class="ab-label">Добавить</span></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-new-content-default" class="ab-submenu">
+		<li id="wp-admin-bar-new-post"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/post-new.php">Запись</a>		</li>
+		<li id="wp-admin-bar-new-media"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/media-new.php">Медиафайл</a>		</li>
+		<li id="wp-admin-bar-new-page"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/post-new.php?post_type=page">Страницу</a>		</li>
+		<li id="wp-admin-bar-new-user"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/user-new.php">Пользователя</a>		</li></ul></div>		</li>
+		<li id="wp-admin-bar-edit"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/post.php?post=290&amp;action=edit">Редактировать страницу</a>		</li>
+		<li id="wp-admin-bar-motopress-edit"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/post.php?post=290&amp;action=edit&amp;motopress-ce-auto-open=true" title="Визуальный конструктор">Визуальный конструктор</a>		</li></ul><ul id="wp-admin-bar-top-secondary" class="ab-top-secondary ab-top-menu">
+		<li id="wp-admin-bar-search" class="admin-bar-search"><div class="ab-item ab-empty-item" tabindex="-1"><form action="http://a0188394.xsph.ru/" method="get" id="adminbarsearch"><input class="adminbar-input" name="s" id="adminbar-search" type="text" value="" maxlength="150"><label for="adminbar-search" class="screen-reader-text">Поиск</label><input type="submit" class="adminbar-button" value="Поиск"></form></div>		</li>
+		<li id="wp-admin-bar-my-account" class="menupop with-avatar"><a class="ab-item" aria-haspopup="true" href="http://a0188394.xsph.ru/wp-admin/profile.php">Привет, <span class="display-name">ExcIIamation</span><img alt="" src="./java_client_documentation_files/ade109bd9240e503a4bb9dd187a858e6" srcset="http://1.gravatar.com/avatar/ade109bd9240e503a4bb9dd187a858e6?s=52&amp;d=mm&amp;r=g 2x" class="avatar avatar-26 photo" height="26" width="26"></a><div class="ab-sub-wrapper"><ul id="wp-admin-bar-user-actions" class="ab-submenu">
+		<li id="wp-admin-bar-user-info"><a class="ab-item" tabindex="-1" href="http://a0188394.xsph.ru/wp-admin/profile.php"><img alt="" src="./java_client_documentation_files/ade109bd9240e503a4bb9dd187a858e6(1)" srcset="http://1.gravatar.com/avatar/ade109bd9240e503a4bb9dd187a858e6?s=128&amp;d=mm&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"><span class="display-name">ExcIIamation</span><span class="username">admin</span></a>		</li>
+		<li id="wp-admin-bar-edit-profile"><a class="ab-item" href="http://a0188394.xsph.ru/wp-admin/profile.php">Изменить профиль</a>		</li>
+		<li id="wp-admin-bar-logout"><a class="ab-item" href="http://a0188394.xsph.ru/wp-login.php?action=logout&amp;_wpnonce=1543992415">Выйти</a>		</li></ul></div>		</li></ul>			</div>
+						<a class="screen-reader-shortcut" href="http://a0188394.xsph.ru/wp-login.php?action=logout&amp;_wpnonce=1543992415">Выйти</a>
+					</div>
+
+		
+</body></html>
