@@ -1,7 +1,7 @@
 <?php
 
     // If access token is invalid or if user doesn't have an access to this method then exit with error
-    ensure_access(array(2)); // Only librarians are allowed to use this method
+    ensure_access(array(0)); // Only librarians are allowed to use this method
 
     $response = array();
 

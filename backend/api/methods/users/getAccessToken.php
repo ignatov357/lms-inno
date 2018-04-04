@@ -23,7 +23,7 @@
     unset($query);
 
     // If an access token is already generated then change an expiry date
-    if($response['accessToken'] != null) {
+    if($response['accessToken'] !== null) {
         $response['expirationDate'] = time() + ACCESS_TOKEN_LIFETIME;
         $query = $db->prepare("UPDATE sessions SET expiration_date = ? WHERE access_token = ?");
         $query->bind_param("is", $response['expirationDate'], $response['accessToken']);
@@ -32,7 +32,7 @@
     }
 
     // If an access token isn't already generated then generate it
-    if($response['accessToken'] == null) {
+    if($response['accessToken'] === null) {
         $response['accessToken'] = hash('sha256', $_POST['userID'].':'.$_POST['password'].':'.time());
         $response['expirationDate'] = time() + ACCESS_TOKEN_LIFETIME;
         $query = $db->prepare("INSERT INTO sessions (user_id, access_token, expiration_date) VALUES (?, ?, ?)");

@@ -1,10 +1,10 @@
 -- phpMyAdmin SQL Dump
--- version 4.6.6
+-- version 4.7.8
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Мар 05 2018 г., 13:28
--- Версия сервера: 5.6.31-77.0
+-- Время создания: Апр 04 2018 г., 16:31
+-- Версия сервера: 5.6.39-83.1
 -- Версия PHP: 5.6.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -29,26 +29,19 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `booked_documents` (
   `user_id` int(11) NOT NULL,
   `document_id` int(11) NOT NULL,
-  `return_till` int(11) NOT NULL
+  `return_till` int(11) NOT NULL,
+  `renewed` int(11) NOT NULL DEFAULT '0',
+  `asked_to_return` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `booked_documents`
 --
 
-INSERT INTO `booked_documents` (`user_id`, `document_id`, `return_till`) VALUES
-(1, 26, 1521981162),
-(2, 3, 1520433157),
-(1, 13, 1521983076),
-(1, 10, 1521980186),
-(1, 11, 1521378263),
-(5, 14, 1521978351),
-(5, 10, 1521978250),
-(6, 11, 1521441461),
-(1, 14, 1521987525),
-(9, 11, 1522653891),
-(7, 10, 1522011723),
-(7, 27, 1522020200);
+INSERT INTO `booked_documents` (`user_id`, `document_id`, `return_till`, `renewed`, `asked_to_return`) VALUES
+(1, 28, 1527684829, 1, 0),
+(1, 14, 1527684622, 1, 0),
+(1, 11, 1527684388, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -66,46 +59,65 @@ CREATE TABLE IF NOT EXISTS `documents` (
   `keywords` text NOT NULL,
   `instock_count` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `documents`
 --
 
 INSERT INTO `documents` (`id`, `type`, `title`, `authors`, `price`, `additional_info`, `keywords`, `instock_count`) VALUES
-(2, 0, 'Test Book 2', 'Ignatov Valery N., ...', '123.45', '{\"reference\":1,\"bestseller\":1,\"publisher\":\"MIT Press\",\"edition\":\"1\",\"publicationYear\":\"2018\"}', 'test, book, test book', 9),
-(3, 0, 'Test Book 3', 'Ignatov Valery N., ...', '123.45', '{\"reference\":0,\"bestseller\":1,\"publisher\":\"MIT Press\",\"edition\":\"3\",\"publicationYear\":\"2019\"}', 'test, book, test book', 1),
-(10, 0, 'Testing in java', 'Ilya Potemin', '0.00', '{\"reference\":0,\"bestseller\":0,\"publisher\":\"some publisher\",\"edition\":\"1\",\"publicationYear\":\"2018\"}', 'testing, java', 5),
-(8, 0, 'Test Book 8', 'Ignatov Valery N., ...', '123.45', '{\"reference\":1,\"bestseller\":1,\"publisher\":\"MIT Press\",\"edition\":\"3\",\"publicationYear\":\"2028\"}', 'test, book, test book', 12),
-(11, 0, 'Testing in java: how does it work', 'Ilya Potemin', '0.00', '{\"reference\":0,\"bestseller\":1,\"publisher\":\"some publisher\",\"edition\":\"2\",\"publicationYear\":\"2018\"}', 'testing, java, howto', 6),
-(13, 0, 'Java: how to get rid of it', 'Ilya Potemin', '0.01', '{\"reference\":0,\"bestseller\":0,\"publisher\":\"some publisher 2\",\"edition\":\"2\",\"publicationYear\":\"1999\"}', 'java, againjava, edition2, javagoaway', 8),
-(14, 0, 'Teamwork with peace', 'Ilya Potemin', '4.20', '{\"reference\":0,\"bestseller\":1,\"publisher\":\"some publisher 2\",\"edition\":\"1\",\"publicationYear\":\"2028\"}', 'teamwork, wheregetpatience', 1),
-(28, 0, 'How to die before midterm', 'N. Shilov, Y. Kholodov', '23.00', '{\"reference\":0,\"bestseller\":1,\"publisher\":\"KingBooks\",\"edition\":\"5\",\"publicationYear\":\"2018\"}', 'midterm, RIP, drop, calcooles', 666),
-(27, 0, 'Autobiography', 'Picroc', '200000.00', '{\"reference\":0,\"bestseller\":1,\"publisher\":\"Awes Proj\",\"edition\":\"2\",\"publicationYear\":\"3018\"}', 'awesome, bestseller', 1),
-(18, 0, 'Lombok for java development', 'Ilya Potemin', '19.84', '{\"reference\":0,\"bestseller\":1,\"publisher\":\"some publisher 2\",\"edition\":\"1\",\"publicationYear\":\"2028\"}', 'development, lombok', 2),
-(19, 0, 'Testing in java 3', 'Ilya Potemin', '1.00', '{\"reference\":0,\"bestseller\":0,\"publisher\":\"some publisher 2\",\"edition\":\"1\",\"publicationYear\":\"2028\"}', 'java, wont, go, away', 10),
-(29, 0, 'N.Shilov, the amazing illusionist', 'IU students', '1000.00', '{\"reference\":0,\"bestseller\":1,\"publisher\":\"Awes-Team pub.\",\"edition\":\"1\",\"publicationYear\":\"2018\"}', 'shilov, theamazing', 1);
+(36, 2, 'Null References: The Billion Dollar Mistake', 'Tony Hoare', '700.00', '[]', 'd3, av, delivery3', 1),
+(8, 0, 'Test Book 8', 'Ignatov Valery N., ...', '123.45', '{\"reference\":0,\"bestseller\":0,\"publisher\":\"MIT Press\",\"edition\":\"3\",\"publicationYear\":\"2028\"}', 'test, book, test book', 12),
+(11, 0, 'Testing in java: how does it work', 'Ilya Potemin', '0.00', '{\"reference\":0,\"bestseller\":1,\"publisher\":\"some publisher\",\"edition\":\"2\",\"publicationYear\":\"2018\"}', 'testing, java, howto', 8),
+(13, 0, 'Java: how to get rid of it', 'Ilya Potemin', '12.00', '{\"reference\":1,\"bestseller\":0,\"publisher\":\"some publisher 2\",\"edition\":\"2\",\"publicationYear\":\"1999\"}', 'java, againjava, edition2, javagoaway', 9),
+(14, 0, 'Teamwork with peace', 'Ilya Potemin', '4.20', '{\"reference\":0,\"bestseller\":1,\"publisher\":\"some publisher 2\",\"edition\":\"1\",\"publicationYear\":\"2028\"}', 'teamwork, wheregetpatience', 2),
+(28, 0, 'How to die before midterm', 'N. Shilov, Y. Kholodov', '23.00', '{\"reference\":0,\"bestseller\":0,\"publisher\":\"KingBooks\",\"edition\":\"11\",\"publicationYear\":\"2018\"}', 'midterm, RIP, drop, calcooles', 609),
+(27, 0, 'Design Patterns: Elements of Reusable Object-Oriented Software', 'Erich Gamma, Ralph Johnson, John Vlissides, Richard Helm', '1700.00', '{\"reference\":0,\"bestseller\":0,\"publisher\":\"Addison-Wesley Professional\",\"edition\":\"1\",\"publicationYear\":\"2003\"}', 'd2, awesome, bestseller', 3),
+(18, 0, 'Lombok for java development', 'Ilya Potemin', '19.84', '{\"reference\":1,\"bestseller\":1,\"publisher\":\"some publisher 2\",\"edition\":\"1\",\"publicationYear\":\"2028\"}', 'development, lombok', 2),
+(29, 0, 'N.Shilov, the amazing illusionist', 'IU students', '1000.00', '{\"reference\":1,\"bestseller\":0,\"publisher\":\"Awes-Team pub.\",\"edition\":\"1\",\"publicationYear\":\"2018\"}', 'shilov, theamazing', 1),
+(30, 1, 'How to live on 12k', 'Ilya Potemin, Alexey Logachev', '12.00', '{\"reference\":1,\"journalTitle\":\"Student Association Journal\",\"journalIssuePublicationDate\":\"2018-04-04\",\"journalIssueEditors\":\"Editor1, Editor2, ... , EditorN\"}', 'club12, howto', 10),
+(31, 0, 'Introduction to Algorithms', 'Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford Stein', '5000.00', '{\"reference\":1,\"bestseller\":0,\"publisher\":\"MIT Press\",\"edition\":\"3\",\"publicationYear\":\"2009\"}', 'd1, cormen, algorithm', 0),
+(32, 2, 'First AV material in our LMS', 'The Great Author', '1000.00', '[]', 'av, nice, perfect, delivery2', 3);
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `document_types`
+-- Структура таблицы `notifications`
 --
 
-CREATE TABLE IF NOT EXISTS `document_types` (
+CREATE TABLE IF NOT EXISTS `notifications` (
   `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  UNIQUE KEY `id` (`id`)
+  `user_id` int(11) NOT NULL,
+  `text` text NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
--- Дамп данных таблицы `document_types`
+-- Дамп данных таблицы `notifications`
 --
 
-INSERT INTO `document_types` (`id`, `name`) VALUES
-(0, 'Book'),
-(1, 'Journal Article'),
-(2, 'Audio/Video Material');
+INSERT INTO `notifications` (`id`, `user_id`, `text`, `time`) VALUES
+(0, 1, 'Hello.', '2018-04-01 17:40:14');
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `queue`
+--
+
+CREATE TABLE IF NOT EXISTS `queue` (
+  `user_id` int(11) NOT NULL,
+  `document_id` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `queue`
+--
+
+INSERT INTO `queue` (`user_id`, `document_id`) VALUES
+(6, 31),
+(1, 36);
 
 -- --------------------------------------------------------
 
@@ -126,11 +138,12 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 --
 
 INSERT INTO `sessions` (`user_id`, `access_token`, `expiration_date`) VALUES
-(8, '3cc27a25683c4cfad36330e8032fbb4c26391f32d5056d52c6a7309b88a87935', 1520469882),
-(5, '978e0810f20b604a2c59af1fd03dd191f839ddb7e630a2c13a095d7506a36aca', 1520502097),
-(1, '69bbc8253aa92d7e36968101882729a827ebae86c74ead3a015bd3fee1918a17', 1520504468),
-(9, 'bf2968014115d4afd820578a2c1f652a7256bb4f165ca4c6356c748191693b15', 1520504364),
-(6, 'd2e85d977014516884a355d8564d7d51d6e4a1a3a44c73eaed5ffd41a4d07a4d', 1520502790);
+(5, '7ff19b64c70d06d53b3628dc36e43a34a608eb7bfe9145cad39543420258762e', 1523105327),
+(1, 'db8f0a181ed248aae8e84cca494933daabf72e1dc0575cee19109781e0a7ae2a', 1523106268),
+(9, '68a83874680c0b61952ec0066597f29f528da6f876e6d16696641c2918ce08d9', 1523106736),
+(6, '4361c34d54f1d1b9dafc9ab8afee960a1055d1d5a2555c01fdb040a021117737', 1523105678),
+(13, '00fdeab77e5036d96389c6bd823dc0ea99c5ac0e33572c8028e8fd81b8700fde', 1523062230),
+(2, 'a137b5d4125dae3cfa67e95fe590e9deb07d7948ac99713df56ac42a57f306fe', 1522940608);
 
 -- --------------------------------------------------------
 
@@ -147,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `address` varchar(150) NOT NULL,
   `phone` varchar(15) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `users`
@@ -156,31 +169,14 @@ CREATE TABLE IF NOT EXISTS `users` (
 INSERT INTO `users` (`id`, `password`, `card_UID`, `type`, `name`, `address`, `phone`) VALUES
 (1, '64ccc3443652504bbced839035f2b195', 'BB8312C5EF08040001903D406D70141D', 2, 'Valerian', 'Not determined', '79998053149'),
 (2, '64ccc3443652504bbced839035f2b195', '', 2, 'Some Bad Guy', 'Innopolis v2.0', 'hidden'),
-(6, '64ccc3443652504bbced839035f2b195', '', 0, 'java test student', 'address', 'phone'),
-(5, '64ccc3443652504bbced839035f2b195', '', 2, 'Ilya Potemin', 'My address', '88005553535'),
-(9, '898c6a04076466505e3c41e603f5684e', '', 1, 'Alexey', 'Innopolis', '898288000228329'),
-(8, '4cf4b91d76e40fd83feafcef1f99eeca', '', 1, 'Picroc', 'Universitetskaya', '89821759743222');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `user_types`
---
-
-CREATE TABLE IF NOT EXISTS `user_types` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  UNIQUE KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Дамп данных таблицы `user_types`
---
-
-INSERT INTO `user_types` (`id`, `name`) VALUES
-(0, 'Student'),
-(1, 'Faculty Member'),
-(2, 'Librarian');
+(6, '64ccc3443652504bbced839035f2b195', '', 1, 'Student dev3', 'address', 'phone'),
+(5, '64ccc3443652504bbced839035f2b195', '', 0, 'Ilya Potemin', 'My address', '88005553535'),
+(9, '898c6a04076466505e3c41e603f5684e', '', 0, 'Alexey', 'Innopolis', '898288000228329'),
+(8, '4cf4b91d76e40fd83feafcef1f99eeca', '', 0, 'Picroc', 'Universitetskaya', '89821759743222'),
+(11, '1785e31356894edf01bdd59ccc99b7d0', '', 3, 'Shiloff', 'Universitetskay st. JK', '123456789111'),
+(12, '64ccc3443652504bbced839035f2b195', '', 3, 'Sergey Afonso', 'Via Margutta, 3', '30001'),
+(13, '64ccc3443652504bbced839035f2b195', '', 3, 'Veronica Rama', 'Stret Atocha, 27', '112358'),
+(15, 'f15a86261c143fab7f248c257cba47ac', '', 1, 'Alexey', 'Univ 1 1 312', '+798211111111');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

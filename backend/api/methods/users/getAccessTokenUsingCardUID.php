@@ -10,7 +10,7 @@
     $query->bind_param("s", $_POST['cardUID']);
     $query->execute();
     $user_id = $query->get_result()->fetch_assoc()['id'];
-    if($user_id == null) {
+    if($user_id === null) {
         // If the given card UID doesn't exit in the system, then exit with error
         json_response(400, array('errorMessage' => 'User wasn\'t found'));
     }
@@ -24,7 +24,7 @@
     unset($query);
 
     // If an access token is already generated then change an expiry date
-    if($response['accessToken'] != null) {
+    if($response['accessToken'] !== null) {
         $response['expirationDate'] = time() + ACCESS_TOKEN_LIFETIME;
         $query = $db->prepare("UPDATE sessions SET expiration_date = ? WHERE access_token = ?");
         $query->bind_param("is", $response['expirationDate'], $response['accessToken']);
@@ -33,7 +33,7 @@
     }
 
     // If an access token isn't already generated then generate it
-    if($response['accessToken'] == null) {
+    if($response['accessToken'] === null) {
         $response['accessToken'] = hash('sha256', $user_id.':'.$_POST['cardUID'].':'.time());
         $response['expirationDate'] = time() + ACCESS_TOKEN_LIFETIME;
         $query = $db->prepare("INSERT INTO sessions (user_id, access_token, expiration_date) VALUES (?, ?, ?)");

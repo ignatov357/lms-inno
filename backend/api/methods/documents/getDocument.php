@@ -11,7 +11,7 @@
     $query->bind_param("i", $_GET['id']);
     $query->execute();
     $document_info = $query->get_result()->fetch_assoc();
-    if($document_info == null) {
+    if($document_info === null) {
         json_response(400, array('errorMessage' => 'Document with given id doesn\'t exist'));
     }
     unset($query);

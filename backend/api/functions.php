@@ -26,13 +26,20 @@
         return $query->get_result()->fetch_assoc()['user_id'];
     }
 
+    function create_notification($user_id, $notification) {
+        global $db;
+        $query = $db->prepare("INSERT INTO notifications (user_id, text) VALUES (?, ?)");
+        $query->bind_param("is", $user_id, $text);
+        $query->execute();
+    }
+
     function ensure_access($allowed_user_types = array()) {
         if (empty(getallheaders()['Access-Token'])) {
             json_response(401, array('errorMessage' => 'Access-Token required'));
         }
 
         $user_id = get_user_id();
-        if ($user_id == NULL) {
+        if ($user_id === null) {
             json_response(401, array('errorMessage' => 'The given Access-Token is invalid'));
         }
         if (!empty($allowed_user_types)) {
@@ -55,7 +62,6 @@
     function is_empty($object) {
         return empty($object) && ($object == NULL || !in_array($object, array("0", 0, 0.0)));
     }
-
 
     function generate_password($length = 8) {
         $sets = array('abcdefghjkmnpqrstuvwxyz', 'ABCDEFGHJKMNPQRSTUVWXYZ', '1234567890');

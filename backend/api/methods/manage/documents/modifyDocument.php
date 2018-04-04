@@ -1,7 +1,7 @@
 <?php
 
     // If access token is invalid or if user doesn't have an access to this method then exit with error
-    ensure_access(array(2)); // Only librarians are allowed to use this method
+    ensure_access(array(0)); // Only librarians are allowed to use this method
 
     // If some of the required parameters are missed then exit with error
     // If some parameter has invalid value then exit with error
@@ -17,7 +17,7 @@
     $query->bind_param("i", $_POST['id']);
     $query->execute();
     $document_type = $query->get_result()->fetch_assoc()['type'];
-    if ($document_type == null) {
+    if ($document_type === null) {
         json_response(400, array('errorMessage' => 'Document with given id doesn\'t exist'));
     }
     unset($query);
@@ -34,14 +34,17 @@
             json_response(400, array('errorMessage' => 'Incorrect value for parameter \'edition\''));
         }
     } elseif ($document_type == 1) {
-        ensure_required_params(array('journalTitle', 'journalIssuePublicationDate', 'journalIssueEditors'), $_POST);
+        ensure_required_params(array('reference', 'journalTitle', 'journalIssuePublicationDate', 'journalIssueEditors'), $_POST);
+        if(!in_array($_POST['reference'], array(0, 1))) {
+            json_response(400, array('errorMessage' => 'Incorrect value for parameter \'bestseller\''));
+        }
     }
 
     $response = array('id' => $_POST['id'], 'instockCount' => $_POST['instockCount'], 'type' => $document_type, 'title' => $_POST['title'], 'authors' => $_POST['authors'], 'price' => $_POST['price'], 'keywords' => $_POST['keywords']);
     if ($document_type == 0) {
         $additional_info = array('reference' => intval($_POST['reference']), 'bestseller' => intval($_POST['bestseller']), 'publisher' => $_POST['publisher'], 'edition' => $_POST['edition'], 'publicationYear' => $_POST['publicationYear']);
     } elseif ($document_type == 1) {
-        $additional_info = array('journalTitle' => $_POST['journalTitle'], 'journalIssuePublicationDate' => $_POST['journalIssuePublicationDate'], 'journalIssueEditors' => $_POST['journalIssueEditors']);
+        $additional_info = array('reference' => intval($_POST['reference']), 'journalTitle' => $_POST['journalTitle'], 'journalIssuePublicationDate' => $_POST['journalIssuePublicationDate'], 'journalIssueEditors' => $_POST['journalIssueEditors']);
     } elseif ($document_type == 2) {
         $additional_info = array();
     }

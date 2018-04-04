@@ -1,7 +1,7 @@
 <?php
 
     // If access token is invalid or if user doesn't have an access to this method then exit with error
-    ensure_access(array(2)); // Only librarians are allowed to use this method
+    ensure_access(array(0)); // Only librarians are allowed to use this method
 
     // If some of the required parameters are missed then exit with error
     // If some parameter has invalid value then exit with error
@@ -11,7 +11,7 @@
     $query = $db->prepare("SELECT * FROM booked_documents WHERE user_id = ? AND document_id = ?");
     $query->bind_param("ii", $_POST['userID'], $_POST['documentID']);
     $query->execute();
-    if($query->get_result()->fetch_assoc() == null) {
+    if($query->get_result()->fetch_assoc() === null) {
         json_response(400, array('errorMessage' => 'User with given id didn\'t check out the document with given id'));
     }
     unset($query);
