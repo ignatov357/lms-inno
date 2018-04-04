@@ -46,13 +46,23 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nothing interesting here yet, swith to the center @string/home_library_tab_all" />
+                android:layout_margin="4dp"
+                android:layout_marginBottom="16dp"
+                android:text="Nothing interesting here yet, switch to the center tab" />
 
             <Button
                 android:id="@+id/fragment_home_settings_show_log_button"
+                style="@android:style/Widget.DeviceDefault.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Show logs" />
+
+            <Button
+                android:id="@+id/fragment_home_settings_crash_in_main_button"
+                style="@android:style/Widget.DeviceDefault.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Imitate crash" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>

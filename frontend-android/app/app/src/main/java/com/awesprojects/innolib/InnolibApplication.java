@@ -1,7 +1,10 @@
 package com.awesprojects.innolib;
 
 import android.app.Application;
+import android.content.Intent;
+import android.os.Process;
 
+import com.awesprojects.innolib.activities.LogActivity;
 import com.awesprojects.innolib.utils.logger.LogSystem;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 
@@ -33,16 +36,22 @@ public class InnolibApplication extends Application{
     public static void setAccessToken(AccessToken accessToken){
         mAccessToken = accessToken;
     }
+
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
         LogSystem.ensureInit();
-        getMainLooper().getThread().setUncaughtExceptionHandler((thread,throwable) -> {
-            log.severe("uncaught exception in app thread : "+throwable.toString());
-            log.severe("application is forced to close");
-            System.exit(-1);
-        });
+        getMainLooper().getThread().setUncaughtExceptionHandler(this::onFatalException);
+    }
+
+    public void onFatalException(Thread thread,Throwable throwable){
+        log.severe("uncaught exception in app thread : "+throwable.toString());
+        log.severe("application is forced to close");
+        Intent logActivityIntent = new Intent(this, LogActivity.class);
+        startActivity(logActivityIntent);
+        Process.killProcess(Process.myPid());
+        System.exit(10);
     }
 
 

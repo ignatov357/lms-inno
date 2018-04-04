@@ -1,6 +1,6 @@
 package com.awesprojects.lmsclient.api;
 
-import com.awesprojects.lmsclient.api.data.Notification;
+import com.awesprojects.lmsclient.api.data.ServerNotification;
 import com.awesprojects.lmsclient.utils.requests.LongPollRequest;
 import com.awesprojects.lmsclient.utils.requests.RequestFactory;
 
@@ -22,13 +22,14 @@ public class NotificationAPI {
 
     private static HashMap<Integer,NotificationConnectionReference> connections;
 
-    public static NotificationConnectionReference create(){
-        LongPollRequest.Builder builder = RequestFactory.longPoll();
-        builder.withURL("/notifications");
-        return create(builder.create());
+    public static NotificationReader create(){
+        return new NotificationReader(createReference());
     }
 
-    public static NotificationConnectionReference create(LongPollRequest request){
+    private static NotificationConnectionReference createReference(){
+        LongPollRequest.Builder builder = RequestFactory.longPoll();
+        builder.withURL("/notifications");
+        LongPollRequest request = builder.create();
         NotificationConnectionReference connectionReference = new NotificationConnectionReference(request.hashCode(),request);
         connections.put(request.hashCode(),connectionReference);
         return connectionReference;
@@ -38,8 +39,13 @@ public class NotificationAPI {
         connections.remove(id);
     }
 
+
+
+    public static final int NOTIFICATION_READ = 1;
+    public static final int NOTIFICATION_UNREAD = 0;
+
     public interface NotificationReceiver{
-        int onReceiveNotification(Notification notification);
+        int onReceiveNotification(ServerNotification notification);
     }
 
     private static class NotificationConnectionReference {
@@ -90,6 +96,29 @@ public class NotificationAPI {
             request.close();
             remove(getId());
         }
+    }
+
+    public static class NotificationReader {
+
+        final NotificationConnectionReference notificationConnectionReference;
+        private NotificationReceiver notificationReceiver;
+
+        public NotificationReader(final NotificationConnectionReference reference){
+            notificationConnectionReference = reference;
+        }
+
+        public void setNotificationReceiver(NotificationReceiver receiver){
+            notificationReceiver = receiver;
+        }
+
+        public void run(){
+
+        }
+
+        public void close(){
+            notificationConnectionReference.close();
+        }
+
     }
 
 }

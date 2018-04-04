@@ -130,10 +130,14 @@ public class SignInMethodsFragment extends Fragment implements View.OnClickListe
         if (compoundButton==mPinUseCheckBox){
             TransitionManager.beginDelayedTransition((ViewGroup)mContent);
             if (b){
-                mFingerprintUseCheckBox.setEnabled(true);
-                mCardUseCheckBox.setEnabled(true);
-                mFingerprintUseCheckBox.setChecked(supportsFingerprint);
-                mCardUseCheckBox.setChecked(supportsNFC);
+                if (supportsFingerprint){
+                    mFingerprintUseCheckBox.setEnabled(true);
+                    mFingerprintUseCheckBox.setChecked(true);
+                }
+                if (supportsNFC){
+                    mCardUseCheckBox.setEnabled(true);
+                    mCardUseCheckBox.setChecked(true);
+                }
                 mInfoTextView.setVisibility(View.INVISIBLE);
             }else{
                 mFingerprintUseCheckBox.setChecked(false);

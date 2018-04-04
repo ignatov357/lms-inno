@@ -5,11 +5,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.awesprojects.innolib.R;
 import com.awesprojects.innolib.fragments.home.PatronProfileFragment;
 import com.awesprojects.innolib.managers.DocumentManager;
+import com.awesprojects.innolib.widgets.OverdueIndicatorView;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 
 import java.util.List;
@@ -72,6 +77,7 @@ public class CheckedOutDocsAdapter extends RecyclerView.Adapter<CheckedOutDocsAd
         TextView mDocAuthor;
         TextView mTimeLeft;
         View mOverdueIndicator;
+        OverdueIndicatorView mOverdueIndicatorView;
         ViewGroup mRootView;
 
         public CheckedOutDocsHolder(View itemView) {
@@ -82,6 +88,7 @@ public class CheckedOutDocsAdapter extends RecyclerView.Adapter<CheckedOutDocsAd
             mDocAuthor = itemView.findViewById(R.id.home_profile_checkedout_element_author);
             mTimeLeft = itemView.findViewById(R.id.home_profile_checkedout_element_left_time);
             mOverdueIndicator = itemView.findViewById(R.id.home_profile_checkedout_element_overdue_indicator);
+            mOverdueIndicatorView = itemView.findViewById(R.id.home_profile_checkedout_element_overdue_indicator_imageview);
         }
 
         public void setTitle(String title){
@@ -100,10 +107,12 @@ public class CheckedOutDocsAdapter extends RecyclerView.Adapter<CheckedOutDocsAd
         public void setReturnDate(long millis){
             if (millis*1000<System.currentTimeMillis()){
                 mOverdueIndicator.setVisibility(View.VISIBLE);
+                mOverdueIndicatorView.setOverdue(true);
             }else{
                 mOverdueIndicator.setVisibility(View.INVISIBLE);
+                mOverdueIndicatorView.setOverdue(false);
             }
-            String returnAt = DocumentManager.getPrettyReturnDate(millis*1000).toLowerCase();
+            String returnAt = DocumentManager.getPrettyReturnDate(millis).toLowerCase();
             mTimeLeft.setText(returnAt);
         }
 

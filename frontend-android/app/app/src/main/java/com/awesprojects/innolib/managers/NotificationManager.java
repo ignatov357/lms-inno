@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.v7.app.NotificationCompat;
 
+import com.awesprojects.innolib.R;
+
 import java.util.logging.Logger;
 
 /**
@@ -15,7 +17,7 @@ public class NotificationManager {
     public static final String TAG = "NotificationManager";
     private static final Logger log = Logger.getLogger(TAG);
 
-    public class Notification{
+    public static class Notification{
         private String mTitle;
         private String mSubtitle;
         @DrawableRes
@@ -69,6 +71,8 @@ public class NotificationManager {
     }
 
     public void addNotification(Context context,Notification notification){
+        if (notification.getIcon()==0)
+            notification.withIcon(R.drawable.ic_library_books_black_24dp);
         android.app.NotificationManager nm = (android.app.NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);

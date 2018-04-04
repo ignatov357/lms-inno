@@ -179,9 +179,9 @@ public class DocumentManager {
         }
     }
 
-    public static String getPrettyReturnDate(long millis){
+    public static String getPrettyReturnDate(long seconds){
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(millis*1000);
+        c.setTimeInMillis(seconds*1000);
         StringBuilder sb = new StringBuilder();
         int day = c.get(Calendar.DAY_OF_MONTH);
         int month = c.get(Calendar.MONTH)+1;

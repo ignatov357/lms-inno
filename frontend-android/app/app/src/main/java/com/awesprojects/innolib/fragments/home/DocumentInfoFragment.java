@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.awesprojects.innolib.InnolibApplication;
 import com.awesprojects.innolib.R;
@@ -36,6 +35,10 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
         void onResult(int status, Document document, String reason);
     }
 
+    public interface OnRenewResultListener{
+        void onResult(Document document,boolean renewed);
+    }
+
     Document mDocument;
     ImageView mPreviewImageView;
     View mBestsellerIndicator;
@@ -52,7 +55,8 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
     int mColorRed;
     int mColorYellow;
     boolean checkoutMode=true;
-    LibraryCheckoutConfirmFragment.OnCheckoutResultListener mResultListener;
+    OnCheckoutResultListener mCheckoutResultListener;
+    OnRenewResultListener mRenewResultListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -154,8 +158,12 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
         checkoutMode = false;
     }
 
-    public void setOnCheckoutListener(LibraryCheckoutConfirmFragment.OnCheckoutResultListener listener){
-        mResultListener = listener;
+    public void setOnCheckoutListener(OnCheckoutResultListener listener){
+        mCheckoutResultListener = listener;
+    }
+
+    public void setOnRenewListener(OnRenewResultListener listener){
+        mRenewResultListener = listener;
     }
 
     public void setDocumentTitle(String title){
@@ -224,8 +232,8 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
 
     public void onCheckOutSucceed() {
         Snackbar.make(getContentView(),"Checkout succeed",Snackbar.LENGTH_SHORT).show();
-        if (mResultListener != null)
-            mResultListener.onResult(0, mDocument, null);
+        if (mCheckoutResultListener != null)
+            mCheckoutResultListener.onResult(0, mDocument, null);
     }
 
     public void onCheckOutFailed(String desc) {
@@ -236,8 +244,8 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
 
     public void onRenewSucceed(){
         Snackbar.make(getContentView(),"Renew succeed",Snackbar.LENGTH_SHORT).show();
-        if (mResultListener != null)
-            mResultListener.onResult(0, mDocument, null);
+        if (mRenewResultListener!=null)
+            mRenewResultListener.onResult(mDocument,true);
     }
 
     public void onRenewFailed(String desc){

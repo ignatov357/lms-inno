@@ -33,9 +33,10 @@ public class LogStorageManager {
         mBaseLog = new File(InnolibApplication.getInstance().getFilesDir(), "application.log");
         mBaseLog.setWritable(true);
         mDebugLog = new File(InnolibApplication.getInstance().getFilesDir(), "debug.log");
+        mDebugLog.setWritable(true);
         try {
-            mBasePrintStream = new PrintStream(new FileOutputStream(mBaseLog, true));
-            mDebugPrintStream = new PrintStream(new FileOutputStream(mDebugLog));
+            mBasePrintStream = new PrintStream(new FileOutputStream(mBaseLog,true));
+            mDebugPrintStream = new PrintStream(new FileOutputStream(mDebugLog, true));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -49,10 +50,32 @@ public class LogStorageManager {
         return mDebugPrintStream;
     }
 
+
     public String loadBaseLogFile(){
+        return loadBaseLogFile(-1);
+    }
+
+    public String loadBaseLogFile(int lastBytes){
+       return loadLog(mBaseLog,lastBytes);
+    }
+
+    public String loadDebugLogFile(){
+        //debug log may be too long and useless, so show last 30000 bytes
+        return loadDebugLogFile(30000);
+    }
+
+    public String loadDebugLogFile(int lastBytes){
+        return loadLog(mDebugLog,lastBytes);
+    }
+
+    private String loadLog(File file,int lastBytes){
         try {
-            FileInputStream fis = new FileInputStream(mBaseLog);
-            byte[] array = new byte[(int)mBaseLog.length()];
+            FileInputStream fis = new FileInputStream(file);
+            if (lastBytes!=-1){
+                lastBytes = lastBytes > fis.available() ? fis.available() : lastBytes;
+                fis.skip(fis.available()-lastBytes);
+            }
+            byte[] array = new byte[(int)file.length()];
             fis.read(array);
             fis.close();
             return new String(array);

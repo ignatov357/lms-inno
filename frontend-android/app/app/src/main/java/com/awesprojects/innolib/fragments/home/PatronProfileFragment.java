@@ -19,12 +19,16 @@ import com.awesprojects.lmsclient.api.data.documents.Document;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.logging.Logger;
 
 /**
  * Created by ilya on 2/4/18.
  */
 
 public class PatronProfileFragment extends AbstractProfileFragment {
+
+    public static final String TAG = "PatronProfileFragment";
+    public static Logger log = Logger.getLogger(TAG);
 
     public static PatronProfileFragment mBindedInstance;
 
@@ -68,7 +72,7 @@ public class PatronProfileFragment extends AbstractProfileFragment {
     public void updateCheckedOutDocs(){
         mCheckedOutSwipeRefreshLayout.setRefreshing(true);
         DocumentManager.getCheckedOutDocuments(InnolibApplication.getAccessToken(), (documents) -> {
-            System.out.println("checkout docs update completed");
+            log.finest("checkout docs update completed");
             if (documents instanceof ResponsableContainer) {
                 //noinspection unchecked
                 onUpdatedCheckedOutDocs( ((ResponsableContainer<Document[]>)documents).get());
@@ -104,9 +108,9 @@ public class PatronProfileFragment extends AbstractProfileFragment {
     @Override
     public void onResume() {
         super.onResume();
-        System.out.println("profile on resume");
+        log.finest("profile on resume");
         if (mPendingUpdate){
-            System.out.print("pending update completing...");
+            log.finer("pending update completing...");
             updateCheckedOutDocs();
             mPendingUpdate = false;
         }
@@ -118,15 +122,15 @@ public class PatronProfileFragment extends AbstractProfileFragment {
         super.onSaveInstanceState(outState);
     }
 
+    public void onDocumentRenew(Document document,boolean renewed){
+        if (renewed){
+            updateCheckedOutDocs();
+        }
+    }
+
     public void onShowDocumentInfo(View documentHolder, Document document) {
         DocumentInfoFragment documentDetailFragment = new DocumentInfoFragment();
-        /*documentDetailFragment.setOnCheckoutListener(((status, doc, reason) -> {
-            int pos = getDocumentPosition(doc);
-            mDocuments.remove(pos);
-            mAdapter.setDocuments(mDocuments);
-            mAdapter.notifyItemRemoved(pos);
-            PatronProfileFragment.refreshCheckedoutList();
-        }));*/
+        documentDetailFragment.setOnRenewListener(this::onDocumentRenew);
         documentDetailFragment.setEnterTransition(new Slide(Gravity.BOTTOM));
         documentDetailFragment.setExitTransition(new Slide(Gravity.BOTTOM));
         Bundle args = new Bundle();
@@ -151,6 +155,7 @@ public class PatronProfileFragment extends AbstractProfileFragment {
         public void onShow(View holderRootView, Document document) {
             mPatronProfileFragment.onShowDocumentInfo(holderRootView, document);
         }
+
     }
 
 }

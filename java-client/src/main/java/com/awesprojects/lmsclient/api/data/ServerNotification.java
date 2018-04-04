@@ -7,14 +7,14 @@ import org.json.JSONObject;
 import java.io.Serializable;
 
 @Data
-public class Notification implements Responsable,Serializable {
+public class ServerNotification implements Responsable,Serializable {
 
     private int id;
 
     private String description;
 
-    public static Notification parse(JSONObject jsonObject){
-        Notification notification = new Notification();
+    public static ServerNotification parse(JSONObject jsonObject){
+        ServerNotification notification = new ServerNotification();
         notification.setId(jsonObject.optInt("notificationID",0));
         notification.setDescription(jsonObject.optString("notification",""));
         return notification;

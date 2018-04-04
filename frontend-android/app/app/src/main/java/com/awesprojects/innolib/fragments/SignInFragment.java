@@ -113,7 +113,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener{
             onSignInSucceed(((AccessToken) result));
         }else{
             Response response = ((Response) result);
-            log.warning("sigh in attempt failed :["+ response.getStatus() + "] "+response.getDescription());
+            log.warning("sign in attempt failed :["+ response.getStatus() + "] "+response.getDescription());
             int responseCode = response.getStatus();
             switch (responseCode){
                 case Response.STATUS_BAD_REQUEST_ERROR:{

@@ -206,13 +206,11 @@
                                         android:gravity="center"
                                         android:orientation="horizontal">
 
-                                        <ImageView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
+                                        <com.awesprojects.innolib.widgets.OverdueIndicatorView
+                                            android:layout_width="18dp"
+                                            android:layout_height="18dp"
                                             android:layout_weight="1"
-                                            android:padding="1dp"
-                                            android:scaleType="center"
-                                            android:src="@android:drawable/ic_notification_overlay" />
+                                            android:padding="1dp"/>
                                     </LinearLayout>
                                 </LinearLayout>
 

@@ -22,20 +22,24 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.WelcomeActivity"
-            android:theme="@style/WelcomeStyle">
-        </activity>
+            android:theme="@style/WelcomeStyle"></activity>
         <activity
             android:name=".activities.HomeActivity"
-            android:theme="@style/HomeTheme">
-        </activity>
+            android:theme="@style/HomeTheme"></activity>
         <activity
-            android:name=".activities.LogActivity" >
-        </activity>
+            android:name=".activities.LogActivity"
+            android:process=":LogActivityProcess"></activity>
+
+        <service
+            android:name=".services.NotificationService"
+            android:enabled="true"
+            android:exported="false"></service>
     </application>
 
 </manifest>
