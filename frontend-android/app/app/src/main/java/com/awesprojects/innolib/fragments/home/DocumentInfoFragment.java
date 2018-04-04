@@ -93,6 +93,9 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
         setKeywords(preparedKeywords(document));
         mPreviewImageView.setImageResource(R.drawable.ic_library_books_black_36dp);
         mCheckoutButton.setEnabled(true);
+        if (document.getInstockCount()<=0){
+            mCheckoutButton.setText(R.string.home_library_checkout_request);
+        }
         mTopInfo1TextView.setVisibility(View.GONE);
         mBottomInfoTextView.setVisibility(View.GONE);
         if (document.getPrice()!=null) {
@@ -127,6 +130,11 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
             mEditionTextView.setText("Published in " + ((Article) document).getJournalTitle() + " in " + ((Article) document).getJournalIssuePublicationDate());
             mTopInfo1TextView.setVisibility(View.VISIBLE);
             mTopInfo1TextView.setText("Issue edited by "+((Article) document).getJournalIssueEditors());
+            if (((Article) document).isReference()){
+                mBottomInfoTextView.setVisibility(View.VISIBLE);
+                mBottomInfoTextView.setText("This is a reference magazine");
+                mCheckoutButton.setEnabled(false);
+            }
         }
         if (document instanceof EMaterial){
             mPreviewImageView.setImageResource(R.drawable.ic_video_library_black_48dp);
@@ -238,7 +246,7 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
 
     public void onCheckOutFailed(String desc) {
         final Snackbar s = Snackbar.make(getContentView(),desc,Snackbar.LENGTH_LONG);
-        s.setAction("OK",(view) -> {s.dismiss();});
+        //s.setAction("OK",(view) -> {s.dismiss();});
         s.show();
     }
 
@@ -268,9 +276,9 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
                     if (responsable instanceof Response) {
                         int status = ((Response) responsable).getStatus();
                         if (status == 200) {
-                            onCheckOutSucceed();
+                            onRenewSucceed();
                         } else {
-                            onCheckOutFailed(((Response) responsable).getDescription());
+                            onRenewFailed(((Response) responsable).getDescription());
                         }
                     }
                 });

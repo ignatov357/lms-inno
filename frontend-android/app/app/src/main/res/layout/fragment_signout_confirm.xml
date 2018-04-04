@@ -4,7 +4,6 @@
 
     <FrameLayout
         android:id="@+id/fragment_signout_confirm_cancel_outside_view"
-        android:background="@drawable/bottom_dialog_shadow"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -12,9 +11,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:orientation="vertical"
             android:background="@color/colorLightBackground"
             android:elevation="@dimen/bottom_dialog_elevation"
+            android:orientation="vertical"
             android:padding="16dp">
 
             <TextView

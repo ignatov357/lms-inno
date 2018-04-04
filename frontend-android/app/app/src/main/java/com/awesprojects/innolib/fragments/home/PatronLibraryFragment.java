@@ -83,7 +83,7 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
 
     public void updateDocuments() {
         setListRefreshing(true);
-        DocumentManager.getDocumentAsync(true, (documents) -> {
+        DocumentManager.getDocumentAsync(false, (documents) -> {
             if (documents instanceof ResponsableContainer) {
                 //noinspection unchecked
                 onDocumentsUpdated(((ResponsableContainer<Document[]>) documents).get());
