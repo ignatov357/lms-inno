@@ -19,9 +19,7 @@
     $documents = $query->get_result();
     while($cur_document = $documents->fetch_assoc()) {
         $cur_document = array_merge(array('id' => $cur_document['id'], 'instockCount' => $cur_document['instock_count'], 'type' => $cur_document['type'], 'title' => $cur_document['title'], 'authors' => $cur_document['authors'], 'price' => $cur_document['price'], 'keywords' => $cur_document['keywords']), json_decode($cur_document['additional_info'], true));
-        if($cur_document['reference'] == 0) {
-            $response[] = $cur_document;
-        }
+        $response[] = $cur_document;
     }
     unset($query);
 

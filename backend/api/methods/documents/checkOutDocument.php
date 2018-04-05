@@ -35,6 +35,22 @@
     unset($query);
     $response['documentID'] = $_POST['documentID'];
 
+    // If the document is a reference book, then exit with error
+    if(in_array($document_info['type'], array(0, 1)) && $document_info['reference'] == 1) {
+        // If there's no available copies of the document in library then exit with error
+        json_response(400, array('errorMessage' => 'Reference books and magazines are not available for checking out'));
+
+    }
+
+    // If user already checked out copy of this document, then exit with error
+    $query = $db->prepare("SELECT * FROM booked_documents WHERE document_id = ? and user_id = ?");
+    $query->bind_param("ii", $_POST['documentID'], $user_id);
+    $query->execute();
+    if($query->get_result()->fetch_assoc() !== null) {
+        json_response(400, array('errorMessage' => 'You already checked out a copy of this document'));
+    }
+    unset($query);
+
     // If there's no available copies of the document in library at this moment then exit with error
     if($document_info['instock_count'] <= 0 || $db->query("SELECT * FROM queue WHERE document_id = " . intval($_POST['documentID']))->fetch_assoc() !== null) {
         // Put user to the queue
@@ -53,7 +69,8 @@
         $query = $db->prepare("SELECT user_id FROM booked_documents WHERE document_id = ? AND renewed = 1");
         $query->bind_param("i", $_POST['documentID']);
         $query->execute();
-        if($cur_user = $query->get_result()->fetch_assoc()['user_id']) {
+		$query = $query->get_result();
+        while($cur_user_id = $query->fetch_assoc()['user_id']) {
             $update_booked_documents_query = $db->prepare("UPDATE booked_documents SET asked_to_return = 1, return_till = ? WHERE user_id = ? AND document_id = ?");
             $update_booked_documents_query->bind_param("iii", time(), $cur_user_id, $_POST['documentID']);
             $update_booked_documents_query->execute();
@@ -62,24 +79,12 @@
             create_notification($cur_user_id, 'Outstanding request received. Please return the document "'.$document_info['title'].'" immediately.');
         }
         unset($query);
+		
+		$queue = get_queue_for_document($_POST['documentID'], true);
+		$position_in_queue = array_search($user_id, $queue) + 1;
 
-        json_response(400, array('errorMessage' => 'There\'re no available copies at this moment, your request was added to the queue'));
+        json_response(400, array('errorMessage' => 'There\'re no available copies at this moment, your request is #' . $position_in_queue . ' in queue'));
     }
-
-    // If the document is a reference book, then exit with error
-    if(in_array($document_info['type'], array(0, 1)) && $document_info['reference'] == 1) {
-        // If there's no available copies of the document in library then exit with error
-        json_response(400, array('errorMessage' => 'Reference books and magazines are not available for checking out'));
-    }
-
-    // If user already checked out copy of this document, then exit with error
-    $query = $db->prepare("SELECT * FROM booked_documents WHERE document_id = ? and user_id = ?");
-    $query->bind_param("ii", $_POST['documentID'], $user_id);
-    $query->execute();
-    if($query->get_result()->fetch_assoc() !== null) {
-        json_response(400, array('errorMessage' => 'You already checked out a copy of this document'));
-    }
-    unset($query);
 
     // Decrease the count of available copies of this document
     $query = $db->prepare("UPDATE documents SET instock_count = instock_count - 1 WHERE id = ?");

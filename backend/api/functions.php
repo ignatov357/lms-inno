@@ -33,6 +33,49 @@
         $query->execute();
     }
 
+	function get_queue_for_document($document_id, $user_ids_only = false) {
+        $queue = array();
+
+        global $db;
+		$users_by_types = array();
+
+        $query = $db->query("SELECT DISTINCT type FROM users");
+		while($user_type = $query->fetch_assoc()) {
+			$users_by_types[$user_type['type']] = array();
+		}
+		unset($query);
+
+		if($user_ids_only) {
+            $query = $db->prepare("SELECT users.id, users.type FROM users INNER JOIN queue ON users.id = queue.user_id WHERE queue.document_id = ?");
+        } else {
+            $query = $db->prepare("SELECT users.id, users.type, users.name, users.address, users.phone FROM users INNER JOIN queue ON users.id = queue.user_id WHERE queue.document_id = ?");
+        }
+        $query->bind_param("i", $document_id);
+        $query->execute();
+		$query = $query->get_result();
+		while($user = $query->fetch_assoc()) {
+		    if($user_ids_only) {
+                $users_by_types[$user['type']][] = $user['id'];
+            } else {
+                $users_by_types[$user['type']][] = $user;
+            }
+		}
+		unset($query);
+
+		$priority = array(1,2,3,4,5);
+		foreach(/*explode(',', PRIORITY_OF_USER_TYPES_IN_QUEUE)*/$priority as $user_type) {
+		    if(array_key_exists($user_type, $users_by_types)) {
+                $queue = array_merge($queue, $users_by_types[$user_type]);
+                unset($users_by_types[$user_type]);
+            }
+		}
+		foreach($users_by_types as $users) {
+			$queue = array_merge($queue, $users);
+		}
+
+		return $queue;
+	}
+
     function ensure_access($allowed_user_types = array()) {
         if (empty(getallheaders()['Access-Token'])) {
             json_response(401, array('errorMessage' => 'Access-Token required'));
@@ -40,13 +83,13 @@
 
         $user_id = get_user_id();
         if ($user_id === null) {
-            json_response(401, array('errorMessage' => 'The given Access-Token is invalid'));
+            json_response(401, array('errorMessage' => 'Given Access-Token is invalid'));
         }
         if (!empty($allowed_user_types)) {
             global $db;
             $user_type = $db->query('SELECT type FROM users WHERE id = '.$user_id)->fetch_assoc()['type'];
             if(!in_array($user_type, $allowed_user_types)) {
-                json_response(401, array('errorMessage' => 'The given Access-Token doesn\'t have an access to this method'));
+                json_response(401, array('errorMessage' => 'User associated with given Access-Token doesn\'t have an access to this method'));
             }
         }
     }
