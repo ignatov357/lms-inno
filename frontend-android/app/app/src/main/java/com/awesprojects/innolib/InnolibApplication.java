@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Process;
 
 import com.awesprojects.innolib.activities.LogActivity;
+import com.awesprojects.innolib.managers.SecureStorageManager;
 import com.awesprojects.innolib.utils.logger.LogSystem;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 
@@ -35,6 +36,7 @@ public class InnolibApplication extends Application{
 
     public static void setAccessToken(AccessToken accessToken){
         mAccessToken = accessToken;
+        SecureStorageManager.getInstance().beginTransaction().put("CACHED_ACCESS_TOKEN",accessToken.getToken()).commit();
     }
 
     @Override
@@ -42,6 +44,7 @@ public class InnolibApplication extends Application{
         super.onCreate();
         mInstance = this;
         LogSystem.ensureInit();
+        log.info("application started");
         getMainLooper().getThread().setUncaughtExceptionHandler(this::onFatalException);
     }
 
