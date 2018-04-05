@@ -3,6 +3,7 @@ package com.awesprojects.innolib.fragments.home;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.transition.TransitionManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -242,6 +243,9 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
         Snackbar.make(getContentView(),"Checkout succeed",Snackbar.LENGTH_SHORT).show();
         if (mCheckoutResultListener != null)
             mCheckoutResultListener.onResult(0, mDocument, null);
+        mDocument.setInstockCount(mDocument.getInstockCount()-1);
+        TransitionManager.beginDelayedTransition(((ViewGroup) getContentView()));
+        setStockCount(mDocument.getInstockCount());
     }
 
     public void onCheckOutFailed(String desc) {
