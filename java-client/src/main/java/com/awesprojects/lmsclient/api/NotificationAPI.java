@@ -1,9 +1,12 @@
 package com.awesprojects.lmsclient.api;
 
+import com.awesprojects.lmsclient.api.data.AccessToken;
 import com.awesprojects.lmsclient.api.data.ServerNotification;
 import com.awesprojects.lmsclient.api.internal.ApiCall;
+import com.awesprojects.lmsclient.utils.requests.GetRequest;
 import com.awesprojects.lmsclient.utils.requests.LongPollRequest;
 import com.awesprojects.lmsclient.utils.requests.RequestFactory;
+import org.json.JSONArray;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,6 +22,7 @@ public class NotificationAPI {
 
     static {
         log.fine("notification api log configured");
+        connections = new HashMap<>();
     }
 
     private static HashMap<Integer,NotificationConnectionReference> connections;
@@ -103,6 +107,7 @@ public class NotificationAPI {
 
         final NotificationConnectionReference notificationConnectionReference;
         private NotificationReceiver notificationReceiver;
+        boolean isWaitingToDie = false;
 
         public NotificationReader(final NotificationConnectionReference reference){
             notificationConnectionReference = reference;
@@ -112,12 +117,39 @@ public class NotificationAPI {
             notificationReceiver = receiver;
         }
 
-        @ApiCall(path = "/notifications")
-        public void run(){
-
+        @ApiCall(path = "/users/getNotifications")
+        public void run(AccessToken accessToken){
+            while (!isWaitingToDie){
+                GetRequest.Builder gr = RequestFactory.get();
+                gr.withURL("/users/getNotifications");
+                gr.withHeader("Access-Token",accessToken.getToken());
+                String str = gr.create().execute();
+                if (Response.getResultCode(str)==Response.STATUS_OK){
+                    log.info("notifications received : "+str);
+                    try {
+                        JSONArray notifyArray = Response.getJsonArrayBody(str);
+                        ServerNotification[] notifications = new ServerNotification[notifyArray.length()];
+                        for (int i = 0; i < notifications.length; i++) {
+                            notifications[i] = ServerNotification.parse(notifyArray.getJSONObject(i));
+                            if (notificationReceiver != null)
+                                notificationReceiver.onReceiveNotification(notifications[i]);
+                        }
+                    }catch(Throwable t){
+                        log.warning("error message parce : "+t.toString());
+                    }
+                }else{
+                    log.warning("unable to parse notifications");
+                }
+                try{
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         public void close(){
+            isWaitingToDie = true;
             notificationConnectionReference.close();
         }
 

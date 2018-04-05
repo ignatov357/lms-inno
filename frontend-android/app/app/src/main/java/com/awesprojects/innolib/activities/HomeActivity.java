@@ -1,6 +1,7 @@
 package com.awesprojects.innolib.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
@@ -8,6 +9,7 @@ import com.awesprojects.innolib.InnolibApplication;
 import com.awesprojects.innolib.interfaces.HomeInterfaceFactory;
 import com.awesprojects.innolib.interfaces.AbstractHomeInterface;
 import com.awesprojects.innolib.managers.SecureStorageManager;
+import com.awesprojects.innolib.services.NotificationService;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 import com.awesprojects.lmsclient.api.data.users.User;
 
@@ -34,10 +36,11 @@ public class HomeActivity extends Activity {
             AccessToken accessToken = new AccessToken(token,-1);
             InnolibApplication.setAccessToken(accessToken);
         }
-
         mCurrentUser = (User) getIntent().getSerializableExtra("CURRENT_USER");
         mHomeInterface = HomeInterfaceFactory.createInterfaceByUserType(this,mCurrentUser.getType());
         mHomeInterface.create(savedInstanceState);
+        Intent notificationServiceIntent = new Intent(this, NotificationService.class);
+        startService(notificationServiceIntent);
         /*if (savedInstanceState==null){
             if (mCurrentUser.getType()==2)
                 mHomeFragment = new LibrarianProfileFragment();
