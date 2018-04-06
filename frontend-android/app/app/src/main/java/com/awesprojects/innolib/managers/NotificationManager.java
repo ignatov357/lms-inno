@@ -1,5 +1,6 @@
 package com.awesprojects.innolib.managers;
 
+import android.app.Notification;
 import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.v7.app.NotificationCompat;
@@ -78,7 +79,10 @@ public class NotificationManager {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setSmallIcon(notification.getIcon())
                 .setContentTitle(notification.getTitle())
-                .setContentText(notification.getSubtitle());
+                .setContentText(notification.getSubtitle())
+                .setStyle(new android.support.v4.app.NotificationCompat.BigTextStyle()
+                .bigText(notification.getSubtitle())
+                .setBigContentTitle(notification.getTitle()));
         android.app.Notification n = builder.build();
         nm.notify(notification.getId(),n);
     }

@@ -1,8 +1,6 @@
 package com.awesprojects.lmsclient.api.internal;
 
-/*
- * methods marked this annotation do synchronous calls of server api
- */
+import com.awesprojects.lmsclient.api.Response;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,10 +9,8 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ApiCall{
+public @interface ResponseType {
 
-    String path() default "unspecified";
-
-    Method method() default Method.GET;
+    Class<? extends Responsable>[] returns() default {Responsable.class};
 
 }

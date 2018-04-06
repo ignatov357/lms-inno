@@ -15,14 +15,8 @@ import com.awesprojects.lmsclient.api.data.ServerNotification;
 
 public class NotificationService extends Service {
 
-    private NotificationAPI.NotificationReader mReader;
-    private AsyncNotificationReader mReaderAsyncTask;
-    private Handler mNotificationHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            onNotificationReceived((ServerNotification)msg.obj);
-        }
-    };
+    private NotificationHandler mNotificationHandler;
+    NotificationAPI.NotificationReader mReader;
 
     public NotificationService() {}
 
@@ -35,12 +29,14 @@ public class NotificationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        mNotificationHandler = new NotificationHandler(this);
         mReader = NotificationAPI.create();
         new NotificationReceiverThread(this,InnolibApplication.getAccessToken(),mReader).start();
     }
 
     @Override
     public void onDestroy() {
+        mNotificationHandler = null;
         super.onDestroy();
     }
 
@@ -52,6 +48,19 @@ public class NotificationService extends Service {
         NotificationManager.getInstance().modifyNotification(this,notification);
     }
 
+    private static class NotificationHandler extends Handler{
+
+        private final NotificationService mService;
+
+        public NotificationHandler(NotificationService service){
+            mService = service;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            mService.onNotificationReceived((ServerNotification)msg.obj);
+        }
+    }
 
     public static class NotificationReceiverThread extends Thread{
 
@@ -66,48 +75,16 @@ public class NotificationService extends Service {
         }
 
         public void run(){
-            mReader.setNotificationReceiver((sn) -> {
-                Message msg = new Message();
-                msg.obj = sn;
-                mService.mNotificationHandler.sendMessage(msg);
-                return 1;
-            });
+            mReader.setNotificationReceiver(this::onReceiveNotification);
             mReader.run(mAccessToken);
         }
-    }
 
-
-    public static class AsyncNotificationReader extends AsyncTask<NotificationAPI.NotificationReader,ServerNotification,Void>{
-
-        private final NotificationService mService;
-        NotificationAPI.NotificationReader mReader;
-
-        public AsyncNotificationReader(NotificationService service){
-            super();
-            mService = service;
-            ServerNotification sn = new ServerNotification();
-            sn.setId(0);
-            sn.setDescription("startup");
-            onNotificationRead(sn);
+        public int onReceiveNotification(ServerNotification notification){
+            Message msg = new Message();
+            msg.obj = notification;
+            mService.mNotificationHandler.sendMessage(msg);
+            return 1;
         }
-
-        @Override
-        protected Void doInBackground(NotificationAPI.NotificationReader... notificationReaders) {
-
-            return null;
-        }
-
-        public int onNotificationRead(ServerNotification notification){
-            publishProgress(notification);
-            return NotificationAPI.NOTIFICATION_READ;
-        }
-
-        @Override
-        protected void onProgressUpdate(ServerNotification... values) {
-            super.onProgressUpdate(values);
-            mService.onNotificationReceived(values[0]);
-        }
-        
     }
 
 }
