@@ -116,6 +116,25 @@ function getDocuments() {
     }
 }
 
+function getQueueForDocument(document_id) {
+    var accessToken = getAccessTokenFromCookie();
+
+    var req = $.ajax({
+        async: false,
+        type: "GET",
+        url: "http://api.awes-projects.com/manage/documents/getQueueForDocument/",
+        headers: {"Access-Token": accessToken},
+        data: {"documentID": document_id},
+        error: function (obj) {
+            alert(obj.responseText);
+        }
+    });
+
+    if (req.status == 200) {
+        return req.responseText;
+    }
+}
+
 //------------------------------------------USERS_EDITING---------------------------------------------------------------
 
 function addUser(name, address, phone, type) {
@@ -344,8 +363,8 @@ function renewDocument(document_id) {
         type: "POST",
         url: "http://api.awes-projects.com/documents/renewDocument/",
         headers: {"Access-Token": getAccessTokenFromCookie()},
-        data : {
-            "documentID" : document_id
+        data: {
+            "documentID": document_id
         },
         success: function () {
             alert("You have renewed document!");
@@ -467,10 +486,9 @@ function getDocumentsField() {
                 }
             }
 
-            if(value['type'] == 1){
-                html_text+="<br><br><p><i>Article in journal <b>" + value.journalTitle +"</b> published <b>" + value.journalIssuePublicationDate +"</b> edited by " + value.journalIssueEditors +"</i></p>"
+            if (value['type'] == 1) {
+                html_text += "<br><br><p><i>Article in journal <b>" + value.journalTitle + "</b> published <b>" + value.journalIssuePublicationDate + "</b> edited by " + value.journalIssueEditors + "</i></p>"
             }
-
 
 
             if (value.reference == 1) {
@@ -534,8 +552,8 @@ function getUsersDocumentsFiled() {
                 }
             }
 
-            if(value['type'] == 1){
-                html_text+="<br><br><p><i>Article in journal <b>" + value.journalTitle +"</b> published <b>" + value.journalIssuePublicationDate +"</b> edited by " + value.journalIssueEditors +"</i></p>"
+            if (value['type'] == 1) {
+                html_text += "<br><br><p><i>Article in journal <b>" + value.journalTitle + "</b> published <b>" + value.journalIssuePublicationDate + "</b> edited by " + value.journalIssueEditors + "</i></p>"
             }
 
 
@@ -615,7 +633,7 @@ function updateDocumentsTable(object) {
     $(object).empty();
     $(object).append(html);
     $(".info-cell").click(function () {
-        console.log("More clicked");
+        //console.log("More clicked");
         var id = $(this).attr("name");
         popupShow();
 
@@ -664,7 +682,7 @@ function popupAddDocument(object) {
             var authors = $("#authors").val();
             var price = $("#price").val();
             var keywords = $("#keywords").val();
-            var bestseller = $("#besteller:checked").val() ? '1' : '0';
+            var bestseller = $("#bestseller:checked").val() ? '1' : '0';
             var publisher = $("#publisher").val() || null;
             var edition = $("#edition").val() || null;
             var pub_year = $("#pub-year").val() || null;
@@ -714,7 +732,7 @@ function popupModifyDocument(object, id) {
         case 1:
             var refer = doc.reference == '1' ? "checked" : "";
             html += "<p>Journal Title:  <input id='j-title' value='" + doc.journalTitle + "'>  Publication date: <input id='j-pub-date' type='date' value='" + doc.journalIssuePublicationDate + "'>" +
-                "  Editors: <input id='j-editors' value='" + doc.journalIssueEditors + "'> Reference: <input id='reference' type='checkbox' " + refer +"></p>";
+                "  Editors: <input id='j-editors' value='" + doc.journalIssueEditors + "'> Reference: <input id='reference' type='checkbox' " + refer + "></p>";
             $("#add-info").append(html);
             break;
     }
@@ -728,7 +746,7 @@ function popupModifyDocument(object, id) {
         var authors = $("#authors").val();
         var price = $("#price").val();
         var keywords = $("#keywords").val();
-        var bestseller = $("#besteller:checked").val() ? '1' : '0';
+        var bestseller = $("#bestseller:checked").val() ? '1' : '0';
         var publisher = $("#publisher").val() || null;
         var edition = $("#edition").val() || null;
         var pub_year = $("#pub-year").val() || null;
@@ -762,11 +780,27 @@ function popupMoreDocument(object, id) {
     var reference = doc.reference == 1 ? "<div style='padding: 10px; background: red'>REFERENCE</div> " : "";
 
     var html = "<h2>" + doc.title + "</h2>" +
-        "<p><i>by " + doc.authors + "</i></p></br></br>" +
+        "<p><i>by " + doc.authors + "</i></p></br>" +
         "<p><b>" + type + "</b> " + descr + "</p>" +
-        "</br><p>" + doc.instockCount + " copies left (price: " + doc.price + ")</p>" +
+        "<p>" + doc.instockCount + " copies left (price: " + doc.price + ")</p>" +
         "<p>Keywords: <i>" + doc.keywords + "</i></p>" +
         bestseller + "</br>" + reference;
+
+    var resp = getQueueForDocument(id);
+    console.log(resp);
+
+    if (resp != "[]") {
+        var doc_queue = JSON.parse(resp);
+
+        html += "<br><h4>Queue for the document:</h4><div style='position: absolute; top: 60%; left: 0; width: 100%; height: 40%; overflow-y: scroll; '><table class='adm-table'><tr><th>Order</th><th>Name</th><th>ID</th><th>Type</th></tr>";
+        doc_queue.forEach(function (value, index) {
+            var type = getUserType(value.type);
+
+            html += "<tr><td>" + index + "</td><td>" + value.name + "</td><td>" + value.id + "</td><td>" + type + "</td></tr>";
+        });
+
+        html += "</table></div>";
+    }
 
     $(object).append(html);
 
@@ -863,7 +897,7 @@ function popupMoreUser(object, id) {
     var user = JSON.parse(getUser(id));
 
     var type = "";
-    switch (user.type){
+    switch (user.type) {
         case 0:
             type = "Librarian";
             break;
@@ -899,9 +933,8 @@ function popupMoreUser(object, id) {
     }
 
 
-
     $("#return").click(function () {
-        if(!$("#usr-doc tr.selected td:first").html()){
+        if (!$("#usr-doc tr.selected td:first").html()) {
             alert("Choose a document to return first!");
             return;
         }
@@ -926,7 +959,7 @@ function updateUserCheckedOutDocumentsTable(object, id) {
         $(object).append("<p>No checked out documents</p>");
         return false;
     }
-    console.log("docs_table is " + docs_table + ", docs_table.lenght is " + docs_table.length )
+    console.log("docs_table is " + docs_table + ", docs_table.lenght is " + docs_table.length)
     console.log("docs_table[0].documentInfo is " + docs_table[0].documentInfo);
 
     docs_table.forEach(function (val) {
@@ -988,4 +1021,20 @@ function popupMoreUserDocument(object, id) {
     $("#hider-2").click(function () {
         $("#hider-2, #popup-2").css("visibility", "hidden");
     });
+}
+
+function getUserType(num_type) {
+    if (num_type == 0) {
+        return "Librarian";
+    } else if (num_type == 1) {
+        return "Student";
+    } else if (num_type == 2) {
+        return "TA";
+    } else if (num_type == 3) {
+        return "Professor";
+    } else if (num_type == 4) {
+        return "Instructor";
+    } else {
+        return "VP";
+    }
 }
