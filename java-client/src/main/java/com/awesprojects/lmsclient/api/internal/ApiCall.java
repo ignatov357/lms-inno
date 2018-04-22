@@ -17,4 +17,6 @@ public @interface ApiCall{
 
     Method method() default Method.GET;
 
+    int port() default 80;
+
 }

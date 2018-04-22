@@ -8,6 +8,7 @@ import com.awesprojects.lmsclient.api.DocumentsAPI;
 import com.awesprojects.lmsclient.api.ResponsableContainer;
 import com.awesprojects.lmsclient.api.UsersAPI;
 import com.awesprojects.lmsclient.api.data.AccessToken;
+import com.awesprojects.lmsclient.api.data.documents.Document;
 import com.awesprojects.lmsclient.api.internal.Responsable;
 
 import java.util.Calendar;
@@ -30,8 +31,15 @@ public class DocumentManager {
         return mInstance;
     }
 
+    public static void getSearchDocumentsAsync(AccessToken accessToken,String query,OnGetDocumentsListener listener){
+        GetSearchDocumentsAsyncTask getSearchDocumentsAsyncTask = new GetSearchDocumentsAsyncTask();
+        getSearchDocumentsAsyncTask.setListener(listener);
+        getSearchDocumentsAsyncTask.setQuery(query);
+        getSearchDocumentsAsyncTask.execute(accessToken);
+    }
+
     public static void getCheckedOutDocuments(AccessToken accessToken,OnGetDocumentsListener listener){
-        GetCheckedOutDocuments getCheckedOutDocumentsAsyncTask = new GetCheckedOutDocuments();
+        GetCheckedOutDocumentsAsyncTask getCheckedOutDocumentsAsyncTask = new GetCheckedOutDocumentsAsyncTask();
         getCheckedOutDocumentsAsyncTask.setListener(listener);
         getCheckedOutDocumentsAsyncTask.execute(accessToken);
     }
@@ -70,14 +78,10 @@ public class DocumentManager {
     }
 
 
-    private static class GetCheckedOutDocuments extends AsyncTask<AccessToken,Integer,Responsable>{
+    private static class GetCheckedOutDocumentsAsyncTask extends AsyncTask<AccessToken,Integer,Responsable>{
         OnGetDocumentsListener onGetDocumentsListener;
-        public void setListener(OnGetDocumentsListener listener){
+        public void setListener(OnGetDocumentsListener listener) {
             onGetDocumentsListener = listener;
-        }
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
         }
         @Override
         protected Responsable doInBackground(AccessToken ... accessToken) {
@@ -86,11 +90,33 @@ public class DocumentManager {
         @Override
         protected void onPostExecute(Responsable documents) {
             super.onPostExecute(documents);
+            //TODO: look for all usages, return responsable
             if (documents instanceof ResponsableContainer)
                 onGetDocumentsListener.onDocumentGet(documents);
         }
     }
 
+    private static class GetSearchDocumentsAsyncTask extends AsyncTask<AccessToken,Integer,Responsable>{
+        OnGetDocumentsListener onGetDocumentsListener;
+        String searchQuery;
+        public void setListener(OnGetDocumentsListener listener){
+            onGetDocumentsListener = listener;
+        }
+        public void setQuery(String query){
+            searchQuery = query;
+        }
+        @Override
+        protected Responsable doInBackground(AccessToken... accessTokens) {
+            return DocumentsAPI.searchDocuments(accessTokens[0],searchQuery);
+        }
+
+        @Override
+        protected void onPostExecute(Responsable responsable) {
+            super.onPostExecute(responsable);
+            if (onGetDocumentsListener != null)
+                onGetDocumentsListener.onDocumentGet(responsable);
+        }
+    }
 
     public static void checkOutDocumentAsync(AccessToken accessToken,int documentId,
                                              OnDocumentCheckOutListener checkOutListener){
@@ -177,6 +203,16 @@ public class DocumentManager {
             case 2: return mDocumentAV;
             default: return "Unknown";
         }
+    }
+
+    public static String[] preparedKeywords(Document document) {
+        String keywords = document.getKeywords();
+        if (keywords == null) return null;
+        keywords = keywords.replace(" ", "_").replace(",_", ",");
+        if (keywords.contains(","))
+            return keywords.split(",");
+        else
+            return new String[]{keywords};
     }
 
     public static String getPrettyReturnDate(long seconds){

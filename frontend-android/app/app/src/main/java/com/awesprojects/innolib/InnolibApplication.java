@@ -30,6 +30,13 @@ public class InnolibApplication extends Application{
         return mInstance;
     }
 
+    public static AccessToken loadCachedToken(){
+        String token = SecureStorageManager.getInstance().get("CACHED_ACCESS_TOKEN");
+        AccessToken accessToken = new AccessToken(token,-1);
+        InnolibApplication.setAccessToken(accessToken);
+        return accessToken;
+    }
+
     public static AccessToken getAccessToken(){
         return mAccessToken;
     }

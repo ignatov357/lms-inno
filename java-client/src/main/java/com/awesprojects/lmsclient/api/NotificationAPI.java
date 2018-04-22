@@ -30,14 +30,15 @@ public class NotificationAPI {
     }
 
     @ApiCall(
-            path = "/users/getNotifications",
-            method = Method.SOCKET
+            path = "/${AccessToken}",
+            method = Method.SOCKET,
+            port = 3000
     )
     @ResponseType(
             returns = NotificationReader.class
     )
-    public static NotificationAPI.NotificationReader create(){
-        return impl.create();
+    public static NotificationAPI.NotificationReader create(AccessToken token){
+        return impl.create(token);
     }
 
 
@@ -52,7 +53,7 @@ public class NotificationAPI {
 
     public static abstract class NotificationReader implements Responsable {
         public abstract void setNotificationReceiver(NotificationReceiver receiver);
-        public abstract void run(AccessToken accessToken);
+        public abstract void run();
         public abstract void close();
     }
 

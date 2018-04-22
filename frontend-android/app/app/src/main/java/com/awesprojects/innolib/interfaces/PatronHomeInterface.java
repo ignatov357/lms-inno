@@ -21,10 +21,11 @@ public class PatronHomeInterface extends AbstractHomeInterface {
     BottomNavigationView mBottomNavigationView;
     ViewGroup mMainFragmentContainer;
     ViewGroup mFragmentRootContainer;
+    ViewGroup mOverlayContainer;
 
     @Override
     public ViewGroup getOverlayContainer() {
-        return mFragmentRootContainer;
+        return mOverlayContainer;
     }
 
     public PatronHomeInterface(HomeActivity activity){
@@ -38,6 +39,7 @@ public class PatronHomeInterface extends AbstractHomeInterface {
         mFragmentRootContainer = activity.findViewById(R.id.fragment_home_root_container);
         mBottomNavigationView = activity.findViewById(R.id.fragment_home_patron_bottom_navigation_view);
         mMainFragmentContainer = activity.findViewById(R.id.fragment_home_patron_main_container);
+        mOverlayContainer = activity.findViewById(R.id.fragment_home_overlay_container);
         setBottomNavigationView(mBottomNavigationView);
         setHomeFragmentContainer(mMainFragmentContainer);
         if (savedState==null){

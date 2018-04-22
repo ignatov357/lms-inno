@@ -1,5 +1,6 @@
 package com.awesprojects.lmsclient.api;
 
+import com.awesprojects.lmsclient.api.data.AccessToken;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 import com.awesprojects.lmsclient.api.impl.APIFactory;
 import com.awesprojects.lmsclient.api.impl.ApiCallHandler;
@@ -41,6 +42,19 @@ public class DocumentsAPI {
     })
     public static Responsable getDocuments(boolean availableOnly) {
         return impl.getDocuments(availableOnly);
+    }
+
+    @ApiCall(
+            //TODO: change path
+            path = "/documents/getDocuments",
+            method = Method.GET
+    )
+    @ResponseType(returns = {
+            ResponsableContainer.class,
+            Response.class
+    })
+    public static Responsable searchDocuments(AccessToken accessToken,String searchQuery) {
+        return impl.searchDocument(accessToken,searchQuery);
     }
 
     @ApiCall(

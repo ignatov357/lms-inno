@@ -1,18 +1,22 @@
 package com.awesprojects.innolib.fragments.home;
 
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.ChangeBounds;
 import android.transition.Slide;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.awesprojects.innolib.R;
 import com.awesprojects.innolib.adapters.PatronLibraryListAdapter;
 import com.awesprojects.innolib.fragments.home.abstracts.AbstractLibraryFragment;
 import com.awesprojects.innolib.managers.DocumentManager;
+import com.awesprojects.innolib.widgets.LibrarySearchBar;
 import com.awesprojects.lmsclient.api.ResponsableContainer;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 
@@ -35,31 +39,24 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
     ArrayList<Document> mDocuments;
     OnDetailsShowListener mDetailsShowListener;
     TabLayout mTabLayout;
+    TabChangeListener mTabChangeListener;
+    OnSearchListener mSearchListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTabLayout = getContentView().findViewById(R.id.fragment_home_library_tab_layout);
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mAdapter.setDocumentsType(tab.getPosition() - 1);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
+        mTabChangeListener = new TabChangeListener(this);
+        mTabLayout.addOnTabSelectedListener(mTabChangeListener);
+        mSearchListener = new OnSearchListener(this);
         mDocuments = new ArrayList<>();
         mAdapter = new PatronLibraryListAdapter(this);
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mListItemAnimator = new DefaultItemAnimator();
         mDetailsShowListener = new OnDetailsShowListener(this);
         mAdapter.setOnShowDocumentDetailsListener(mDetailsShowListener);
+        getSearchBar().setTouchOnlyMode(true);
+        getSearchBar().setSearchCallbackListener(mSearchListener);
         getList().setAdapter(mAdapter);
         getList().setLayoutManager(mLayoutManager);
         getList().setItemAnimator(mListItemAnimator);
@@ -140,8 +137,8 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
     public void onShowDocumentInfo(View documentHolder, Document document) {
         DocumentInfoFragment documentDetailFragment = new DocumentInfoFragment();
         documentDetailFragment.setOnCheckoutListener(((status, doc, reason) -> {
-            doc.setInstockCount(doc.getInstockCount()-1);
-            if (doc.getInstockCount()<=0) {
+            doc.setInstockCount(doc.getInstockCount() - 1);
+            if (doc.getInstockCount() <= 0) {
                 int pos = getDocumentPosition(doc);
                 mDocuments.remove(pos);
                 mAdapter.setDocuments(mDocuments);
@@ -156,19 +153,64 @@ public class PatronLibraryFragment extends AbstractLibraryFragment {
         documentDetailFragment.setArguments(args);
         getFragmentManager().beginTransaction()
                 .addToBackStack("DetailsShow")
-                .add(getHomeActivity().getHomeInterface().getOverlayContainer().getId(), documentDetailFragment, "DocumentInfoFragment")
+                .add(getHomeActivity().getHomeInterface().getOverlayContainer().getId(),
+                        documentDetailFragment, "DocumentInfoFragment")
+                .commit();
+    }
+
+    public void onSearchStarted(){
+        SearchFragment searchFragment = new SearchFragment();
+        //searchFragment.setEnterTransition(new Slide(Gravity.TOP));
+        //searchFragment.setExitTransition(new Slide(Gravity.TOP));
+        getFragmentManager().beginTransaction()
+                .addToBackStack("SearchFragment")
+                //.addSharedElement(getSearchBar(),"SearchBar")
+                //.addSharedElement(getSearchBarBackgroundView(),"SearchBarBackground")
+                .add(getHomeActivity().getHomeInterface().getOverlayContainer().getId(),
+                        searchFragment, "DocumentSearchFragment")
                 .commit();
     }
 
 
-    public static class OnDetailsShowListener implements PatronLibraryListAdapter.OnShowDocumentDetailsListener {
-
+    private static class OnSearchListener implements LibrarySearchBar.SearchCallback{
         final PatronLibraryFragment mPatronLibraryFragment;
+        public OnSearchListener(PatronLibraryFragment patronLibraryFragment) {
+            mPatronLibraryFragment = patronLibraryFragment;
+        }
+        @Override
+        public void onSearchStarted() {
+            mPatronLibraryFragment.onSearchStarted();
+        }
+        @Override
+        public void onSearchFinished() {}
+        @Override
+        public void onQueryTextSubmit(String text) {}
+        @Override
+        public void onQueryTextChange(String text) {}
+    }
 
+
+    private static class TabChangeListener implements TabLayout.OnTabSelectedListener{
+        final PatronLibraryFragment mPatronLibraryFragment;
+        public TabChangeListener(PatronLibraryFragment patronLibraryFragment) {
+            mPatronLibraryFragment = patronLibraryFragment;
+        }
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            mPatronLibraryFragment.mAdapter.setDocumentsType(tab.getPosition() - 1);
+        }
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {}
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {}
+    }
+
+
+    private static class OnDetailsShowListener implements PatronLibraryListAdapter.OnShowDocumentDetailsListener {
+        final PatronLibraryFragment mPatronLibraryFragment;
         public OnDetailsShowListener(PatronLibraryFragment patronLibraryFragment) {
             mPatronLibraryFragment = patronLibraryFragment;
         }
-
         @Override
         public void onShow(View viewHolderRoot, Document document) {
             mPatronLibraryFragment.onShowDocumentInfo(viewHolderRoot, document);

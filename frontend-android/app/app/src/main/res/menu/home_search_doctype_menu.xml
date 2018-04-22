@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/all"
+        android:icon="@drawable/ic_storage_black_36dp"
+        android:title="All" />
+    <item
+        android:id="@+id/books"
+        android:icon="@drawable/ic_library_books_black_36dp"
+        android:title="Books" />
+    <item
+        android:id="@+id/articles"
+        android:icon="@drawable/ic_insert_drive_file_black_36dp"
+        android:title="Articles" />
+    <item
+        android:id="@+id/av"
+        android:icon="@drawable/ic_video_library_black_36dp"
+        android:title="A/V" />
+</menu>

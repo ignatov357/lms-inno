@@ -10,7 +10,9 @@ import javax.net.ssl.SSLSocketFactory;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.*;
+import java.nio.charset.Charset;
 import java.security.cert.Certificate;
 import java.util.Scanner;
 import java.util.logging.Logger;
@@ -32,7 +34,10 @@ public class RequestExecutor {
         AbstractApiRequest apiRequest = createApiRequest(address, port, request);
         try {
             apiRequest.connect();
-            return apiRequest.execute(request);
+            //log.info(request);
+            String response = apiRequest.execute(request);
+            log.info("response:"+response);
+            return response;
         }catch (IOException e) {
             log.fine("error occured while request : "+e.toString());
         }
@@ -40,7 +45,11 @@ public class RequestExecutor {
     }
 
     public static AbstractApiRequest createApiRequest(String request){
-        return createApiRequest(Config.getCurrentConfig().getApiDomain(),80,request);
+        return createApiRequest(request,80);
+    }
+
+    public static AbstractApiRequest createApiRequest(String request,int port){
+        return createApiRequest(Config.getCurrentConfig().getApiDomain(),port,request);
     }
 
     public static AbstractApiRequest createApiRequest(String address,int port,String request){
@@ -83,7 +92,9 @@ public class RequestExecutor {
             try {
                 if (Config.getCurrentConfig().isVerbose())
                 log.fine("request: "+request);
-                socket.getOutputStream().write(request.getBytes());
+                byte[] array = Charset.forName("iso-8859-1").encode(request).array();
+                //log.warning("WRITTEN "+array.length+" bytes");
+                socket.getOutputStream().write(array);
                 socket.getOutputStream().flush();
             } catch (IOException e) {
                 log.warning(e.toString());

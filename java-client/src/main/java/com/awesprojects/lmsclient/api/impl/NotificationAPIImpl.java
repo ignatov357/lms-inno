@@ -28,13 +28,14 @@ public class NotificationAPIImpl implements INotificationAPI {
 
     private HashMap<Integer, NotificationConnectionReference> connections;
 
-    public NotificationAPI.NotificationReader create() {
-        return new DefaultNotificationReader(createReference());
+    public NotificationAPI.NotificationReader create(AccessToken token) {
+        return new DefaultNotificationReader(createReference(token));
     }
 
-    private NotificationConnectionReference createReference() {
+    private NotificationConnectionReference createReference(AccessToken accessToken) {
         LongPollRequest.Builder builder = RequestFactory.longPoll();
-        builder.withURL("/notifications");
+        builder.withURL("/"+accessToken.getToken());
+        builder.onPort(3000);
         LongPollRequest request = builder.create();
         NotificationConnectionReference connectionReference = new NotificationConnectionReference(this, request.hashCode(), request);
         connections.put(request.hashCode(), connectionReference);
@@ -60,35 +61,20 @@ public class NotificationAPIImpl implements INotificationAPI {
             notificationReceiver = receiver;
         }
 
-        @ApiCall(path = "/users/getNotifications")
-        public void run(AccessToken accessToken) {
-            while (!isWaitingToDie) {
-                GetRequest.Builder gr = RequestFactory.get();
-                gr.withURL("/users/getNotifications");
-                gr.withHeader("Access-Token", accessToken.getToken());
-                String str = gr.create().execute();
-                if (Response.getResultCode(str) == Response.STATUS_OK) {
-                    //log.info("notifications received : " + str);
-                    try {
-                        JSONArray notifyArray = Response.getJsonArrayBody(str);
-                        ServerNotification[] notifications = new ServerNotification[notifyArray.length()];
-                        for (int i = 0; i < notifications.length; i++) {
-                            notifications[i] = ServerNotification.parse(notifyArray.getJSONObject(i));
-                            if (notificationReceiver != null)
-                                notificationReceiver.onReceiveNotification(notifications[i]);
-                        }
-                    } catch (Throwable t) {
-                        log.warning("error message parce : " + t.toString());
-                    }
-                } else {
-                    log.warning("unable to parse notifications");
+        @ApiCall(path = "/${AccessToken}")
+        public void run() {
+            notificationConnectionReference.open();
+            if (!notificationConnectionReference.isOpened()) return;
+            try{
+                byte[] buffer = new byte[4096];
+                while (true){
+                    int read = notificationConnectionReference.in.read();
+                    System.out.print(read+" ");
+                    //notificationConnectionReference.read(buffer,0,4096);
+                    //String response = new String(buffer).trim();
+                    //System.out.println(response);
                 }
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            }catch(Throwable t){}
         }
 
         public void close() {
@@ -106,6 +92,7 @@ public class NotificationAPIImpl implements INotificationAPI {
         private InputStream in;
         private OutputStream out;
         private NotificationAPIImpl notificationAPI;
+        private boolean opened;
 
         public NotificationConnectionReference(NotificationAPIImpl notificationAPI, int id, LongPollRequest request) {
             this.notificationAPI = notificationAPI;
@@ -117,13 +104,21 @@ public class NotificationAPIImpl implements INotificationAPI {
             return id;
         }
 
+        public boolean isOpened(){
+            return opened;
+        }
+
         public NotificationConnectionReference open() {
-            request.open();
             try {
+                request.open();
                 in = request.getSocket().getInputStream();
                 out = request.getSocket().getOutputStream();
+                opened = true;
+                log.finest("notification reference created succeed");
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
+                opened = false;
+                log.warning("unable to open notification reference");
             }
             return this;
         }

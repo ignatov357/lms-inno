@@ -28,10 +28,15 @@ public class ApiCallHandler<T> implements InvocationHandler {
         try {
             return method.invoke(proxied, args);
         } catch (InvocationTargetException throwable) {
+            Throwable thrown = throwable.getTargetException();
+            StackTraceElement[] stack = thrown.getStackTrace();
             log.warning("error occurred in implementation of "
                     + implementationOf.getName() + "." + method.getName()
                     + " by " + proxied.getClass().getName() + " " + method.getName()
-                    + " : " + throwable.getTargetException());
+                    + " on line "+stack[stack.length-1].getLineNumber()
+                    + " : " + thrown);
+            thrown.printStackTrace();
+
             return new Response(Response.STATUS_API_ERROR, throwable.getTargetException().toString());
         }
     }

@@ -2,21 +2,28 @@ package com.awesprojects.innolib.services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 
 import com.awesprojects.innolib.InnolibApplication;
+import com.awesprojects.innolib.activities.StartActivity;
 import com.awesprojects.innolib.managers.NotificationManager;
 import com.awesprojects.lmsclient.api.NotificationAPI;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 import com.awesprojects.lmsclient.api.data.ServerNotification;
 
+import java.util.logging.Logger;
+
 public class NotificationService extends Service {
 
+    public static final String TAG = "NotifService";
+    public static Logger log = Logger.getLogger(TAG);
     private NotificationHandler mNotificationHandler;
     NotificationAPI.NotificationReader mReader;
+    AccessToken mAccessToken;
 
     public NotificationService() {}
 
@@ -29,9 +36,24 @@ public class NotificationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        ensureToken();
         mNotificationHandler = new NotificationHandler(this);
         mReader = NotificationAPI.create();
-        new NotificationReceiverThread(this,InnolibApplication.getAccessToken(),mReader).start();
+        new NotificationReceiverThread(this,mAccessToken,mReader).start();
+    }
+
+    public void ensureToken(){
+        SharedPreferences sp = getSharedPreferences(InnolibApplication.PREFERENCES_APPLICATION_STATE, MODE_PRIVATE);
+        boolean signedIn = sp.getBoolean(StartActivity.PREFERENCE_IS_SIGNED_IN,false);
+        if (!signedIn)
+            stopSelf();
+        mAccessToken = InnolibApplication.getAccessToken();
+        if (mAccessToken==null)
+            mAccessToken = InnolibApplication.loadCachedToken();
+        if (mAccessToken==null) {
+            stopSelf();
+            log.warning("you are signed in, but access token was not found");
+        }
     }
 
     @Override
