@@ -12,6 +12,9 @@
     $user_info = $query->get_result()->fetch_assoc();
     unset($query);
 
+    if($user_info['type'] == 0) {
+        $user_info['permissions'] = get_permissions();
+    }
     $response = $user_info;
     unset($user_info);
 

@@ -20,10 +20,43 @@
 
     function get_user_id() {
         global $db;
+
         $query = $db->prepare("SELECT * FROM sessions WHERE access_token = ?");
         $query->bind_param("s", getallheaders()['Access-Token']);
         $query->execute();
+
         return $query->get_result()->fetch_assoc()['user_id'];
+    }
+
+    function get_user_type($user_id = null) {
+        if($user_id === null) {
+            $user_id = get_user_id();
+        }
+
+        global $db;
+
+        $query = $db->prepare("SELECT type FROM users WHERE id = ?");
+        $query->bind_param("i", $user_id);
+        $query->execute();
+
+        return $query->get_result()->fetch_assoc()['type'];
+    }
+
+    function get_permissions($user_id = null) {
+        if($user_id === null) {
+            $user_id = get_user_id();
+        }
+
+        global $db;
+
+        $query = $db->prepare("SELECT * FROM librarians_permissions WHERE librarian_id = ?");
+        $query->bind_param("i", $user_id);
+        $query->execute();
+        $permissions = $query->get_result()->fetch_assoc();
+        unset($permissions['librarian_id']);
+        unset($query);
+
+        return $permissions;
     }
 
     function create_notification($user_id, $notification) {
@@ -62,8 +95,7 @@
 		}
 		unset($query);
 
-		$priority = array(1,2,3,4,5);
-		foreach(/*explode(',', PRIORITY_OF_USER_TYPES_IN_QUEUE)*/$priority as $user_type) {
+		foreach(explode(',', PRIORITY_OF_USER_TYPES_IN_QUEUE) as $user_type) {
 		    if(array_key_exists($user_type, $users_by_types)) {
                 $queue = array_merge($queue, $users_by_types[$user_type]);
                 unset($users_by_types[$user_type]);
@@ -90,6 +122,21 @@
             $user_type = $db->query('SELECT type FROM users WHERE id = '.$user_id)->fetch_assoc()['type'];
             if(!in_array($user_type, $allowed_user_types)) {
                 json_response(401, array('errorMessage' => 'User associated with given Access-Token doesn\'t have an access to this method'));
+            }
+        }
+    }
+
+    function ensure_permissions($required_permissions = array()) {
+        global $db;
+
+        $permissions = get_permissions();
+        if($permissions === null) {
+            json_response(401, array('errorMessage' => 'Librarian associated with given Access-Token doesn\'t have any permissions'));
+        }
+
+        foreach($required_permissions as $key => $value) {
+            if($value == 1 && (!isset($permissions[$key]) || $permissions[$key] != 1)) {
+                json_response(401, array('errorMessage' => 'Librarian associated with given Access-Token doesn\'t have required permissions to use this method'));
             }
         }
     }

@@ -2,6 +2,7 @@
 
     // If access token is invalid or if user doesn't have an access to this method then exit with error
     ensure_access(array(0)); // Only librarians are allowed to use this method
+    ensure_permissions(array('remove' => 1)); // Check librarian's permissions
 
     // If some of the required parameters are missed then exit with error
     // If some parameter has invalid value then exit with error
