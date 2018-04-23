@@ -15,4 +15,8 @@ public @interface ApiCall{
 
     String path() default "unspecified";
 
+    Method method() default Method.GET;
+
+    int port() default 80;
+
 }

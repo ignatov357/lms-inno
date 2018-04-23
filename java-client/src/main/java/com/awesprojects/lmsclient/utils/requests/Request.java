@@ -13,6 +13,7 @@ public abstract class Request {
     private String url;
     @Getter @Setter
     protected boolean closeConnection;
+    protected final String LINE_END = "\r\n";
 
     Request(){
         closeConnection = true;
@@ -24,7 +25,7 @@ public abstract class Request {
 
     public void compileHeaders(StringBuilder sb){
         for (String[] pair : headers){
-            sb.append(pair[0]).append(": ").append(pair[1]).append("\n");
+            sb.append(pair[0]).append(": ").append(pair[1]).append(LINE_END);
         }
     }
 

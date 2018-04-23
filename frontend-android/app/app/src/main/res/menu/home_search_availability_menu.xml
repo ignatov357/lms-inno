@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/any"
+        android:icon="@drawable/ic_hourglass_empty_black_36dp"
+        android:title="Any" />
+    <item
+        android:id="@+id/available"
+        android:icon="@drawable/ic_hourglass_full_black_36dp"
+        android:title="Available" />
+</menu>

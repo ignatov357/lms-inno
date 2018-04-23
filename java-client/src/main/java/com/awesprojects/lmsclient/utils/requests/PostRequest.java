@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,26 +62,30 @@ public class PostRequest extends Request{
 
     public String buildRequest(StringBuilder sb){
         sb.append("POST ").append(getUrl());
-        sb.append(" HTTP/1.1").append("\n");
-        sb.append("Host: ").append(Config.getCurrentConfig().getApiDomain()).append("\n");
-        sb.append("Accept: */* \n");
-        sb.append("Accept-Encoding: gzip/deflate \n");
+        if (!getUrl().endsWith("/"))
+            sb.append("/");
+        sb.append(" HTTP/1.1").append(LINE_END);
+        sb.append("Host: ").append(Config.getCurrentConfig().getApiDomain()).append(LINE_END);
+        sb.append("Accept: application/json, text/javascript, */* ").append(LINE_END);
+        sb.append("Accept-Encoding: deflate ").append(LINE_END);
         if (hasData()) {
-            sb.append("Content-Type: application/x-www-form-urlencoded").append("\n");
-            sb.append("Content-Length: ").append(computeDataLength()).append("\n");
+            sb.append("Content-Type: application/x-www-form-urlencoded; charset=UTF-8").append(LINE_END);
+            sb.append("Content-Length: ").append(computeDataLength()).append(LINE_END);
         }
         if (isCloseConnection())
-            sb.append("Connection: close\n");
+            sb.append("Connection: close").append(LINE_END);
         if (hasHeaders())
             compileHeaders(sb);
-        sb.append("\n");
+        sb.append(LINE_END);
         if (hasData())
             compileData(sb);
         return sb.toString();
     }
+
     @Override
     public String buildRequestAndGetResponse(StringBuilder sb) {
         String requestStr = buildRequest(sb);
+        //requestStr = new String(Charset.forName("UTF-8").encode(requestStr).array());
         String response = RequestExecutor.executeRequest(requestStr);
         return response;
     }

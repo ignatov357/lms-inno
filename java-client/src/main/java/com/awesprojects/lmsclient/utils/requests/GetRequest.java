@@ -41,19 +41,25 @@ public class GetRequest extends Request{
         query.add(new String[]{key,value});
     }
 
+    public String getBuiltRequest(){
+        StringBuilder sb = new StringBuilder();
+        buildRequest(sb);
+        return sb.toString();
+    }
+
     protected String buildRequest(StringBuilder sb){
         sb.append("GET ").append(getUrl());
         if (hasQuery()) {
             sb.append("?");
             compileQuery(sb);
         }
-        sb.append(" HTTP/1.1").append("\n");
-        sb.append("Host: ").append(Config.getCurrentConfig().getApiDomain()).append("\n");
+        sb.append(" HTTP/1.1").append(LINE_END);
+        sb.append("Host: ").append(Config.getCurrentConfig().getApiDomain()).append(LINE_END);
         if (isCloseConnection())
-            sb.append("Connection: close\n");
+            sb.append("Connection: close").append(LINE_END);
         if (hasHeaders())
             compileHeaders(sb);
-        sb.append("\n");
+        sb.append(LINE_END);
         return sb.toString();
     }
 

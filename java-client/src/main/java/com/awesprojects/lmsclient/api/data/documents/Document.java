@@ -56,4 +56,21 @@ public abstract class Document implements Responsable,Serializable{
         throw new NullPointerException("document class type="+object.getInt("type")+" was not found");
     }
 
+    public static Document getImpl(){
+        return new DocumentImpl();
+    }
+
+    private static class DocumentImpl extends Document{
+
+        public DocumentImpl(JSONObject object){
+            super(object);
+            setType(-10);
+        }
+
+        public DocumentImpl(){
+            super();
+            setType(-10);
+        }
+    }
+
 }

@@ -90,15 +90,7 @@ public class PatronLibraryListAdapter extends RecyclerView.Adapter<PatronLibrary
         return new PatronLibraryListItemHolder(v);
     }
 
-    public static String[] preparedKeywords(Document document) {
-        String keywords = document.getKeywords();
-        if (keywords == null) return null;
-        keywords = keywords.replace(" ", "_").replace(",_", ",");
-        if (keywords.contains(","))
-            return keywords.split(",");
-        else
-            return new String[]{keywords};
-    }
+
 
 
     @Override
@@ -111,7 +103,7 @@ public class PatronLibraryListAdapter extends RecyclerView.Adapter<PatronLibrary
         holder.setTitle(doc.getTitle());
         holder.setAuthors(doc.getAuthors());
        // holder.setStockCount(doc.getInstockCount());
-        holder.setKeywords(preparedKeywords(doc));
+        holder.setKeywords(DocumentManager.preparedKeywords(doc));
 
         //holder.setCheckoutAvailable(true, null);
         if (doc instanceof Book) {

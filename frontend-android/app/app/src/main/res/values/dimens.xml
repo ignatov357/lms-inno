@@ -2,6 +2,10 @@
 <resources>
     <dimen name="android_toolbar_height">56dp</dimen>
     <dimen name="android_toolbar_elevation">4dp</dimen>
+    <dimen name="android_searchbar_height">48dp</dimen>
+    <dimen name="android_searchbar_elevation_default">2dp</dimen>
+    <dimen name="android_searchbar_elevation_raised">12dp</dimen>
+    <dimen name="android_searchmenu_margins">6dp</dimen>
     <dimen name="android_navbar_height">48dp</dimen>
     <dimen name="android_navbar_elevation">8dp</dimen>
     <dimen name="drawer_width">192dp</dimen>

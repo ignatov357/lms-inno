@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 public class StartActivity extends Activity implements SignInFragment.OnSignInListener,
         SignInMethodsFragment.Callback, IdentityConfirmFragment.Callback, SignInHandler.SignInResult {
 
-    public static final String TAG = "SignInFragment";
+    public static final String TAG = "StartActivity";
     public static Logger log = Logger.getLogger(TAG);
 
     public static final String PREFERENCE_IS_SIGNED_IN = "is_signed_in";

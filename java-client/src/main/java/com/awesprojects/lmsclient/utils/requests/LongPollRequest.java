@@ -7,6 +7,7 @@ import java.net.Socket;
 public class LongPollRequest extends GetRequest{
 
     Socket socket;
+    int port = 80;
 
     public LongPollRequest(){
         super();
@@ -16,8 +17,9 @@ public class LongPollRequest extends GetRequest{
     public InputStream open(){
         StringBuilder sb = new StringBuilder();
         super.buildRequest(sb);
-        RequestExecutor.AbstractApiRequest apiRequest =  RequestExecutor.createApiRequest(sb.toString());
+        RequestExecutor.AbstractApiRequest apiRequest =  RequestExecutor.createApiRequest(sb.toString(),port);
         try {
+            apiRequest.connect();
             socket = apiRequest.getSocket();
             return socket.getInputStream();
         } catch (IOException e) {
@@ -56,6 +58,11 @@ public class LongPollRequest extends GetRequest{
         @Override
         public Builder withHeader(String key, String value) {
             withHeaderInternal(key,value);
+            return this;
+        }
+
+        public Builder onPort(int port){
+            request.port = port;
             return this;
         }
 
