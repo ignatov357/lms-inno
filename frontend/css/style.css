@@ -5,7 +5,7 @@
 
 body{
     background: #f9fbe7;
-    font: 150% Akrobat;
+    font: 110% Akrobat;
 }
 
 .btn{
@@ -56,6 +56,10 @@ input.text-form{
 .adm-table td, .adm-table th, .adm-table{
     border-bottom: 1px solid #ddd;
     padding: 15px;
+}
+
+.adm-table td, .adm-table th{
+    height: 40px;
 }
 
 .adm-table tr:not(.unselectable):not(.selected):hover{
