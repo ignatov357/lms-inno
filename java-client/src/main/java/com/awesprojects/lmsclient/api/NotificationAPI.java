@@ -51,8 +51,14 @@ public class NotificationAPI {
         int onReceiveNotification(ServerNotification notification);
     }
 
+    public interface NotificationChangeListener{
+        void onConnected();
+        void onDisconnected();
+    }
+
     public static abstract class NotificationReader implements Responsable {
         public abstract void setNotificationReceiver(NotificationReceiver receiver);
+        public abstract void setNotificationChangeListener(NotificationChangeListener listener);
         public abstract void run();
         public abstract void close();
     }

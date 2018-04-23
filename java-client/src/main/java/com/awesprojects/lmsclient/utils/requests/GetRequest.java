@@ -41,6 +41,12 @@ public class GetRequest extends Request{
         query.add(new String[]{key,value});
     }
 
+    public String getBuiltRequest(){
+        StringBuilder sb = new StringBuilder();
+        buildRequest(sb);
+        return sb.toString();
+    }
+
     protected String buildRequest(StringBuilder sb){
         sb.append("GET ").append(getUrl());
         if (hasQuery()) {

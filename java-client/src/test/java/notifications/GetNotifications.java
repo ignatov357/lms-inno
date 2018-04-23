@@ -8,9 +8,10 @@ public class GetNotifications {
     public static void main(String[] args){
         NotificationAPI.NotificationReader reader = NotificationAPI.create(Config.patronAccessToken);
         reader.setNotificationReceiver((notification) -> {
-            System.out.print(notification);
+            System.out.println("received notification:"+notification);
             return 0;
         });
         reader.run();
     }
+
 }
