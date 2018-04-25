@@ -40,6 +40,10 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
         void onResult(Document document,boolean renewed);
     }
 
+    public interface OnFragmentClosedListener{
+        void onClosed();
+    }
+
     Document mDocument;
     ImageView mPreviewImageView;
     View mBestsellerIndicator;
@@ -58,6 +62,7 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
     boolean checkoutMode=true;
     OnCheckoutResultListener mCheckoutResultListener;
     OnRenewResultListener mRenewResultListener;
+    OnFragmentClosedListener mOnFragmentClosedListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -175,14 +180,22 @@ public class DocumentInfoFragment extends AbstractHomeOverlayFragment implements
         mRenewResultListener = listener;
     }
 
+    public void setOnFragmentClosedListener(OnFragmentClosedListener listener){
+        mOnFragmentClosedListener = listener;
+    }
+
     public void setDocumentTitle(String title){
         mToolbar.setTitle(title);
     }
 
     @Override
     public void onDestroy() {
-        //showHomeUI(true);
+        //showHomeUI(true)
+        //;
         super.onDestroy();
+        if (mOnFragmentClosedListener!=null){
+            mOnFragmentClosedListener.onClosed();
+        }
     }
 
     @Override

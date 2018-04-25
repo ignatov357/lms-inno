@@ -53,8 +53,9 @@ public class DocumentsAPI {
             ResponsableContainer.class,
             Response.class
     })
-    public static Responsable searchDocuments(AccessToken accessToken,String searchQuery) {
-        return impl.searchDocument(accessToken,searchQuery);
+    public static Responsable searchDocuments(AccessToken accessToken,String searchQuery,
+                                              Search.Type type,Search.Where where,Search.Availability availability) {
+        return impl.searchDocument(accessToken,searchQuery,type,where,availability);
     }
 
     @ApiCall(

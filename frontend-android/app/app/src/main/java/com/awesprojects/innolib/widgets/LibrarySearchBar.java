@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -115,6 +116,7 @@ public class LibrarySearchBar extends LinearLayout {
                 if (!mSearching){
                     startSearch();
                     mInputEditText.requestFocus();
+
                 }
             }
         });
@@ -128,9 +130,25 @@ public class LibrarySearchBar extends LinearLayout {
         });
     }
 
+    public void showKeyboard(){
+        InputMethodManager imm = (InputMethodManager)
+                getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm != null){
+            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+        }
+    }
+
+    public void hideKeyboard(){
+        InputMethodManager imm = (InputMethodManager)
+                getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm != null){
+            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+        }
+    }
+
     public boolean onInputTextKeyEvent(View view,int action,KeyEvent event){
         if (mSearching && !touchOnlyMode && event.getKeyCode()==KeyEvent.KEYCODE_ENTER){
-            stopSearchAndSubmit();
+            submitQuery();
             return true;
         }
         return false;
@@ -210,6 +228,13 @@ public class LibrarySearchBar extends LinearLayout {
     public void updateText(String newQuery){
         if (mCallback!=null)
             mCallback.onQueryTextChange(newQuery);
+    }
+
+    public void submitQuery(){
+        String query = mInputEditText.getText().toString();
+        if (mCallback!=null) {
+            mCallback.onQueryTextSubmit(query);
+        }
     }
 
     public void stopSearchAndSubmit(){

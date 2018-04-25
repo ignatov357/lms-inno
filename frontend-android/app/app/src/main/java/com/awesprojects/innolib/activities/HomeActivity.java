@@ -32,6 +32,11 @@ public class HomeActivity extends Activity {
     protected AbstractHomeInterface mHomeInterface;
     protected List<KeyDispatchListener> mKeyListeners;
 
+    public HomeActivity(){
+        super();
+        mKeyListeners = new ArrayList<>();
+    }
+
     public User getUser(){
         return mCurrentUser;
     }
@@ -39,7 +44,7 @@ public class HomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mKeyListeners = new ArrayList<>();
+
 
         //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);

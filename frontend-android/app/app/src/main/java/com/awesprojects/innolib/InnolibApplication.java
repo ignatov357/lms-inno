@@ -9,6 +9,7 @@ import com.awesprojects.innolib.managers.SecureStorageManager;
 import com.awesprojects.innolib.utils.logger.LogSystem;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -57,6 +58,7 @@ public class InnolibApplication extends Application{
 
     public void onFatalException(Thread thread,Throwable throwable){
         log.severe("uncaught exception in app thread : "+throwable.toString());
+        log.log(Level.SEVERE,"full exception info:",throwable);
         log.severe("application is forced to close");
         Intent logActivityIntent = new Intent(this, LogActivity.class);
         startActivity(logActivityIntent);

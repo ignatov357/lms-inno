@@ -14,7 +14,9 @@ import android.support.v7.widget.RecyclerView;
 import android.transition.AutoTransition;
 import android.transition.ChangeTransform;
 import android.transition.Fade;
+import android.transition.Slide;
 import android.transition.TransitionManager;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +33,7 @@ import com.awesprojects.innolib.managers.DocumentManager;
 import com.awesprojects.innolib.widgets.LibrarySearchBar;
 import com.awesprojects.innolib.widgets.SearchCategoryMenuView;
 import com.awesprojects.lmsclient.api.ResponsableContainer;
+import com.awesprojects.lmsclient.api.Search;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 import com.awesprojects.lmsclient.api.internal.Responsable;
 
@@ -78,14 +81,20 @@ public class SearchFragment extends AbstractHomeOverlayFragment
         mSearchListView = getContentView().findViewById(R.id.fragment_home_search_list_recyclerview);
         mSearchListManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mSearchListAdapter = new SearchListAdapter(this);
+        mSearchListAdapter.setClickCallback(this::onSearchResultClicked);
         mItemAnimator = new DefaultItemAnimator();
         mSearchListView.setAdapter(mSearchListAdapter);
         mSearchListView.setItemAnimator(mItemAnimator);
         mSearchListView.setLayoutManager(mSearchListManager);
+        mSearchListView.setHasFixedSize(true);
+        mSearchListManager.setItemPrefetchEnabled(true);
+        mSearchListView.setItemViewCacheSize(3);
         mSearchListAdapter.setDocuments(mFoundDocuments);
         mSearchParameters = new SearchParameters();
         initCategories();
         startupAnimation();
+        mSearchBar.showKeyboard();
+        mSearchBar.startSearch();
     }
 
     public boolean onKeyEvent(KeyEvent keyEvent) {
@@ -187,6 +196,26 @@ public class SearchFragment extends AbstractHomeOverlayFragment
         super.onDestroy();
     }
 
+    public void onSearchResultClicked(View documentHolder, Document document){
+        DocumentInfoFragment documentDetailFragment = new DocumentInfoFragment();
+        documentDetailFragment.setOnFragmentClosedListener(() -> {
+            getHomeActivity().addKeyDispatchListener(SearchFragment.this);
+            mSearchBar.showKeyboard();
+        });
+        documentDetailFragment.setEnterTransition(new Slide(Gravity.BOTTOM));
+        documentDetailFragment.setExitTransition(new Slide(Gravity.BOTTOM));
+        Bundle args = new Bundle();
+        args.putSerializable("DOCUMENT", document);
+        documentDetailFragment.setArguments(args);
+        getFragmentManager().beginTransaction()
+                .addToBackStack("DetailsShow")
+                .add(getHomeActivity().getHomeInterface().getOverlayContainer().getId(),
+                        documentDetailFragment, "DocumentInfoFragment")
+                .commit();
+        mSearchBar.hideKeyboard();
+        getHomeActivity().removeKeyDispatchListener(this);
+    }
+
     public void onSearchCategoryItemSelected(SearchCategoryMenuView.Category category, MenuItem item) {
         switch (category) {
             case DOCUMENT_TYPE: {
@@ -265,9 +294,41 @@ public class SearchFragment extends AbstractHomeOverlayFragment
     }
 
     public void searchDocuments(String query) {
+        Search.Type type = getSearchType(mSearchParameters);
+        Search.Where place = getSearchPlace(mSearchParameters);
+        Search.Availability availability = getSearchAvailability(mSearchParameters);
         Toast.makeText(this.getActivity(), "parameters : " + mSearchParameters.toString(), Toast.LENGTH_SHORT).show();
-        DocumentManager.getSearchDocumentsAsync(InnolibApplication.getAccessToken(), query,
+        DocumentManager.getSearchDocumentsAsync(InnolibApplication.getAccessToken(), query, type, place, availability,
                 this::onSearchResponseReceived);
+    }
+
+    public Search.Type getSearchType(SearchParameters parameters){
+        Search.Type type = Search.Type.ANY;
+        if (parameters.mType.equalsIgnoreCase("books")){
+            type = Search.Type.BOOKS;
+        }else if (parameters.mType.equalsIgnoreCase("articles")){
+            type = Search.Type.ARTICLES;
+        }else if (parameters.mType.equalsIgnoreCase("a/v")){
+            type = Search.Type.AV;
+        }
+        return type;
+    }
+
+    public Search.Where getSearchPlace(SearchParameters parameters){
+        Search.Where where = Search.Where.TITLE;
+        if (parameters.mWhere.equalsIgnoreCase("author")){
+            where = Search.Where.AUTHORS;
+        }else if (parameters.mWhere.equalsIgnoreCase("keywords")){
+            where = Search.Where.KEYWORDS;
+        }
+        return where;
+    }
+
+    public Search.Availability getSearchAvailability(SearchParameters parameters){
+        Search.Availability availability = Search.Availability.ANY;
+        if (parameters.availableOnly)
+            availability = Search.Availability.AVAILABLE_ONLY;
+        return availability;
     }
 
     private static class SearchParameters {

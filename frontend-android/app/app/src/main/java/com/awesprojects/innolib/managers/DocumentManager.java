@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import com.awesprojects.innolib.R;
 import com.awesprojects.lmsclient.api.DocumentsAPI;
 import com.awesprojects.lmsclient.api.ResponsableContainer;
+import com.awesprojects.lmsclient.api.Search;
 import com.awesprojects.lmsclient.api.UsersAPI;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 import com.awesprojects.lmsclient.api.data.documents.Document;
@@ -26,50 +27,57 @@ public class DocumentManager {
     private static DocumentManager mInstance;
 
     public static DocumentManager getInstance() {
-        if (mInstance==null)
+        if (mInstance == null)
             mInstance = new DocumentManager();
         return mInstance;
     }
 
-    public static void getSearchDocumentsAsync(AccessToken accessToken,String query,OnGetDocumentsListener listener){
+    public static void getSearchDocumentsAsync(AccessToken accessToken, String query, Search.Type type,
+                    Search.Where where, Search.Availability availability,OnGetDocumentsListener listener) {
         GetSearchDocumentsAsyncTask getSearchDocumentsAsyncTask = new GetSearchDocumentsAsyncTask();
+        getSearchDocumentsAsyncTask.setParameters(type,where,availability);
         getSearchDocumentsAsyncTask.setListener(listener);
         getSearchDocumentsAsyncTask.setQuery(query);
         getSearchDocumentsAsyncTask.execute(accessToken);
     }
 
-    public static void getCheckedOutDocuments(AccessToken accessToken,OnGetDocumentsListener listener){
+    public static void getCheckedOutDocuments(AccessToken accessToken, OnGetDocumentsListener listener) {
         GetCheckedOutDocumentsAsyncTask getCheckedOutDocumentsAsyncTask = new GetCheckedOutDocumentsAsyncTask();
         getCheckedOutDocumentsAsyncTask.setListener(listener);
         getCheckedOutDocumentsAsyncTask.execute(accessToken);
     }
 
-    public static void getDocumentAsync(OnGetDocumentsListener onGetDocumentsListener){
-        getDocumentAsync(false,onGetDocumentsListener);
+    public static void getDocumentAsync(OnGetDocumentsListener onGetDocumentsListener) {
+        getDocumentAsync(false, onGetDocumentsListener);
     }
 
-    public static void getDocumentAsync(boolean availableOnly,OnGetDocumentsListener onGetDocumentsListener){
+    public static void getDocumentAsync(boolean availableOnly, OnGetDocumentsListener onGetDocumentsListener) {
         GetDocumentAsyncTask getDocumentAsyncTask = new GetDocumentAsyncTask();
         getDocumentAsyncTask.setListener(onGetDocumentsListener);
         getDocumentAsyncTask.execute(availableOnly);
     }
+
     public interface OnGetDocumentsListener {
         void onDocumentGet(Responsable documents);
     }
 
-    private static class GetDocumentAsyncTask extends AsyncTask<Boolean,Integer,Responsable>{
+    private static class GetDocumentAsyncTask extends AsyncTask<Boolean, Integer, Responsable> {
         OnGetDocumentsListener onGetDocumentsListener;
-        public void setListener(OnGetDocumentsListener listener){
+
+        public void setListener(OnGetDocumentsListener listener) {
             onGetDocumentsListener = listener;
         }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
         }
+
         @Override
-        protected Responsable doInBackground(Boolean ... availableOnly) {
+        protected Responsable doInBackground(Boolean... availableOnly) {
             return DocumentsAPI.getDocuments(availableOnly[0]);
         }
+
         @Override
         protected void onPostExecute(Responsable documents) {
             super.onPostExecute(documents);
@@ -78,15 +86,18 @@ public class DocumentManager {
     }
 
 
-    private static class GetCheckedOutDocumentsAsyncTask extends AsyncTask<AccessToken,Integer,Responsable>{
+    private static class GetCheckedOutDocumentsAsyncTask extends AsyncTask<AccessToken, Integer, Responsable> {
         OnGetDocumentsListener onGetDocumentsListener;
+
         public void setListener(OnGetDocumentsListener listener) {
             onGetDocumentsListener = listener;
         }
+
         @Override
-        protected Responsable doInBackground(AccessToken ... accessToken) {
+        protected Responsable doInBackground(AccessToken... accessToken) {
             return UsersAPI.getCheckedOutDocuments(accessToken[0]);
         }
+
         @Override
         protected void onPostExecute(Responsable documents) {
             super.onPostExecute(documents);
@@ -96,18 +107,30 @@ public class DocumentManager {
         }
     }
 
-    private static class GetSearchDocumentsAsyncTask extends AsyncTask<AccessToken,Integer,Responsable>{
+    private static class GetSearchDocumentsAsyncTask extends AsyncTask<AccessToken, Integer, Responsable> {
         OnGetDocumentsListener onGetDocumentsListener;
         String searchQuery;
-        public void setListener(OnGetDocumentsListener listener){
+        Search.Type type = Search.Type.ANY;
+        Search.Where place = Search.Where.TITLE;
+        Search.Availability availability = Search.Availability.ANY;
+
+        public void setListener(OnGetDocumentsListener listener) {
             onGetDocumentsListener = listener;
         }
-        public void setQuery(String query){
+
+        public void setQuery(String query) {
             searchQuery = query;
         }
+
+        public void setParameters(Search.Type type, Search.Where place, Search.Availability availability) {
+            this.type = type;
+            this.place = place;
+            this.availability = availability;
+        }
+
         @Override
         protected Responsable doInBackground(AccessToken... accessTokens) {
-            return DocumentsAPI.searchDocuments(accessTokens[0],searchQuery);
+            return DocumentsAPI.searchDocuments(accessTokens[0], searchQuery, type, place, availability);
         }
 
         @Override
@@ -118,29 +141,30 @@ public class DocumentManager {
         }
     }
 
-    public static void checkOutDocumentAsync(AccessToken accessToken,int documentId,
-                                             OnDocumentCheckOutListener checkOutListener){
+    public static void checkOutDocumentAsync(AccessToken accessToken, int documentId,
+                                             OnDocumentCheckOutListener checkOutListener) {
         CheckOutDocumentAsyncTask asyncTask = new CheckOutDocumentAsyncTask();
         asyncTask.setListener(checkOutListener);
-        asyncTask.execute(accessToken,documentId);
+        asyncTask.execute(accessToken, documentId);
     }
 
     public interface OnDocumentCheckOutListener {
         void onDocumentCheckedOut(Responsable responsable);
     }
 
-    private static class CheckOutDocumentAsyncTask extends AsyncTask<Object,Integer,Responsable>{
+    private static class CheckOutDocumentAsyncTask extends AsyncTask<Object, Integer, Responsable> {
 
         OnDocumentCheckOutListener onDocumentCheckOutListener;
 
-        public void setListener(OnDocumentCheckOutListener listener){
+        public void setListener(OnDocumentCheckOutListener listener) {
             onDocumentCheckOutListener = listener;
         }
+
         @Override
         protected Responsable doInBackground(Object... objects) {
-            String token = ((AccessToken)objects[0]).getToken();
+            String token = ((AccessToken) objects[0]).getToken();
             int id = (int) objects[1];
-            return DocumentsAPI.checkOutDocument(token,id);
+            return DocumentsAPI.checkOutDocument(token, id);
         }
 
         @Override
@@ -150,29 +174,30 @@ public class DocumentManager {
         }
     }
 
-    public static void renewDocumentAsync(AccessToken accessToken,int documentId,
-                                          OnDocumentRenewListener renewListener){
+    public static void renewDocumentAsync(AccessToken accessToken, int documentId,
+                                          OnDocumentRenewListener renewListener) {
         RenewDocumentAsyncTask asyncTask = new RenewDocumentAsyncTask();
         asyncTask.setListener(renewListener);
-        asyncTask.execute(accessToken,documentId);
+        asyncTask.execute(accessToken, documentId);
     }
 
     public interface OnDocumentRenewListener {
         void onDocumentRenewed(Responsable responsable);
     }
 
-    private static class RenewDocumentAsyncTask extends AsyncTask<Object,Integer,Responsable>{
+    private static class RenewDocumentAsyncTask extends AsyncTask<Object, Integer, Responsable> {
 
         OnDocumentRenewListener onDocumentRenewListener;
 
-        public void setListener(OnDocumentRenewListener listener){
+        public void setListener(OnDocumentRenewListener listener) {
             onDocumentRenewListener = listener;
         }
+
         @Override
         protected Responsable doInBackground(Object... objects) {
-            String token = ((AccessToken)objects[0]).getToken();
+            String token = ((AccessToken) objects[0]).getToken();
             int id = (int) objects[1];
-            return DocumentsAPI.renewDocument(token,id);
+            return DocumentsAPI.renewDocument(token, id);
         }
 
         @Override
@@ -182,26 +207,30 @@ public class DocumentManager {
         }
     }
 
-    boolean isStringLoaded=false;
+    boolean isStringLoaded = false;
     String mDocumentBook;
     String mDocumentArticle;
     String mDocumentAV;
 
-    private void ensureStringsLoaded(Context context){
-        if (!isStringLoaded){
+    private void ensureStringsLoaded(Context context) {
+        if (!isStringLoaded) {
             mDocumentBook = context.getResources().getString(R.string.document_0);
             mDocumentArticle = context.getResources().getString(R.string.document_1);
             mDocumentAV = context.getResources().getString(R.string.document_2);
         }
     }
 
-    public String getDocumentType(int type,Context context){
+    public String getDocumentType(int type, Context context) {
         ensureStringsLoaded(context);
-        switch (type){
-            case 0: return mDocumentBook;
-            case 1: return mDocumentArticle;
-            case 2: return mDocumentAV;
-            default: return "Unknown";
+        switch (type) {
+            case 0:
+                return mDocumentBook;
+            case 1:
+                return mDocumentArticle;
+            case 2:
+                return mDocumentAV;
+            default:
+                return "Unknown";
         }
     }
 
@@ -215,18 +244,18 @@ public class DocumentManager {
             return new String[]{keywords};
     }
 
-    public static String getPrettyReturnDate(long seconds){
+    public static String getPrettyReturnDate(long seconds) {
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(seconds*1000);
+        c.setTimeInMillis(seconds * 1000);
         StringBuilder sb = new StringBuilder();
         int day = c.get(Calendar.DAY_OF_MONTH);
-        int month = c.get(Calendar.MONTH)+1;
+        int month = c.get(Calendar.MONTH) + 1;
         int year = c.get(Calendar.YEAR) % 100;
         int hour = c.get(Calendar.HOUR_OF_DAY);
         int minute = c.get(Calendar.MINUTE);
         sb.append("Return till ");
-        sb.append(day).append(".").append(month<10 ? "0"+month : month).append(".").append(year < 10 ? "0"+year : year);
-        sb.append(" at ").append(hour).append(":").append(minute<10 ? "0"+minute : minute);
+        sb.append(day).append(".").append(month < 10 ? "0" + month : month).append(".").append(year < 10 ? "0" + year : year);
+        sb.append(" at ").append(hour).append(":").append(minute < 10 ? "0" + minute : minute);
         return sb.toString();
     }
 

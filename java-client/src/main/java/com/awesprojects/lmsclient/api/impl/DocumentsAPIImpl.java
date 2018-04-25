@@ -2,6 +2,7 @@ package com.awesprojects.lmsclient.api.impl;
 
 import com.awesprojects.lmsclient.api.ResponsableContainer;
 import com.awesprojects.lmsclient.api.Response;
+import com.awesprojects.lmsclient.api.Search;
 import com.awesprojects.lmsclient.api.data.AccessToken;
 import com.awesprojects.lmsclient.api.data.documents.Document;
 import com.awesprojects.lmsclient.api.internal.Responsable;
@@ -55,26 +56,46 @@ class DocumentsAPIImpl implements IDocumentsAPI {
     }
 
     @Override
-    public Responsable searchDocument(AccessToken accessToken,String searchQuery) {
+    public Responsable searchDocument(AccessToken accessToken, String searchQuery,
+                                      Search.Type type, Search.Where where, Search.Availability availability) {
         GetRequest.Builder builder = RequestFactory.get();
         //TODO: remove workaround
         builder.withURL("/documents/getDocuments");
         //builder.withHeader("Access-Token",accessToken.getToken());
-        builder.withQuery("availableOnly","0");
+        builder.withQuery("availableOnly", "0");
         String response = builder.create().execute();
-        if (Response.getResultCode(response) == Response.STATUS_OK){
+        if (Response.getResultCode(response) == Response.STATUS_OK) {
             JSONArray array = Response.getJsonArrayBody(response);
             ArrayList<Document> documentArrayList = new ArrayList<>();
             for (int i = 0; i < array.length(); i++) {
                 Document document = Document.parseDocument(array.getJSONObject(i));
-                if (document.getTitle().startsWith(searchQuery)){
-                    documentArrayList.add(document);
+                if (type != Search.Type.ANY) {
+                    if (type == Search.Type.BOOKS && document.getType() != 0) continue;
+                    if (type == Search.Type.ARTICLES && document.getType() != 1) continue;
+                    if (type == Search.Type.AV && document.getType() != 2) continue;
                 }
+                if (availability == Search.Availability.AVAILABLE_ONLY && document.getInstockCount()==0)
+                    continue;
+                switch (where){
+                    case TITLE:{
+                        if (!document.getTitle().contains(searchQuery)) continue;
+                        break;
+                    }
+                    case AUTHORS:{
+                        if (!document.getAuthors().contains(searchQuery)) continue;
+                        break;
+                    }
+                    case KEYWORDS:{
+                        if (!document.getKeywords().contains(searchQuery)) continue;
+                        break;
+                    }
+                }
+                documentArrayList.add(document);
             }
             Document[] documents = new Document[documentArrayList.size()];
             documentArrayList.toArray(documents);
             return new ResponsableContainer<>(documents);
-        }else{
+        } else {
             return Response.getResult(response);
         }
     }

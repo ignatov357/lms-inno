@@ -42,10 +42,18 @@ public class LogHandler extends ConsoleHandler {
                         .append(sb).append(" ")
                         .append(String.format("%1$-7s ",record.getLevel().getName()))
                         .append(String.format("[%1$-18s] : ",record.getLoggerName()));
+
                 if (record.getMessage().equals("THROW")){
                     out.append("thrown "+record.getThrown());
                 }else {
                     out.append(record.getMessage());
+                }
+                if (record.getThrown()!=null){
+                    Throwable t = record.getThrown();
+                    StackTraceElement[] stack = t.getStackTrace();
+                    for (StackTraceElement se : stack) {
+                        out.append("in "+se.getClassName()+"."+se.getMethodName()+" on line"+se.getLineNumber()+"\n");
+                    }
                 }
                 return out.toString();
             }
