@@ -78,15 +78,15 @@ class DocumentsAPIImpl implements IDocumentsAPI {
                     continue;
                 switch (where){
                     case TITLE:{
-                        if (!document.getTitle().contains(searchQuery)) continue;
+                        if (!containsQuery(document.getTitle(),searchQuery)) continue;
                         break;
                     }
                     case AUTHORS:{
-                        if (!document.getAuthors().contains(searchQuery)) continue;
+                        if (!containsQuery(document.getAuthors(),searchQuery)) continue;
                         break;
                     }
                     case KEYWORDS:{
-                        if (!document.getKeywords().contains(searchQuery)) continue;
+                        if (!containsQuery(document.getKeywords(),searchQuery)) continue;
                         break;
                     }
                 }
@@ -98,6 +98,30 @@ class DocumentsAPIImpl implements IDocumentsAPI {
         } else {
             return Response.getResult(response);
         }
+    }
+
+    private static boolean containsQuery(String field,String query){
+        field = field.toLowerCase();
+        if (query.contains(" OR ")){
+            String[] queries = query.split(" OR ");
+            for (String q : queries){
+                q = q.toLowerCase();
+                if (field.contains(q))
+                    return true;
+            }
+            return false;
+        }
+        if (query.contains(" AND ")){
+            String[] queries = query.split(" AND ");
+            for (String q : queries){
+                q = q.toLowerCase();
+                if (!field.contains(q))
+                    return false;
+            }
+            return true;
+        }
+        query = query.toLowerCase();
+        return field.contains(query);
     }
 
     @Override
